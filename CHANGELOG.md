@@ -52,3 +52,4 @@
 - Wed 2 Sep 2026: Watch Party creation is now the only action on venue cards, while the party page keeps call/map details, host recovery, and one RSVP per browser.
 - Wed 2 Sep 2026: Added RCB Bar & Cafe and Pecos as real central Bangalore venue options that need a same-day F1 screening call.
 - Wed 2 Sep 2026: Added Pecos Stones Indiranagar as a real venue option that needs a same-day F1 screening call.
+- Wed 2 Sep 2026: Marked Pecos Brigade Road and Pecos Stones Indiranagar as verified after builder confirmation.
