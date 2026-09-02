@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap");
 
 :root {
   --track: #07080b;
@@ -852,6 +852,221 @@ a {
 
 .landing-footer p {
   margin: 0;
+}
+
+.findmyscreen-landing {
+  --landing-bg: #070807;
+  --landing-surface: #10120f;
+  --landing-surface-2: #151813;
+  --landing-text: #f4f1e8;
+  --landing-muted: rgba(244, 241, 232, 0.62);
+  --landing-soft: rgba(244, 241, 232, 0.12);
+  --landing-accent: #c8ff3d;
+  --landing-accent-soft: rgba(200, 255, 61, 0.16);
+  --landing-verified: #44e28b;
+  --landing-amber: #ffc857;
+  background:
+    radial-gradient(circle at 78% 12%, rgba(200, 255, 61, 0.12), transparent 19%),
+    radial-gradient(circle at 16% 28%, rgba(255, 200, 87, 0.08), transparent 22%),
+    linear-gradient(90deg, rgba(244, 241, 232, 0.028) 1px, transparent 1px),
+    linear-gradient(180deg, var(--landing-bg) 0%, #0b0d0a 44%, #050605 100%);
+  background-size: auto, auto, 72px 72px, 100% 100%;
+  color: var(--landing-text);
+  font-family: Inter, Arial, sans-serif;
+}
+
+.findmyscreen-landing .landing-nav {
+  border-bottom-color: rgba(200, 255, 61, 0.44);
+}
+
+.findmyscreen-landing .landing-wordmark,
+.findmyscreen-landing .landing-nav a,
+.findmyscreen-landing .landing-hero h1,
+.findmyscreen-landing .landing-section-heading h2,
+.findmyscreen-landing .event-row h3,
+.findmyscreen-landing .flow-board > div > strong,
+.findmyscreen-landing .journey-step-copy strong,
+.findmyscreen-landing .verified-copy h3,
+.findmyscreen-landing .watch-plan-preview h2,
+.findmyscreen-landing .watch-plan-preview h3,
+.findmyscreen-landing .watch-plan-preview b,
+.findmyscreen-landing .tonight-board strong,
+.findmyscreen-landing .landing-final-cta h2,
+.findmyscreen-landing .landing-footer strong {
+  color: var(--landing-text);
+}
+
+.findmyscreen-landing .landing-hero h1,
+.findmyscreen-landing .landing-section-heading h2,
+.findmyscreen-landing .verified-copy h2,
+.findmyscreen-landing .verified-copy h3,
+.findmyscreen-landing .watch-plan-preview h2,
+.findmyscreen-landing .watch-plan-preview h3,
+.findmyscreen-landing .landing-final-cta h2,
+.findmyscreen-landing .event-row h3,
+.findmyscreen-landing .tonight-board strong,
+.findmyscreen-landing .flow-board > div > strong,
+.findmyscreen-landing .journey-step-copy strong {
+  font-family: "Space Grotesk", Inter, Arial, sans-serif;
+  font-weight: 800;
+}
+
+.findmyscreen-landing .landing-hero h1 {
+  line-height: 0.88;
+}
+
+.findmyscreen-landing .landing-kicker,
+.findmyscreen-landing .landing-section-heading span,
+.findmyscreen-landing .landing-live-strip span,
+.findmyscreen-landing .flow-board span,
+.findmyscreen-landing .flow-board li b,
+.findmyscreen-landing .journey-column-head span,
+.findmyscreen-landing .journey-step-copy b,
+.findmyscreen-landing .watch-plan-preview > div > span,
+.findmyscreen-landing .watch-plan-preview aside > span,
+.findmyscreen-landing .tonight-board span {
+  color: var(--landing-accent);
+}
+
+.findmyscreen-landing .landing-hero-copy > p:not(.landing-kicker),
+.findmyscreen-landing .landing-section-heading p,
+.findmyscreen-landing .event-row p,
+.findmyscreen-landing .flow-board p,
+.findmyscreen-landing .journey-column-head p,
+.findmyscreen-landing .journey-step-copy p,
+.findmyscreen-landing .verified-copy p,
+.findmyscreen-landing .watch-plan-preview p,
+.findmyscreen-landing .landing-footer {
+  color: var(--landing-muted);
+}
+
+.findmyscreen-landing .landing-nav > div,
+.findmyscreen-landing .landing-search label,
+.findmyscreen-landing .landing-sport-chips small,
+.findmyscreen-landing .signal-point small,
+.findmyscreen-landing .signal-stat,
+.findmyscreen-landing .event-row span,
+.findmyscreen-landing .event-row strong,
+.findmyscreen-landing .event-row em,
+.findmyscreen-landing .tonight-board em,
+.findmyscreen-landing .tonight-board b,
+.findmyscreen-landing .watch-plan-preview aside strong,
+.findmyscreen-landing .watch-plan-preview small,
+.findmyscreen-landing .verified-pass dt {
+  color: rgba(244, 241, 232, 0.48);
+}
+
+.findmyscreen-landing .landing-nav > div a:last-child,
+.findmyscreen-landing .landing-search button,
+.findmyscreen-landing .watch-plan-preview a,
+.findmyscreen-landing .landing-final-cta a {
+  background: var(--landing-accent);
+  color: #071006;
+}
+
+.findmyscreen-landing .landing-search input,
+.findmyscreen-landing .journey-column,
+.findmyscreen-landing .verified-pass,
+.findmyscreen-landing .watch-plan-preview aside {
+  background: rgba(16, 18, 15, 0.86);
+}
+
+.findmyscreen-landing .landing-search input,
+.findmyscreen-landing .landing-sport-chips span,
+.findmyscreen-landing .journey-phone-frame,
+.findmyscreen-landing .event-row-list,
+.findmyscreen-landing .event-row,
+.findmyscreen-landing .flow-board,
+.findmyscreen-landing .flow-board > div,
+.findmyscreen-landing .flow-board li,
+.findmyscreen-landing .journey-column-head,
+.findmyscreen-landing .journey-step,
+.findmyscreen-landing .landing-live-strip,
+.findmyscreen-landing .tonight-board > a,
+.findmyscreen-landing .tonight-board > div,
+.findmyscreen-landing .landing-footer {
+  border-color: var(--landing-soft);
+}
+
+.findmyscreen-landing .landing-sport-chips span[data-live="true"] {
+  border-color: rgba(200, 255, 61, 0.46);
+  color: var(--landing-text);
+  background: rgba(200, 255, 61, 0.07);
+}
+
+.findmyscreen-landing .signal-map {
+  border-left-color: var(--landing-soft);
+  background:
+    radial-gradient(circle, rgba(200, 255, 61, 0.1), transparent 55%),
+    linear-gradient(90deg, rgba(244, 241, 232, 0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(244, 241, 232, 0.03) 1px, transparent 1px);
+  background-size: auto, 58px 58px, 58px 58px;
+}
+
+.findmyscreen-landing .signal-core {
+  border-color: rgba(200, 255, 61, 0.72);
+}
+
+.findmyscreen-landing .signal-core::before,
+.findmyscreen-landing .signal-core::after {
+  border-color: rgba(200, 255, 61, 0.22);
+}
+
+.findmyscreen-landing .signal-point i,
+.findmyscreen-landing .landing-live-strip i,
+.findmyscreen-landing .verified-pass i,
+.findmyscreen-landing .flow-board li i {
+  background: var(--landing-accent);
+  box-shadow: 0 0 0 6px var(--landing-accent-soft), 0 0 30px rgba(200, 255, 61, 0.28);
+}
+
+.findmyscreen-landing .event-row-live strong,
+.findmyscreen-landing .tonight-board em,
+.findmyscreen-landing .verified-pass > span {
+  color: var(--landing-verified);
+}
+
+.findmyscreen-landing .event-row:hover,
+.findmyscreen-landing .tonight-board > a:hover {
+  background: rgba(200, 255, 61, 0.07);
+}
+
+.findmyscreen-landing .flow-board,
+.findmyscreen-landing .journey-column {
+  border-top-color: rgba(200, 255, 61, 0.58);
+}
+
+.findmyscreen-landing .journey-column {
+  background:
+    radial-gradient(circle at 8% 20%, rgba(200, 255, 61, 0.08), transparent 24%),
+    linear-gradient(90deg, rgba(200, 255, 61, 0.055), transparent 28%),
+    rgba(16, 18, 15, 0.8);
+}
+
+.findmyscreen-landing .verified-copy h2 {
+  color: rgba(244, 241, 232, 0.36);
+}
+
+.findmyscreen-landing .verified-copy h2 span,
+.findmyscreen-landing .tonight-board time {
+  color: var(--landing-amber);
+}
+
+.findmyscreen-landing .verified-pass {
+  border-top-color: var(--landing-verified);
+}
+
+.findmyscreen-landing .watch-plan-preview aside {
+  border-top-color: var(--landing-accent);
+}
+
+.findmyscreen-landing .watch-plan-preview aside::after {
+  background: rgba(200, 255, 61, 0.48);
+}
+
+.findmyscreen-landing .tonight-board > div strong {
+  font-size: clamp(30px, 3.8vw, 52px);
+  line-height: 1;
 }
 
 @keyframes signalPulse {
@@ -3910,18 +4125,25 @@ h3 {
 
   .tonight-board > a,
   .tonight-board > div {
-    gap: 10px;
+    grid-template-columns: 62px minmax(0, 1fr);
+    gap: 8px 12px;
     min-height: 136px;
     align-items: start;
     padding: 18px 0;
   }
 
   .tonight-board strong {
-    font-size: 34px;
-    line-height: 0.94;
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .findmyscreen-landing .tonight-board > div strong {
+    font-size: 24px;
+    line-height: 1.08;
   }
 
   .tonight-board em {
+    grid-column: 2;
     font-size: 10px;
   }
 
