@@ -73,3 +73,4 @@
 - Thu 3 Sep 2026: Added Book Now as a visible action on every venue card in the F1 recommendations grid.
 - Thu 3 Sep 2026: Moved Book Now back inside the watch-party page and changed it to a coming-soon interest prompt instead of a phone-number flow.
 - Thu 3 Sep 2026: Book Now Yes/No interest responses now save to Convex and appear in the admin proof table.
+- Thu 3 Sep 2026: Unsupported area searches now show no venue results and suggest supported Bangalore areas instead.

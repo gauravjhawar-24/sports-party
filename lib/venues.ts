@@ -1,4 +1,5 @@
-export type EvidenceTag = "Verified" | "Posted about F1" | "Regular F1 venue" | "Needs call";
+export type EvidenceTag =
+  "Verified" | "Posted about F1" | "Regular F1 venue" | "Needs call";
 
 export type Venue = {
   id: string;
@@ -19,7 +20,7 @@ export const nextRace = {
   name: "Italian Grand Prix",
   circuit: "Monza",
   raceDate: "Sunday, 6 Sep 2026",
-  raceTime: "6:30 PM IST"
+  raceTime: "6:30 PM IST",
 };
 
 export const venues: Venue[] = [
@@ -29,13 +30,15 @@ export const venues: Venue[] = [
     area: "MG Road",
     zones: ["mg road", "church street", "brigade road", "central bangalore"],
     evidenceTag: "Posted about F1",
-    evidence: "District lists an Italian GP 2026 live screening at SkyDeck By Sherlock's.",
+    evidence:
+      "District lists an Italian GP 2026 live screening at SkyDeck By Sherlock's.",
     phone: "Needs call",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=SkyDeck+By+Sherlocks+MG+Road+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=SkyDeck+By+Sherlocks+MG+Road+Bangalore",
     vibe: "Central, big-screen race night, easy for mixed groups.",
     price: "Entry listing seen around Rs 199",
     sourceLabel: "District listing",
-    sourceUrl: "https://www.district.in/"
+    sourceUrl: "https://www.district.in/",
   },
   {
     id: "underdoggs-hebbal",
@@ -43,13 +46,15 @@ export const venues: Venue[] = [
     area: "Hebbal",
     zones: ["hebbal", "sahakara nagar", "north bangalore"],
     evidenceTag: "Posted about F1",
-    evidence: "District lists an Italian GP 2026 screening at Underdoggs Hebbal.",
+    evidence:
+      "District lists an Italian GP 2026 screening at Underdoggs Hebbal.",
     phone: "Needs call",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Underdoggs+Hebbal+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Underdoggs+Hebbal+Bangalore",
     vibe: "Sports-bar energy, better when the group wants a crowd.",
     price: "Entry listing seen around Rs 200",
     sourceLabel: "District listing",
-    sourceUrl: "https://www.district.in/activities/screening-in-bengaluru/"
+    sourceUrl: "https://www.district.in/activities/screening-in-bengaluru/",
   },
   {
     id: "underdoggs-whitefield",
@@ -57,13 +62,15 @@ export const venues: Venue[] = [
     area: "Whitefield",
     zones: ["whitefield", "marathahalli", "brookefield"],
     evidenceTag: "Regular F1 venue",
-    evidence: "Underdoggs says Formula 1 and other sports are broadcast on its screens.",
+    evidence:
+      "Underdoggs says Formula 1 and other sports are broadcast on its screens.",
     phone: "Needs call",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Underdoggs+Sports+Bar+Whitefield",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Underdoggs+Sports+Bar+Whitefield",
     vibe: "Sports-first pub with multiple screens and strong match-day energy.",
     price: "Mid to high",
     sourceLabel: "Venue website",
-    sourceUrl: "https://underdoggs.com/"
+    sourceUrl: "https://underdoggs.com/",
   },
   {
     id: "amoeba-sports-bar",
@@ -71,13 +78,15 @@ export const venues: Venue[] = [
     area: "Church Street",
     zones: ["church street", "mg road", "brigade road", "central bangalore"],
     evidenceTag: "Regular F1 venue",
-    evidence: "Watch Party Radar lists Amoeba Sports Bar as showing Formula 1 frequently.",
+    evidence:
+      "Watch Party Radar lists Amoeba Sports Bar as showing Formula 1 frequently.",
     phone: "Needs call",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Amoeba+Sports+Bar+Church+Street+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Amoeba+Sports+Bar+Church+Street+Bangalore",
     vibe: "Compact central sports bar, good for a small F1 group.",
     price: "Mid",
     sourceLabel: "Watch Party Radar",
-    sourceUrl: "https://watchpartyradar.com/bangalore/"
+    sourceUrl: "https://watchpartyradar.com/bangalore/",
   },
   {
     id: "rcb-bar-cafe-brigade-road",
@@ -85,13 +94,15 @@ export const venues: Venue[] = [
     area: "Brigade Road",
     zones: ["brigade road", "mg road", "church street", "central bangalore"],
     evidenceTag: "Needs call",
-    evidence: "RCB Bar & Cafe is a real sports-themed Bengaluru venue, but the F1 screening needs a same-day confirmation.",
+    evidence:
+      "RCB Bar & Cafe is a real sports-themed Bengaluru venue, but the F1 screening needs a same-day confirmation.",
     phone: "9980999944",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=RCB+Bar+Cafe+Garuda+Mall+Magrath+Road+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=RCB+Bar+Cafe+Garuda+Mall+Magrath+Road+Bangalore",
     vibe: "Sports-first, big-brand bar setup near Brigade Road for groups that want a match-night atmosphere.",
     price: "High",
     sourceLabel: "Official venue page",
-    sourceUrl: "https://royalchallengers.com/rcb-bar-cafe"
+    sourceUrl: "https://royalchallengers.com/rcb-bar-cafe",
   },
   {
     id: "pecos-brigade-road",
@@ -101,11 +112,12 @@ export const venues: Venue[] = [
     evidenceTag: "Verified",
     evidence: "Manually confirmed by builder for the Italian GP main race.",
     phone: "8041640022",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Pecos+Brigade+Road+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Pecos+Brigade+Road+Bangalore",
     vibe: "Old-school Bangalore pub feel, confirmed for a central race-night plan.",
     price: "Mid to high",
     sourceLabel: "Venue website",
-    sourceUrl: "https://pecospub.com/"
+    sourceUrl: "https://pecospub.com/",
   },
   {
     id: "pecos-stones-indiranagar",
@@ -115,11 +127,13 @@ export const venues: Venue[] = [
     evidenceTag: "Verified",
     evidence: "Manually confirmed by builder for the Italian GP main race.",
     phone: "8971664068",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Pecos+Stones+Indiranagar+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Pecos+Stones+Indiranagar+Bangalore",
     vibe: "Old-school rock pub on 100 Feet Road, confirmed for an Indiranagar race-night plan.",
     price: "Mid to high",
     sourceLabel: "Zomato listing",
-    sourceUrl: "https://www.zomato.com/bangalore/pecos-stones-indiranagar-bangalore"
+    sourceUrl:
+      "https://www.zomato.com/bangalore/pecos-stones-indiranagar-bangalore",
   },
   {
     id: "big-pitcher-sarjapur",
@@ -127,13 +141,16 @@ export const venues: Venue[] = [
     area: "Sarjapur Road",
     zones: ["sarjapur", "sarjapur road", "bellandur", "hsr", "hsr layout"],
     evidenceTag: "Regular F1 venue",
-    evidence: "Big Pitcher's own race-day page describes Formula 1 screening experiences.",
+    evidence:
+      "Big Pitcher's own race-day page describes Formula 1 screening experiences.",
     phone: "Needs call",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Big+Pitcher+Sarjapur+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Big+Pitcher+Sarjapur+Bangalore",
     vibe: "Large brewpub energy, strong choice for Bellandur and Sarjapur groups.",
     price: "Mid to high",
     sourceLabel: "Venue page",
-    sourceUrl: "https://www.bigpitcher.co.in/sarjapur-best-pub-in-bangalore/ourBlogs/ultimate_race-day_experience.html"
+    sourceUrl:
+      "https://www.bigpitcher.co.in/sarjapur-best-pub-in-bangalore/ourBlogs/ultimate_race-day_experience.html",
   },
   {
     id: "buffalo-wild-wings-indiranagar",
@@ -141,13 +158,16 @@ export const venues: Venue[] = [
     area: "Indiranagar",
     zones: ["indiranagar", "domlur", "old airport road"],
     evidenceTag: "Regular F1 venue",
-    evidence: "Older Bangalore F1 guides and fan posts mention Buffalo Wild Wings for Formula 1 screenings.",
+    evidence:
+      "Older Bangalore F1 guides and fan posts mention Buffalo Wild Wings for Formula 1 screenings.",
     phone: "6360198721",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Buffalo+Wild+Wings+Indiranagar+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Buffalo+Wild+Wings+Indiranagar+Bangalore",
     vibe: "Sports-bar crowd, wings, beer and multiple screens.",
     price: "Mid to high",
     sourceLabel: "Public F1 guide",
-    sourceUrl: "https://www.whatshot.in/bangalore/f1-fans-walk-into-these-pubs--bars-to-watch-the-main-sunday-race-live-on-the-big-screen-c-35096"
+    sourceUrl:
+      "https://www.whatshot.in/bangalore/f1-fans-walk-into-these-pubs--bars-to-watch-the-main-sunday-race-live-on-the-big-screen-c-35096",
   },
   {
     id: "church-street-social",
@@ -155,13 +175,16 @@ export const venues: Venue[] = [
     area: "Church Street",
     zones: ["church street", "mg road", "brigade road", "central bangalore"],
     evidenceTag: "Needs call",
-    evidence: "Older fan threads mention Social for F1, but V1 needs a fresh check before trusting it.",
+    evidence:
+      "Older fan threads mention Social for F1, but V1 needs a fresh check before trusting it.",
     phone: "9152071971",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Church+Street+Social+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Church+Street+Social+Bangalore",
     vibe: "Loud central plan with food, drinks and a younger crowd.",
     price: "Mid to high",
     sourceLabel: "Needs fresh check",
-    sourceUrl: "https://www.reddit.com/r/bangalore/comments/pm1hyh/f1_screening/"
+    sourceUrl:
+      "https://www.reddit.com/r/bangalore/comments/pm1hyh/f1_screening/",
   },
   {
     id: "doff-indiranagar",
@@ -171,19 +194,21 @@ export const venues: Venue[] = [
     evidenceTag: "Verified",
     evidence: "Personally confirmed for the Italian GP main race.",
     phone: "9036737098",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Doff+Pub+Lounge+Indiranagar+Bangalore",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Doff+Pub+Lounge+Indiranagar+Bangalore",
     vibe: "Lower-key Indiranagar option when the group wants a calmer race night.",
     price: "Mid",
     sourceLabel: "Needs fresh check",
-    sourceUrl: "https://www.whatshot.in/bangalore/f1-fans-walk-into-these-pubs--bars-to-watch-the-main-sunday-race-live-on-the-big-screen-c-35096"
-  }
+    sourceUrl:
+      "https://www.whatshot.in/bangalore/f1-fans-walk-into-these-pubs--bars-to-watch-the-main-sunday-race-live-on-the-big-screen-c-35096",
+  },
 ];
 
 const evidenceRank: Record<EvidenceTag, number> = {
   Verified: 0,
   "Posted about F1": 1,
   "Regular F1 venue": 2,
-  "Needs call": 3
+  "Needs call": 3,
 };
 
 const zoneNearness: Record<string, string[]> = {
@@ -199,28 +224,146 @@ const zoneNearness: Record<string, string[]> = {
     "whitefield",
     "mg road",
     "church street",
-    "jp nagar"
+    "jp nagar",
   ],
-  "hsr layout": ["hsr", "hsr layout", "bellandur", "sarjapur", "sarjapur road", "koramangala", "indiranagar", "mg road"],
-  hsr: ["hsr", "hsr layout", "bellandur", "sarjapur", "sarjapur road", "koramangala", "indiranagar", "mg road"],
-  "sarjapur road": ["sarjapur", "sarjapur road", "bellandur", "hsr", "hsr layout", "koramangala", "whitefield"],
-  sarjapur: ["sarjapur", "sarjapur road", "bellandur", "hsr", "hsr layout", "koramangala", "whitefield"],
-  koramangala: ["koramangala", "hsr", "hsr layout", "indiranagar", "mg road", "bellandur"],
-  indiranagar: ["indiranagar", "domlur", "old airport road", "mg road", "church street", "koramangala", "bellandur"],
-  "mg road": ["mg road", "church street", "brigade road", "central bangalore", "indiranagar", "koramangala"],
-  whitefield: ["whitefield", "brookefield", "marathahalli", "bellandur", "sarjapur"],
-  "jp nagar": ["jp nagar", "j p nagar", "jayanagar", "bannerghatta road", "koramangala"]
+  "hsr layout": [
+    "hsr",
+    "hsr layout",
+    "bellandur",
+    "sarjapur",
+    "sarjapur road",
+    "koramangala",
+    "indiranagar",
+    "mg road",
+  ],
+  hsr: [
+    "hsr",
+    "hsr layout",
+    "bellandur",
+    "sarjapur",
+    "sarjapur road",
+    "koramangala",
+    "indiranagar",
+    "mg road",
+  ],
+  "sarjapur road": [
+    "sarjapur",
+    "sarjapur road",
+    "bellandur",
+    "hsr",
+    "hsr layout",
+    "koramangala",
+    "whitefield",
+  ],
+  sarjapur: [
+    "sarjapur",
+    "sarjapur road",
+    "bellandur",
+    "hsr",
+    "hsr layout",
+    "koramangala",
+    "whitefield",
+  ],
+  koramangala: [
+    "koramangala",
+    "hsr",
+    "hsr layout",
+    "indiranagar",
+    "mg road",
+    "bellandur",
+  ],
+  indiranagar: [
+    "indiranagar",
+    "domlur",
+    "old airport road",
+    "mg road",
+    "church street",
+    "koramangala",
+    "bellandur",
+  ],
+  "mg road": [
+    "mg road",
+    "church street",
+    "brigade road",
+    "central bangalore",
+    "indiranagar",
+    "koramangala",
+  ],
+  whitefield: [
+    "whitefield",
+    "brookefield",
+    "marathahalli",
+    "bellandur",
+    "sarjapur",
+  ],
+  "jp nagar": [
+    "jp nagar",
+    "j p nagar",
+    "jayanagar",
+    "bannerghatta road",
+    "koramangala",
+  ],
 };
 
 const areaAliases: Record<string, string[]> = {
-  bellandur: ["bellandur", "belandur", "bellanduru", "bellandur gate", "ecospace"],
-  "hsr layout": ["hsr layout", "hsr", "h s r", "hsr sector", "sector 1 hsr", "sector 2 hsr"],
+  bellandur: [
+    "bellandur",
+    "belandur",
+    "bellanduru",
+    "bellandur gate",
+    "ecospace",
+  ],
+  "hsr layout": [
+    "hsr layout",
+    "hsr",
+    "h s r",
+    "hsr sector",
+    "sector 1 hsr",
+    "sector 2 hsr",
+  ],
   "sarjapur road": ["sarjapur road", "sarjapur", "sarjapura", "sarjapura road"],
-  koramangala: ["koramangala", "kormangala", "koramangla", "koramangalaa", "koramangala 5th block", "koramangala 6th block"],
-  indiranagar: ["indiranagar", "indira nagar", "indra nagar", "indranagar", "indiranagara", "indranagara", "indira", "100 feet road", "domlur", "old airport road"],
-  "mg road": ["mg road", "m g road", "mahatma gandhi road", "brigade road", "church street", "central bangalore"],
-  whitefield: ["whitefield", "white field", "brookefield", "brooke field", "marathahalli"],
-  "jp nagar": ["jp nagar", "j p nagar", "jpnagar", "jayanagar", "bannerghatta road"]
+  koramangala: [
+    "koramangala",
+    "kormangala",
+    "koramangla",
+    "koramangalaa",
+    "koramangala 5th block",
+    "koramangala 6th block",
+  ],
+  indiranagar: [
+    "indiranagar",
+    "indira nagar",
+    "indra nagar",
+    "indranagar",
+    "indiranagara",
+    "indranagara",
+    "indira",
+    "100 feet road",
+    "domlur",
+    "old airport road",
+  ],
+  "mg road": [
+    "mg road",
+    "m g road",
+    "mahatma gandhi road",
+    "brigade road",
+    "church street",
+    "central bangalore",
+  ],
+  whitefield: [
+    "whitefield",
+    "white field",
+    "brookefield",
+    "brooke field",
+    "marathahalli",
+  ],
+  "jp nagar": [
+    "jp nagar",
+    "j p nagar",
+    "jpnagar",
+    "jayanagar",
+    "bannerghatta road",
+  ],
 };
 
 export function rankVenues(areaInput: string) {
@@ -229,10 +372,14 @@ export function rankVenues(areaInput: string) {
 
 export function rankVenueList(areaInput: string, venueList: Venue[]) {
   const normalizedArea = normalizeArea(areaInput);
-  const nearbyZones = normalizedArea ? zoneNearness[normalizedArea] ?? [normalizedArea] : [];
+  const isSupportedArea = Boolean(normalizedArea);
+  const nearbyZones = isSupportedArea
+    ? (zoneNearness[normalizedArea] ?? [normalizedArea])
+    : [];
 
   const ranked = [...venueList].sort((left, right) => {
-    const evidenceDiff = evidenceRank[left.evidenceTag] - evidenceRank[right.evidenceTag];
+    const evidenceDiff =
+      evidenceRank[left.evidenceTag] - evidenceRank[right.evidenceTag];
     if (evidenceDiff !== 0) return evidenceDiff;
 
     return nearnessScore(right, nearbyZones) - nearnessScore(left, nearbyZones);
@@ -240,9 +387,18 @@ export function rankVenueList(areaInput: string, venueList: Venue[]) {
 
   return {
     normalizedArea,
-    isSupportedArea: Boolean(normalizedArea),
-    results: ranked.slice(0, 6),
-    popularAreas: ["Bellandur", "HSR Layout", "Sarjapur Road", "Koramangala", "Indiranagar", "MG Road", "Whitefield", "JP Nagar"]
+    isSupportedArea,
+    results: isSupportedArea ? ranked.slice(0, 6) : [],
+    popularAreas: [
+      "Bellandur",
+      "HSR Layout",
+      "Sarjapur Road",
+      "Koramangala",
+      "Indiranagar",
+      "MG Road",
+      "Whitefield",
+      "JP Nagar",
+    ],
   };
 }
 
@@ -254,15 +410,21 @@ export function buildInviteText(venue: Venue) {
     `Status: ${venue.evidenceTag}`,
     `Vibe: ${venue.vibe}`,
     `Map: ${venue.mapUrl}`,
-    "Who's in?"
+    "Who's in?",
   ].join("\n");
 }
 
 function normalizeArea(input: string) {
-  const text = input.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+  const text = input
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   if (!text) return "";
 
-  const directMatch = Object.keys(areaAliases).find((area) => areaAliases[area].some((alias) => text.includes(alias)));
+  const directMatch = Object.keys(areaAliases).find((area) =>
+    areaAliases[area].some((alias) => text.includes(alias)),
+  );
   if (directMatch) return directMatch;
 
   if (text.includes("bangalore") || text.includes("bengaluru")) {

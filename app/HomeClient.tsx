@@ -515,7 +515,7 @@ export function HomeClient({
 
           {!run.isSupportedArea ? (
             <section className="pit-message" role="status">
-              <strong>We are starting with Bangalore F1 screenings.</strong>
+              <strong>No verified screenings here yet.</strong>
               <p>Try one of these areas instead.</p>
               <div
                 className="quick-areas compact"
