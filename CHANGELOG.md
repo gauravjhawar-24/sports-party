@@ -41,3 +41,4 @@
 - Wed 2 Sep 2026: Admin now links back to `/f1`, area search prevents duplicate submissions, verified backups use clearer copy, and the scope reflects the new `/f1` product route.
 - Wed 2 Sep 2026: The app is live on Vercel with the public GitHub repo saved in the scope, and PostHog analytics wiring is ready for a project token.
 - Wed 2 Sep 2026: PostHog wizard leftovers were cleaned up, and the PostHog host is configured on Vercel while the project token remains pending.
+- Wed 2 Sep 2026: PostHog production token was added to Vercel so live visitor analytics can start after redeploy.

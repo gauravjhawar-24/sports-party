@@ -158,7 +158,7 @@ The personalized artifact is the F1 race invite: "Italian GP watch plan: [Pub], 
 | Data storage | Convex | `convex/schema.ts`, `convex/actions.ts` | Requires `.env.local` with Convex deployment values | Convex project `sports-party` created and functions codegen passed |
 | Venue signal search | Tavily Search API | `POST https://api.tavily.com/search` through server route `/api/venue-signals` | Free tier is 1,000 credits/month; V1 uses basic search | Official Tavily docs checked; local API key still needed |
 | Hosting | Vercel | Project deployment | Not yet connected for sports-party | Must deploy empty app in M0 |
-| Analytics | PostHog, Plausible, GA4 or Datafast | Read-only access required | Visitor row caps at L2 without it | Not set up yet |
+| Analytics | PostHog | `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` on Vercel | Visitor row needs read-only access for judging | Token and host added to Vercel production |
 
 ### unsupported assumptions
 
@@ -522,11 +522,11 @@ M1 — one ugly complete flow.
 
 ### current blocker
 
-Visitor analytics are wired in code but not active because the PostHog project token has not been added yet.
+Visitor analytics are wired in code and the PostHog production env vars are added on Vercel. Read-only judging access still needs to be saved.
 
 ### next single action
 
-Create a PostHog project, add `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` to Vercel, redeploy, and save read-only access for judging.
+Open the live site in a browser, confirm the first pageview in PostHog, then save read-only analytics access for judging.
 
 ## 15. decision log
 
