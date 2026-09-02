@@ -430,7 +430,7 @@ export function HomeClient({
                 </div>
                 <div>
                   <dt>Start</dt>
-                  <dd>{nextRace.raceTime.replace(" PM", "")} IST</dd>
+                  <dd>{nextRace.raceTime}</dd>
                 </div>
                 <div>
                   <dt>Laps</dt>
@@ -509,10 +509,10 @@ export function HomeClient({
               Change area
             </button>
             <a href="/f1/my-plans">My plans</a>
-            <div>
+            <h1 className="result-heading">
               <span>Showing F1 screening plan for</span>
               <strong>{submittedArea || "Bangalore"}</strong>
-            </div>
+            </h1>
           </header>
 
           {!run.isSupportedArea ? (
@@ -938,7 +938,7 @@ function VenueStats({ venue, position }: { venue: Venue; position: number }) {
   return (
     <div className="venue-stats" aria-label={`${venue.name} quick stats`}>
       <span>
-        <b>Distance</b>
+        <b>Area</b>
         {venue.area}
       </span>
       <span>
