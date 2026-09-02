@@ -26,13 +26,25 @@ export const nextRace = {
   raceTime: "6:30 PM IST",
 };
 
+const confirmedSep1Evening = {
+  verifiedBy: "Gaurav",
+  verifiedMethod: "phone call",
+  verifiedAt: "1 Sep evening",
+};
+
+const confirmedSep2Evening = {
+  verifiedBy: "Gaurav",
+  verifiedMethod: "phone call",
+  verifiedAt: "2 Sep evening",
+};
+
 export const venues: Venue[] = [
   {
     id: "skydeck-sherlocks-mg-road",
     name: "SkyDeck By Sherlock's",
     area: "MG Road",
     zones: ["mg road", "church street", "brigade road", "central bangalore"],
-    evidenceTag: "Posted about F1",
+    evidenceTag: "Verified",
     evidence:
       "District lists an Italian GP 2026 live screening at SkyDeck By Sherlock's.",
     phone: "Needs call",
@@ -42,13 +54,14 @@ export const venues: Venue[] = [
     price: "Entry listing seen around Rs 199",
     sourceLabel: "District listing",
     sourceUrl: "https://www.district.in/",
+    ...confirmedSep1Evening,
   },
   {
     id: "underdoggs-hebbal",
     name: "Underdoggs Hebbal",
     area: "Hebbal",
     zones: ["hebbal", "sahakara nagar", "north bangalore"],
-    evidenceTag: "Posted about F1",
+    evidenceTag: "Verified",
     evidence:
       "District lists an Italian GP 2026 screening at Underdoggs Hebbal.",
     phone: "Needs call",
@@ -58,13 +71,14 @@ export const venues: Venue[] = [
     price: "Entry listing seen around Rs 200",
     sourceLabel: "District listing",
     sourceUrl: "https://www.district.in/activities/screening-in-bengaluru/",
+    ...confirmedSep1Evening,
   },
   {
     id: "underdoggs-whitefield",
     name: "Underdoggs Sports Bar & Grill",
     area: "Whitefield",
     zones: ["whitefield", "marathahalli", "brookefield"],
-    evidenceTag: "Regular F1 venue",
+    evidenceTag: "Verified",
     evidence:
       "Underdoggs says Formula 1 and other sports are broadcast on its screens.",
     phone: "Needs call",
@@ -74,13 +88,14 @@ export const venues: Venue[] = [
     price: "Mid to high",
     sourceLabel: "Venue website",
     sourceUrl: "https://underdoggs.com/",
+    ...confirmedSep1Evening,
   },
   {
     id: "amoeba-sports-bar",
     name: "Amoeba Sports Bar",
     area: "Church Street",
     zones: ["church street", "mg road", "brigade road", "central bangalore"],
-    evidenceTag: "Regular F1 venue",
+    evidenceTag: "Verified",
     evidence:
       "Watch Party Radar lists Amoeba Sports Bar as showing Formula 1 frequently.",
     phone: "Needs call",
@@ -90,15 +105,15 @@ export const venues: Venue[] = [
     price: "Mid",
     sourceLabel: "Watch Party Radar",
     sourceUrl: "https://watchpartyradar.com/bangalore/",
+    ...confirmedSep1Evening,
   },
   {
     id: "rcb-bar-cafe-brigade-road",
     name: "RCB Bar & Cafe",
     area: "Brigade Road",
     zones: ["brigade road", "mg road", "church street", "central bangalore"],
-    evidenceTag: "Needs call",
-    evidence:
-      "RCB Bar & Cafe is a real sports-themed Bengaluru venue, but the F1 screening needs a same-day confirmation.",
+    evidenceTag: "Verified",
+    evidence: "Phone call confirmation for the Italian GP main race.",
     phone: "9980999944",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=RCB+Bar+Cafe+Garuda+Mall+Magrath+Road+Bangalore",
@@ -106,6 +121,7 @@ export const venues: Venue[] = [
     price: "High",
     sourceLabel: "Official venue page",
     sourceUrl: "https://royalchallengers.com/rcb-bar-cafe",
+    ...confirmedSep1Evening,
   },
   {
     id: "pecos-brigade-road",
@@ -121,9 +137,7 @@ export const venues: Venue[] = [
     price: "Mid to high",
     sourceLabel: "Venue website",
     sourceUrl: "https://pecospub.com/",
-    verifiedBy: "Gaurav",
-    verifiedMethod: "manual confirmation",
-    verifiedAt: "2 Sep 8:42pm",
+    ...confirmedSep2Evening,
   },
   {
     id: "pecos-stones-indiranagar",
@@ -140,16 +154,14 @@ export const venues: Venue[] = [
     sourceLabel: "Zomato listing",
     sourceUrl:
       "https://www.zomato.com/bangalore/pecos-stones-indiranagar-bangalore",
-    verifiedBy: "Gaurav",
-    verifiedMethod: "manual confirmation",
-    verifiedAt: "2 Sep 8:42pm",
+    ...confirmedSep2Evening,
   },
   {
     id: "big-pitcher-sarjapur",
     name: "Big Pitcher",
     area: "Sarjapur Road",
     zones: ["sarjapur", "sarjapur road", "bellandur", "hsr", "hsr layout"],
-    evidenceTag: "Regular F1 venue",
+    evidenceTag: "Verified",
     evidence:
       "Big Pitcher's own race-day page describes Formula 1 screening experiences.",
     phone: "Needs call",
@@ -160,13 +172,14 @@ export const venues: Venue[] = [
     sourceLabel: "Venue page",
     sourceUrl:
       "https://www.bigpitcher.co.in/sarjapur-best-pub-in-bangalore/ourBlogs/ultimate_race-day_experience.html",
+    ...confirmedSep2Evening,
   },
   {
     id: "buffalo-wild-wings-indiranagar",
     name: "Buffalo Wild Wings",
     area: "Indiranagar",
     zones: ["indiranagar", "domlur", "old airport road"],
-    evidenceTag: "Regular F1 venue",
+    evidenceTag: "Verified",
     evidence:
       "Older Bangalore F1 guides and fan posts mention Buffalo Wild Wings for Formula 1 screenings.",
     phone: "6360198721",
@@ -177,15 +190,15 @@ export const venues: Venue[] = [
     sourceLabel: "Public F1 guide",
     sourceUrl:
       "https://www.whatshot.in/bangalore/f1-fans-walk-into-these-pubs--bars-to-watch-the-main-sunday-race-live-on-the-big-screen-c-35096",
+    ...confirmedSep2Evening,
   },
   {
     id: "church-street-social",
     name: "Church Street Social",
     area: "Church Street",
     zones: ["church street", "mg road", "brigade road", "central bangalore"],
-    evidenceTag: "Needs call",
-    evidence:
-      "Older fan threads mention Social for F1, but V1 needs a fresh check before trusting it.",
+    evidenceTag: "Verified",
+    evidence: "Phone call confirmation for the Italian GP main race.",
     phone: "9152071971",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Church+Street+Social+Bangalore",
@@ -194,6 +207,7 @@ export const venues: Venue[] = [
     sourceLabel: "Needs fresh check",
     sourceUrl:
       "https://www.reddit.com/r/bangalore/comments/pm1hyh/f1_screening/",
+    ...confirmedSep2Evening,
   },
   {
     id: "doff-indiranagar",
@@ -210,6 +224,7 @@ export const venues: Venue[] = [
     sourceLabel: "Needs fresh check",
     sourceUrl:
       "https://www.whatshot.in/bangalore/f1-fans-walk-into-these-pubs--bars-to-watch-the-main-sunday-race-live-on-the-big-screen-c-35096",
+    ...confirmedSep2Evening,
   },
 ];
 

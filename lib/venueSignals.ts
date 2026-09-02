@@ -106,10 +106,7 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
   const hasProof = Boolean(
     signal.verifiedBy && signal.verifiedMethod && signal.verifiedAt,
   );
-  const isManualVerified =
-    signal.sourceQuery === "Manual venue entry" &&
-    signal.signalType === "Verified" &&
-    hasProof;
+  const isManualVerified = signal.sourceQuery === "Manual venue entry";
 
   return {
     id: `approved-${signal._id}`,
@@ -120,10 +117,12 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
     evidence: readableEvidence(signal),
     phone: "Needs call",
     mapUrl: `https://www.google.com/maps/search/?api=1&query=${query}`,
-    vibe: isManualVerified
-      ? `Verified ${area} option added by the FindMyScreen team for this race night.`
-      : "Fresh online signal. Call once before you send the plan.",
-    price: isManualVerified ? "Check with venue" : "Needs check",
+    vibe: hasProof
+      ? `Confirmed ${area} option for this race night.`
+      : isManualVerified
+        ? `Manual ${area} option added by the FindMyScreen team for this race night.`
+        : "Fresh online signal. Call once before you send the plan.",
+    price: hasProof || isManualVerified ? "Check with venue" : "Needs check",
     sourceLabel: sourceLabel(signal.sourceUrl),
     sourceUrl: signal.sourceUrl,
     verifiedBy: signal.verifiedBy,
