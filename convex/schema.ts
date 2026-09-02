@@ -42,6 +42,7 @@ export default defineSchema({
   watchParties: defineTable({
     hostName: v.string(),
     hostEmail: v.string(),
+    inviteCode: v.optional(v.string()),
     areaInput: v.string(),
     normalizedArea: v.string(),
     venueId: v.string(),
@@ -58,7 +59,8 @@ export default defineSchema({
     createdAt: v.number()
   })
     .index("by_created_at", ["createdAt"])
-    .index("by_hostEmail_and_createdAt", ["hostEmail", "createdAt"]),
+    .index("by_hostEmail_and_createdAt", ["hostEmail", "createdAt"])
+    .index("by_inviteCode", ["inviteCode"]),
 
   rsvps: defineTable({
     partyId: v.id("watchParties"),

@@ -107,7 +107,7 @@ export function MyPlansClient() {
                   <span><b>{counts.maybe}</b> Maybe</span>
                   <span><b>{counts.out}</b> Out</span>
                 </div>
-                <Link href={`/f1/party/${party._id}`}>Open plan →</Link>
+                <Link href={party.inviteCode ? `/f1/join/${party.inviteCode}` : `/f1/party/${party._id}`}>Open plan →</Link>
               </article>
             ))}
           </div>

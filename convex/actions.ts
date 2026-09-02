@@ -13,6 +13,16 @@ const venueCandidateArgs = {
   confidence: v.number()
 };
 
+const inviteAlphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+function makeInviteCode() {
+  let code = "";
+  for (let index = 0; index < 6; index += 1) {
+    code += inviteAlphabet[Math.floor(Math.random() * inviteAlphabet.length)];
+  }
+  return code;
+}
+
 export const recordSearch = mutation({
   args: {
     areaInput: v.string(),
@@ -111,9 +121,22 @@ export const createWatchParty = mutation({
   },
   handler: async (ctx, args) => {
     const createdAt = Date.now();
+    let inviteCode = makeInviteCode();
+
+    for (let attempts = 0; attempts < 5; attempts += 1) {
+      const existing = await ctx.db
+        .query("watchParties")
+        .withIndex("by_inviteCode", (q) => q.eq("inviteCode", inviteCode))
+        .first();
+
+      if (!existing) break;
+      inviteCode = makeInviteCode();
+    }
+
     const partyId = await ctx.db.insert("watchParties", {
       hostName: args.hostName.trim(),
       hostEmail: args.hostEmail.trim().toLowerCase(),
+      inviteCode,
       areaInput: args.areaInput,
       normalizedArea: args.normalizedArea,
       venueId: args.venueId,
@@ -150,7 +173,7 @@ export const createWatchParty = mutation({
       createdAt
     });
 
-    return partyId;
+    return { partyId, inviteCode };
   }
 });
 
@@ -215,6 +238,30 @@ export const watchPartyWithRsvps = query({
     const rsvps = await ctx.db
       .query("rsvps")
       .withIndex("by_party_and_created_at", (q) => q.eq("partyId", args.partyId))
+      .order("asc")
+      .collect();
+
+    return { party, rsvps };
+  }
+});
+
+export const watchPartyWithRsvpsByInviteCode = query({
+  args: {
+    inviteCode: v.string()
+  },
+  handler: async (ctx, args) => {
+    const code = args.inviteCode.trim().toUpperCase();
+    if (!code) return null;
+
+    const party = await ctx.db
+      .query("watchParties")
+      .withIndex("by_inviteCode", (q) => q.eq("inviteCode", code))
+      .first();
+    if (!party) return null;
+
+    const rsvps = await ctx.db
+      .query("rsvps")
+      .withIndex("by_party_and_created_at", (q) => q.eq("partyId", party._id))
       .order("asc")
       .collect();
 

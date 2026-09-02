@@ -85,6 +85,8 @@ export function HomeClient({
   const [hostEmail, setHostEmail] = useState("");
   const [lookupEmail, setLookupEmail] = useState("");
   const [submittedLookupEmail, setSubmittedLookupEmail] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
+  const [inviteCodeError, setInviteCodeError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [hostError, setHostError] = useState("");
   const [areaError, setAreaError] = useState("");
@@ -220,7 +222,7 @@ export function HomeClient({
     try {
       const venue = pendingParty.venue;
       const hostClientId = getOrCreateClientId();
-      const partyId = await createWatchParty({
+      const party = await createWatchParty({
         hostName: trimmedName,
         hostEmail: trimmedEmail.toLowerCase(),
         areaInput: submittedArea || venue.area,
@@ -238,7 +240,7 @@ export function HomeClient({
         raceDate: nextRace.raceDate,
         raceTime: nextRace.raceTime
       });
-      rememberHostParty(String(partyId));
+      rememberHostParty(String(party.partyId), party.inviteCode);
 
       captureProductEvent("findmyscreen_watch_party_created", {
         area_input: submittedArea || venue.area,
@@ -247,7 +249,7 @@ export function HomeClient({
         venue_name: venue.name
       });
 
-      window.location.href = `/f1/party/${partyId}`;
+      window.location.href = `/f1/join/${party.inviteCode}`;
     } catch {
       setHostError("Could not create the watch party. Please try again.");
     } finally {
@@ -266,6 +268,19 @@ export function HomeClient({
 
     setActionStatus("");
     setSubmittedLookupEmail(nextEmail);
+  }
+
+  function submitInviteCode(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const code = cleanInviteCode(inviteCode);
+
+    if (code.length < 4) {
+      setInviteCodeError("Enter the invite code from your group link.");
+      return;
+    }
+
+    setInviteCodeError("");
+    window.location.href = `/f1/join/${code}`;
   }
 
   async function revealInvite(venue: Venue) {
@@ -439,6 +454,12 @@ export function HomeClient({
                 ))}
               </div>
 
+              <JoinWatchParty
+                error={inviteCodeError}
+                inviteCode={inviteCode}
+                onInviteCodeChange={setInviteCode}
+                onSubmit={submitInviteCode}
+              />
               <MyWatchParties
                 hostParties={hostParties}
                 lookupEmail={lookupEmail}
@@ -724,13 +745,57 @@ function getOrCreateClientId() {
   return nextId;
 }
 
-function rememberHostParty(partyId: string) {
+function cleanInviteCode(value: string) {
+  const trimmed = value.trim();
+  const urlMatch = trimmed.match(/\/f1\/join\/([^/?#]+)/i);
+  if (urlMatch?.[1]) return urlMatch[1].trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+  const lastToken = trimmed.split(/\s+/).at(-1) ?? trimmed;
+  return lastToken.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+function rememberHostParty(partyId: string, inviteCode?: string) {
   if (typeof window === "undefined") return;
 
   const current = JSON.parse(window.localStorage.getItem(hostPartiesKey) || "[]") as string[];
   const next = [partyId, ...current.filter((item) => item !== partyId)].slice(0, 10);
   window.localStorage.setItem(hostPartiesKey, JSON.stringify(next));
   window.localStorage.setItem(`findmyscreen-host-party:${partyId}`, "true");
+  if (inviteCode) {
+    window.localStorage.setItem(`findmyscreen-host-party-code:${inviteCode}`, "true");
+  }
+}
+
+function JoinWatchParty({
+  error,
+  inviteCode,
+  onInviteCodeChange,
+  onSubmit
+}: {
+  error: string;
+  inviteCode: string;
+  onInviteCodeChange: (value: string) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}) {
+  return (
+    <section className="my-parties-box join-party-box" aria-label="Join a watch party">
+      <div className="my-parties-header">
+        <span>Have an invite code?</span>
+        <strong>Join a watch party</strong>
+      </div>
+      <form onSubmit={onSubmit}>
+        <label htmlFor="watch-party-code">Invite code</label>
+        <input
+          id="watch-party-code"
+          value={inviteCode}
+          onChange={(event) => onInviteCodeChange(event.target.value)}
+          placeholder="Example: K7P9Q2"
+        />
+        <button type="submit">Join</button>
+      </form>
+      {error ? <p className="area-error">{error}</p> : null}
+    </section>
+  );
 }
 
 function MyWatchParties({
@@ -767,7 +832,7 @@ function MyWatchParties({
           {hostParties === undefined ? <p>Checking...</p> : null}
           {hostParties?.length === 0 ? <p>No watch parties found for this email.</p> : null}
           {hostParties?.map((party) => (
-            <a href={`/f1/party/${party._id}`} key={party._id}>
+            <a href={party.inviteCode ? `/f1/join/${party.inviteCode}` : `/f1/party/${party._id}`} key={party._id}>
               <span>{party.raceName}</span>
               <strong>{party.venueName}</strong>
               <small>{party.raceDate} · {party.raceTime}</small>

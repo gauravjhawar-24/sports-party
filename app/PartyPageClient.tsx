@@ -16,7 +16,7 @@ const decisionLabels: Record<Decision, string> = {
 };
 const clientIdKey = "findmyscreen-client-id";
 
-export function PartyPageClient({ partyId }: { partyId: string }) {
+export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inviteCode?: string }) {
   const [name, setName] = useState("");
   const [decision, setDecision] = useState<Decision>("in");
   const [clientId, setClientId] = useState("");
@@ -24,7 +24,15 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const partyData = useQuery(api.actions.watchPartyWithRsvps, { partyId: partyId as Id<"watchParties"> });
+  const partyById = useQuery(
+    api.actions.watchPartyWithRsvps,
+    partyId ? { partyId: partyId as Id<"watchParties"> } : "skip"
+  );
+  const partyByCode = useQuery(
+    api.actions.watchPartyWithRsvpsByInviteCode,
+    inviteCode ? { inviteCode } : "skip"
+  );
+  const partyData = partyId ? partyById : partyByCode;
   const submitRsvp = useMutation(api.actions.submitWatchPartyRsvp);
 
   const grouped = useMemo(() => {
@@ -42,8 +50,18 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
   useEffect(() => {
     const nextClientId = getOrCreateClientId();
     setClientId(nextClientId);
-    setIsHostDevice(window.localStorage.getItem(`findmyscreen-host-party:${partyId}`) === "true");
-  }, [partyId]);
+  }, []);
+
+  useEffect(() => {
+    const party = partyData?.party;
+    if (!party) return;
+
+    const isHostById = window.localStorage.getItem(`findmyscreen-host-party:${party._id}`) === "true";
+    const isHostByCode = party.inviteCode
+      ? window.localStorage.getItem(`findmyscreen-host-party-code:${party.inviteCode}`) === "true"
+      : false;
+    setIsHostDevice(isHostById || isHostByCode);
+  }, [partyData?.party]);
 
   useEffect(() => {
     if (!currentDeviceRsvp || name) return;
@@ -78,7 +96,11 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
   }
 
   const { party } = partyData;
-  const partyUrl = typeof window === "undefined" ? "" : window.location.href;
+  const partyUrl = typeof window === "undefined"
+    ? ""
+    : party.inviteCode
+      ? `${window.location.origin}/f1/join/${party.inviteCode}`
+      : window.location.href;
   const hostRsvp = partyData.rsvps.find((rsvp) => rsvp.isHost);
 
   async function copyPartyLink() {
@@ -187,6 +209,9 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
               <input id="party-link" value={partyUrl} readOnly aria-label="Watch party invite link" />
               <button type="button" onClick={() => void copyPartyLink()}>Copy</button>
             </div>
+            {party.inviteCode ? (
+              <p className="invite-code-note">Invite code: <strong>{party.inviteCode}</strong></p>
+            ) : null}
             {status ? <p className="action-status">{status}</p> : null}
 
             {isHostDevice ? (

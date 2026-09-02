@@ -76,6 +76,14 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
               </span>
             ))}
           </div>
+
+          <form className="landing-join-code" action="/f1/join">
+            <label htmlFor="landing-invite-code">Have a watch-party code?</label>
+            <div>
+              <input id="landing-invite-code" name="code" placeholder="Enter invite code" />
+              <button type="submit">Join party</button>
+            </div>
+          </form>
         </div>
 
         <SignalMap />
