@@ -23,12 +23,12 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
   }
 
   return (
-    <main className="find-my-screen-landing">
+    <main className="findmyscreen-landing">
       <section className="landing-hero">
-        <nav className="landing-nav" aria-label="Find my Screen">
+        <nav className="landing-nav" aria-label="FindMyScreen">
           <div className="landing-brand">
             <span>FMS</span>
-            <strong>Find my Screen</strong>
+            <strong>FindMyScreen</strong>
           </div>
         </nav>
 
@@ -44,7 +44,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
             <p className="landing-eyebrow">Bangalore match nights</p>
             <h1>Find the sports bar where your game is actually on.</h1>
             <p>
-              Find my Screen helps fans pick one place for live screenings nearby. Search what is live, see the strongest pub
+              FindMyScreen helps fans pick one place for live screenings nearby. Search what is live, see the strongest pub
               pick, and send one plan to the group.
             </p>
           </div>
@@ -70,7 +70,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         </div>
       </section>
 
-      <section className="landing-strip" aria-label="How Find my Screen helps">
+      <section className="landing-strip" aria-label="How FindMyScreen helps">
         <div>
           <span>01</span>
           <strong>Search by area</strong>

@@ -28,7 +28,7 @@ export function InvitePageClient({ venue, area }: { venue: Venue; area: string }
     });
 
     if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
-      posthog.capture("find_my_screen_share_invite_unlocked", {
+      posthog.capture("findmyscreen_share_invite_unlocked", {
         area_input: area,
         normalized_area: area.toLowerCase(),
         venue_id: venue.id,

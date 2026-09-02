@@ -108,7 +108,7 @@ export function HomeClient({
           bestVenueId: nextRun.results[0].id,
           resultVenueIds: nextRun.results.map((venue) => venue.id)
         });
-        captureProductEvent("find_my_screen_area_searched", {
+        captureProductEvent("findmyscreen_area_searched", {
           area_input: nextArea,
           normalized_area: nextRun.normalizedArea,
           best_venue_id: nextRun.results[0].id
@@ -156,7 +156,7 @@ export function HomeClient({
       venueName: venue.name,
       raceName: nextRace.name
     });
-    captureProductEvent("find_my_screen_share_invite_unlocked", {
+    captureProductEvent("findmyscreen_share_invite_unlocked", {
       area_input: submittedArea,
       normalized_area: run.normalizedArea,
       venue_id: venue.id,
@@ -189,7 +189,7 @@ export function HomeClient({
         venueName: actionToComplete.venue.name,
         raceName: nextRace.name
       });
-      captureProductEvent("find_my_screen_action_completed", {
+      captureProductEvent("findmyscreen_action_completed", {
         action_type: actionToComplete.action,
         area_input: submittedArea,
         normalized_area: run.normalizedArea,
@@ -243,7 +243,7 @@ export function HomeClient({
           <header className="topbar">
             <div className="brand-mark">FMS</div>
             <div>
-              <strong>Find my Screen Bangalore</strong>
+              <strong>FindMyScreen Bangalore</strong>
               <span>F1 race-night finder</span>
             </div>
           </header>
@@ -523,7 +523,7 @@ export function InviteReveal({
       </div>
       <div className="invite-card-preview" aria-label="Shareable race invite preview">
         <div className="invite-topline">
-          <span>Find my Screen race night</span>
+          <span>FindMyScreen race night</span>
           <b>F1</b>
         </div>
         <div className="invite-race">
@@ -598,7 +598,7 @@ async function createInviteImage(venue: Venue, action: InviteImageAction) {
   ctx.fillStyle = "#e10600";
   roundRect(ctx, 94, 94, 236, 58, 10);
   ctx.fill();
-  drawText(ctx, "FIND MY SCREEN RACE NIGHT", 118, 132, 26, 900, "#ffffff", 620);
+  drawText(ctx, "FINDMYSCREEN RACE NIGHT", 118, 132, 26, 900, "#ffffff", 620);
   drawText(ctx, "F1", 820, 168, 118, 900, "rgba(255, 255, 255, 0.9)", 180);
 
   drawText(ctx, "ONE PLAN. NO GROUP DEBATE.", 94, 640, 30, 900, "#ffb000", 880);
@@ -619,7 +619,7 @@ async function createInviteImage(venue: Venue, action: InviteImageAction) {
   const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
   if (!blob) return;
 
-  const fileName = `find-my-screen-${slugify(venue.name)}-${slugify(nextRace.name)}.png`;
+  const fileName = `findmyscreen-${slugify(venue.name)}-${slugify(nextRace.name)}.png`;
   const file = new File([blob], fileName, { type: "image/png" });
 
   if (action === "share" && navigator.canShare?.({ files: [file] })) {

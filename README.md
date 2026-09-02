@@ -1,4 +1,4 @@
-# Find my Screen Bangalore
+# FindMyScreen Bangalore
 
 A separate Build Week project for finding sports screenings in nearby Bangalore pubs.
 

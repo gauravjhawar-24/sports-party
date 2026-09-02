@@ -15,7 +15,7 @@ export default function AdminPage() {
         <Link href="/f1">Back to product</Link>
         <div>
           <span>Admin</span>
-          <strong>Find my Screen proof table</strong>
+          <strong>FindMyScreen proof table</strong>
         </div>
       </header>
 

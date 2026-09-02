@@ -3,7 +3,7 @@ import { ConvexClientProvider } from "./ConvexClientProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Find my Screen Bangalore",
+  title: "FindMyScreen Bangalore",
   description: "Find sports screenings in nearby Bangalore pubs."
 };
 
