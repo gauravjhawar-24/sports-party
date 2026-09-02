@@ -87,9 +87,11 @@ Advice, a transcript, an extraction, search results or a chat response alone do 
 2. Product shows the next F1 main race and asks for the user's Bangalore area.
 3. User enters a free-text area such as "Bellandur" or "near HSR."
 4. Product ranks all Bangalore F1 venues by evidence tag first and nearby location second.
-5. Product shows one best race invite card plus two backup pubs.
-6. User clicks Share invite if the best pub is Verified, or Call pub if it is not verified.
-7. Product asks for email, records the meaningful action, then completes the share/call action.
+5. Product shows one best pub plus two backup pubs.
+6. Host can click Call pub, Open map, or Create Watch Party on any venue.
+7. Create Watch Party asks for host name and email, creates a dedicated party page, and counts the host as "I'm in."
+8. Host shares the watch-party link with friends.
+9. Friend opens the link, enters name, chooses "I'm in", "Maybe", or "Out", and sees live RSVP stats.
 
 ### inputs
 
@@ -99,25 +101,29 @@ Advice, a transcript, an extraction, search results or a chat response alone do 
 | Venue data | Convex approved venue signals + code-file fallback | Must include evidence tag, source URL, area and review status | Only approved online signals can enter customer ranking |
 | Next F1 race | Manual entry from official F1 calendar for V1 | Must be main race only, not qualifying or practice | Race name and date shown in UI |
 | Email | User input after Share/Call click | Needed for meaningful action tracking | Basic email format check |
+| Host name | User input before watch party creation | Needed to count the host as attending | Required, max 60 characters |
+| RSVP name | Friend input on watch-party page | May include nicknames or emoji | Required, max 60 characters |
+| RSVP decision | Button choice | Must be one of "I'm in", "Maybe", "Out" | One choice required |
 
 ### outputs and state changes
 
 | Output/state change | Consumer | Required format | Proof of completion |
 |---|---|---|---|
-| Best pub invite | End user and their friends | Race name/date, pub, area, evidence status, vibe, map link | Share invite text generated |
+| Watch party page | Host and friends | Race name/date, pub, area, invite card, map link, RSVP form and stats | Dedicated party URL opens |
 | Two backups | End user | Pub cards with reason and action | Visible on result screen |
 | Meaningful action | Builder/reviewer | `share_plan_clicked` or `call_pub_clicked` | Convex count and screenshot |
+| RSVP response | Host/friends/reviewer | Name grouped under In, Maybe, or Out | Convex count and watch-party page |
 | Visitor analytics | Builder/reviewer | Unique visitor count | Read-only analytics view |
 
 ### what the product must remember
 
-- within one session: entered area, recommended pub, backup pubs, pending email modal.
-- across sessions (Convex tables): venue data, search runs, emails, meaningful actions, timestamps.
+- within one session: entered area, recommended pub, backup pubs, pending host modal.
+- across sessions (Convex tables): venue data, search runs, emails, meaningful actions, watch parties, RSVP responses, timestamps.
 - what it must deliberately forget: exact user location beyond the area text; no phone number in V1.
 
 ### human review boundary
 
-- What can be automated: area matching, venue ranking, invite text generation, action tracking.
+- What can be automated: area matching, venue ranking, watch-party creation, host RSVP creation, friend RSVP tracking.
 - What requires confirmation: whether a pub is Verified today.
 - What must be escalated: missing phone number, broken map link, unclear screening status.
 - How uncertainty is exposed: evidence tags and copy such as Needs call.
@@ -130,11 +136,11 @@ A directory page listing pubs with filters for sport and area.
 
 ### the non-obvious choice
 
-The product chooses one best pub and turns it into an invitation, because the real job is reducing group-chat debate, not browsing more options.
+The product chooses one best pub and turns it into a watch-party decision page, because the real job is reducing group-chat debate, not browsing more options.
 
 ### the moment they screenshot
 
-The personalized artifact is the F1 race invite: "Italian GP watch plan: [Pub], [Area], [status], [map]. Who's in?" If this does not get shared, reach will come from direct invites and the GrowthX community post.
+The personalized artifact is the F1 watch-party invite card plus live RSVP page: "Italian GP at [Pub]. I'm in / Maybe / Out." If this does not get shared, reach will come from direct invites and the GrowthX community post.
 
 ### ideas deliberately rejected
 
@@ -361,6 +367,25 @@ Acceptance test:
 
 If I am behind, cut to: `fix only the blocker that stops Share/Call; no new features.`
 
+#### M4A — Watch Party v1 development plan
+
+This is the approved refinement after user feedback: the invite should not restart messy WhatsApp debate. It should become a live decision page.
+
+| # | Milestone | Layer | Acceptance test | If behind, cut to this |
+|---:|---|---|---|---|
+| 1 | I can see `Create Watch Party` beside Call pub and Open map on the best venue and backup cards. | Frontend | Every visible venue card has the button. | Add it only to the best venue card. |
+| 2 | I can click `Create Watch Party` and see one small host form asking for name and email. | Frontend | Empty name/email shows a friendly error; valid input can continue. | Use browser prompt-style modal, no extra styling. |
+| 3 | I can submit host name and email and create a watch-party record. | Database | Convex stores venue id, venue name, race name, area, host name, host email and created time. | Store only venue id, host email and created time. |
+| 4 | I can automatically count the host as `I'm in`. | Database | Convex stores the host RSVP linked to the party. | Show host name locally on first load, then persist later. |
+| 5 | I can land on `/f1/party/[partyId]` and see only that party: invite card, venue, race time, map and shareable link. | Frontend / Backend | Opening the URL in a new tab loads the same party without the venue list. | Reuse the existing invite page layout. |
+| 6 | I can copy or share the party link from the party page. | Frontend | Copy button copies the party URL and shows a success message. | Show the link in a readonly input. |
+| 7 | A friend can enter name and choose `I'm in`, `Maybe`, or `Out` on one screen. | Frontend | Empty name is blocked; one choice is required; emoji names do not break layout. | Name + three buttons, no modal. |
+| 8 | A friend can submit once without duplicate rows from double-click. | Frontend / Database | Submit button disables while saving; Convex stores one response per submit. | Disable the button while saving. |
+| 9 | I can refresh or reopen the party link and still see grouped stats. | Database | In/Maybe/Out counts and names survive refresh. | Show counts only if names grouping takes too long. |
+| 10 | I can verify the proof in Convex and PostHog. | Database / Analytics | Convex shows watch party and RSVP rows; PostHog shows party page visits. | Convex proof only; PostHog pageview already covers visitors. |
+
+Not this week: group chat, comments, multiple venue voting, payment/booking, host-only login, edit RSVP, WhatsApp API automation.
+
 ### M5 — verify and submit (Fri 4 Sep night -> Sat 5 Sep, 11:00 AM)
 
 **Purpose:** milestone 06. No new features.
@@ -522,11 +547,11 @@ M1 — one ugly complete flow.
 
 ### current blocker
 
-No current blocker. Visitor analytics are wired, a live event has been seen in PostHog, and read-only judging access has been saved.
+User feedback found a missing post-share flow: the invite image still leaves friends to debate in WhatsApp. Watch Party RSVP flow is now the active refinement.
 
 ### next single action
 
-Run the final phone check on `/`, `/f1`, area search, Share invite, email unlock and Call pub.
+Build M4A.1: add `Create Watch Party` on venue cards, then M4A.2: host name/email form.
 
 ## 15. decision log
 
@@ -539,3 +564,4 @@ Run the final phone check on `/`, `/f1`, area search, Share invite, email unlock
 | Tue 1 Sep 2026 | Share/Call requires email first | Captures meaningful action after user sees value | Adds Convex signup/action tracking |
 | Tue 1 Sep 2026 | Proof table moved to `/admin` | Customer-facing product should not show internal evidence tables | Keeps `/` clean and keeps demo proof separate |
 | Tue 1 Sep 2026 | Added hybrid Tavily data pipeline | User wanted smart online data discovery, filtering, approval, then customer display | Adds `/admin/venues`, Convex venue candidates, and approved signals in product ranking |
+| Wed 2 Sep 2026 | Added Watch Party RSVP plan | User test showed invite sharing still creates messy group debate | Adds host/friend flows, party page, RSVP stats and Convex persistence to the active plan |
