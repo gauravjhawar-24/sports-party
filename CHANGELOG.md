@@ -56,3 +56,4 @@
 - Wed 2 Sep 2026: Cleaned up the watch-party lookup box and expanded F1 results from three venues to six.
 - Wed 2 Sep 2026: Added versioned invite-style link previews for watch-party pages so shared RSVP links show race and venue context.
 - Wed 2 Sep 2026: Removed the old download-poster invite actions so sharing focuses on the watch-party link preview.
+- Thu 3 Sep 2026: Recreated the F1 finder start screen from the Figma reference with race-control styling, start lights, and a detailed race panel.

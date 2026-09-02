@@ -339,19 +339,31 @@ export function HomeClient({
   }
 
   return (
-    <main className="race-shell">
+    <main className={`race-shell ${!hasSearched ? "race-shell-start" : ""}`}>
       {!hasSearched ? (
         <section className="start-screen">
           <header className="topbar">
-            <div className="brand-mark">FMS</div>
-            <div>
-              <strong>FindMyScreen Bangalore</strong>
-              <span>F1 race-night finder</span>
+            <div className="topbar-left">
+              <div className="brand-mark">FMS</div>
+              <span>FindMyScreen Bangalore</span>
+              <span>RND 16 · Italian Grand Prix · Autodromo Nazionale Monza</span>
+            </div>
+            <div className="topbar-right">
+              <span aria-hidden="true" />
+              <strong>F1 race-night finder</strong>
             </div>
           </header>
 
           <div className="hero-grid">
             <div className="hero-copy">
+              <div className="start-lights" aria-label="Race lights on">
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <em>Lights on</em>
+              </div>
               <p className="eyebrow">Race control for pub plans</p>
               <h1>Pick one place for the next F1 race.</h1>
               <p className="lead">
@@ -376,13 +388,14 @@ export function HomeClient({
               </form>
 
               <div className="quick-areas" aria-label="Quick Bangalore areas">
-                {quickAreas.map((quickArea) => (
+                {quickAreas.map((quickArea, index) => (
                   <a href={areaHref(quickArea)} key={quickArea} onClick={(event) => {
                     event.preventDefault();
                     window.history.pushState(null, "", areaHref(quickArea));
                     setArea(quickArea);
                     if (!isSearching) void searchArea(quickArea);
                   }}>
+                    <span>S{index + 1}</span>
                     {quickArea}
                   </a>
                 ))}
@@ -398,12 +411,53 @@ export function HomeClient({
             </div>
 
             <aside className="race-panel" aria-label="Next F1 race">
-              <span>Next main race</span>
-              <strong>{nextRace.name}</strong>
-              <p>{nextRace.circuit}</p>
-              <div>
-                <b>{nextRace.raceDate}</b>
-                <b>{nextRace.raceTime}</b>
+              <div className="race-panel-header">
+                <span>Next main race</span>
+                <b>RND 16/24</b>
+              </div>
+              <div className="race-panel-title">
+                <strong>{nextRace.name}</strong>
+                <p>{nextRace.circuit}</p>
+              </div>
+              <dl className="race-facts">
+                <div>
+                  <dt>Date</dt>
+                  <dd>{nextRace.raceDate.replace("Sunday, ", "Sun ")}</dd>
+                </div>
+                <div>
+                  <dt>Start</dt>
+                  <dd>{nextRace.raceTime.replace(" PM", "")} IST</dd>
+                </div>
+                <div>
+                  <dt>Laps</dt>
+                  <dd>53</dd>
+                </div>
+                <div>
+                  <dt>Dist.</dt>
+                  <dd>306.720 km</dd>
+                </div>
+                <div>
+                  <dt>Circuit</dt>
+                  <dd>5.793 km</dd>
+                </div>
+              </dl>
+              <div className="race-countdown" aria-label="Race countdown">
+                <span>Race starts in</span>
+                <div>
+                  <b>03<small>D</small></b>
+                  <b>18<small>H</small></b>
+                  <b>12<small>M</small></b>
+                  <b>15<small>S</small></b>
+                </div>
+              </div>
+              <div className="upcoming-races">
+                <span>Upcoming</span>
+                <ol>
+                  <li><b>17</b><strong>Singapore GP<small>Marina Bay</small></strong><em>21 Sep</em></li>
+                  <li><b>18</b><strong>USGP Austin<small>COTA</small></strong><em>19 Oct</em></li>
+                  <li><b>19</b><strong>Mexico City GP<small>Hermanos Rodriguez</small></strong><em>26 Oct</em></li>
+                  <li><b>20</b><strong>Sao Paulo GP<small>Interlagos</small></strong><em>09 Nov</em></li>
+                </ol>
               </div>
             </aside>
           </div>

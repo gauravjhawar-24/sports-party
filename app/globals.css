@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap");
+
 :root {
   --track: #07080b;
   --carbon: #101116;
@@ -331,53 +333,96 @@ a {
   padding: 24px 0 56px;
 }
 
+.race-shell-start {
+  width: 100%;
+  padding: 0;
+}
+
 .start-screen {
   display: grid;
-  min-height: calc(100vh - 80px);
+  min-height: 100vh;
   grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 9% 13%, rgba(225, 6, 0, 0.18), transparent 15%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(180deg, #191919 0%, #151515 46%, #101010 100%);
+  background-size: auto, 72px 72px, 100% 100%;
 }
 
 .topbar {
   display: flex;
-  gap: 12px;
   align-items: center;
-  margin-bottom: 18px;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 56px;
+  border-bottom: 1px solid var(--red);
+  padding: 0 28px;
+  background: #1b1b1b;
+  font-family: "JetBrains Mono", monospace;
+  text-transform: uppercase;
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.topbar-left {
+  gap: 18px;
+}
+
+.topbar-left > span {
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 18px;
+  color: rgba(247, 247, 242, 0.46);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  white-space: nowrap;
+}
+
+.topbar-right {
+  gap: 8px;
+}
+
+.topbar-right span {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--red);
+}
+
+.topbar-right strong {
+  color: rgba(247, 247, 242, 0.44);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 4px;
 }
 
 .brand-mark {
   display: grid;
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--panel);
-  color: var(--red);
-  font-size: 15px;
-  font-weight: 900;
-}
-
-.topbar strong,
-.topbar span {
-  display: block;
-}
-
-.topbar strong {
-  font-size: 15px;
-}
-
-.topbar span {
-  margin-top: 2px;
-  color: rgba(247, 247, 242, 0.64);
+  border: 0;
+  border-radius: 0;
+  background: var(--red);
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
   font-size: 13px;
+  font-weight: 900;
 }
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 0;
   align-items: stretch;
-  align-self: center;
+  min-height: calc(100vh - 56px);
+  align-self: stretch;
 }
 
 .hero-copy,
@@ -392,22 +437,28 @@ a {
 }
 
 .hero-copy {
-  min-height: 430px;
-  padding: clamp(28px, 6vw, 64px);
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: 42px 44px 38px;
   position: relative;
   overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .hero-copy::after {
   content: "";
   position: absolute;
-  right: -120px;
-  bottom: 28px;
-  width: 360px;
-  height: 72px;
-  border-top: 3px solid rgba(225, 6, 0, 0.85);
-  border-bottom: 3px solid rgba(255, 255, 255, 0.22);
-  transform: rotate(-12deg);
+  right: 16px;
+  bottom: -88px;
+  width: 330px;
+  height: 150px;
+  border: 14px solid rgba(225, 6, 0, 0.08);
+  border-radius: 70px;
   z-index: 0;
 }
 
@@ -417,11 +468,49 @@ a {
 }
 
 .eyebrow {
-  margin: 0 0 14px;
+  margin: 26px 0 28px;
   color: var(--red);
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.start-lights {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  height: 62px;
+}
+
+.start-lights span {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #f20a05;
+  box-shadow: 0 0 28px rgba(242, 10, 5, 0.72), 0 0 52px rgba(242, 10, 5, 0.22);
+}
+
+.start-lights span::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 39px;
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.start-lights em {
+  align-self: center;
+  margin-left: 12px;
+  color: rgba(247, 247, 242, 0.22);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 4px;
   text-transform: uppercase;
 }
 
@@ -432,29 +521,34 @@ p {
   margin-top: 0;
 }
 
-h1 {
-  max-width: 760px;
-  margin-bottom: 18px;
+.hero-copy h1 {
+  max-width: 620px;
+  margin-bottom: 24px;
+  border-left: 7px solid var(--red);
   color: white;
-  font-size: clamp(46px, 8vw, 92px);
-  line-height: 0.92;
+  padding-left: 16px;
+  font-family: "Barlow Condensed", Arial, Helvetica, sans-serif;
+  font-size: 104px;
+  font-weight: 900;
+  line-height: 0.88;
   letter-spacing: 0;
   text-wrap: balance;
   text-transform: uppercase;
 }
 
 .lead {
-  max-width: 620px;
+  max-width: 610px;
   color: rgba(247, 247, 242, 0.72);
-  font-size: 19px;
-  line-height: 1.45;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
   text-wrap: pretty;
 }
 
 .area-form {
   display: grid;
   gap: 10px;
-  margin-top: 34px;
+  margin-top: 30px;
   position: relative;
   z-index: 1;
 }
@@ -465,36 +559,40 @@ h1 {
 .section-heading span,
 .backup-number {
   color: rgba(247, 247, 242, 0.6);
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   font-weight: 900;
-  letter-spacing: 0;
+  letter-spacing: 4px;
   text-transform: uppercase;
 }
 
 .area-form div {
   display: grid;
   grid-template-columns: minmax(180px, 1fr) auto;
-  gap: 8px;
-  max-width: 620px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 6px;
+  gap: 0;
+  max-width: 1032px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 0;
+  background: #242424;
+  padding: 0;
 }
 
 .area-form input {
   min-width: 0;
-  height: 48px;
+  height: 50px;
   border: 0;
-  border-radius: 5px;
-  background: white;
-  color: var(--ink);
+  border-radius: 0;
+  background: #242424;
+  color: white;
   outline: none;
-  padding: 0 14px;
+  padding: 0 18px;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .area-form input:focus {
-  box-shadow: 0 0 0 3px rgba(225, 6, 0, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(225, 6, 0, 0.7);
 }
 
 .area-form button,
@@ -503,18 +601,22 @@ h1 {
 .backup-actions button,
 .backup-actions a {
   border: 0;
-  border-radius: 5px;
+  border-radius: 0;
   background: var(--red);
   color: white;
   cursor: pointer;
-  padding: 0 18px;
+  padding: 0 28px;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 16px;
   font-weight: 900;
+  letter-spacing: 1px;
   text-decoration: none;
   transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1), background 140ms ease;
+  text-transform: uppercase;
 }
 
 .area-form button {
-  height: 48px;
+  height: 50px;
 }
 
 .area-form button:active,
@@ -554,15 +656,24 @@ h1 {
   display: inline-flex;
   min-height: 36px;
   align-items: center;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: white;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0;
+  background: transparent;
+  color: rgba(247, 247, 242, 0.82);
   cursor: pointer;
-  padding: 0 12px;
-  font-size: 14px;
-  font-weight: 800;
+  padding: 0 13px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
   text-decoration: none;
+}
+
+.quick-areas a span {
+  color: var(--red);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0;
 }
 
 .quick-areas.compact {
@@ -571,42 +682,179 @@ h1 {
 
 .race-panel {
   display: flex;
-  min-height: 430px;
+  min-height: 0;
   flex-direction: column;
+  justify-content: flex-start;
+  border: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
+  background: #202020;
+  color: var(--panel);
+  box-shadow: none;
+}
+
+.race-panel-header {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 24px;
-  background:
-    linear-gradient(135deg, rgba(225, 6, 0, 0.26), transparent 32%),
-    var(--panel);
-  color: var(--ink);
+  min-height: 40px;
+  background: var(--red);
+  color: white;
+  padding: 0 24px;
+  font-family: "JetBrains Mono", monospace;
 }
 
-.race-panel span {
-  color: var(--red);
-  font-size: 12px;
-  font-weight: 900;
+.race-panel-header span,
+.race-countdown > span,
+.upcoming-races > span {
+  color: rgba(247, 247, 242, 0.6);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 4px;
   text-transform: uppercase;
 }
 
-.race-panel strong {
+.race-panel-header span {
+  color: white;
+}
+
+.race-panel-header b {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.race-panel-title {
+  padding: 30px 24px 24px;
+}
+
+.race-panel-title strong {
   display: block;
-  margin-top: auto;
-  font-size: 44px;
-  line-height: 0.95;
+  max-width: 230px;
+  color: white;
+  font-family: "Barlow Condensed", Arial, Helvetica, sans-serif;
+  font-size: 43px;
+  font-weight: 900;
+  line-height: 0.78;
   text-transform: uppercase;
 }
 
-.race-panel p {
-  margin: 12px 0 20px;
-  color: var(--muted);
-  font-size: 20px;
+.race-panel-title p {
+  margin: 14px 0 0;
+  color: rgba(247, 247, 242, 0.36);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
-.race-panel div {
+.race-facts {
   display: grid;
-  gap: 8px;
-  border-top: 1px solid var(--line-dark);
-  padding-top: 16px;
+}
+
+.race-facts div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  min-height: 38px;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 24px;
+}
+
+.race-facts dt,
+.race-facts dd {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.race-facts dt {
+  color: rgba(247, 247, 242, 0.26);
+}
+
+.race-facts dd {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.7);
+  font-weight: 700;
+}
+
+.race-countdown {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px;
+}
+
+.race-countdown div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.race-countdown b {
+  display: grid;
+  min-height: 62px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.race-countdown small {
+  color: rgba(247, 247, 242, 0.35);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8px;
+}
+
+.upcoming-races {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 24px 24px;
+}
+
+.upcoming-races ol {
+  display: grid;
+  gap: 0;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.upcoming-races li {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 54px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: "JetBrains Mono", monospace;
+}
+
+.upcoming-races li > b {
+  color: var(--red);
+  font-size: 10px;
+}
+
+.upcoming-races strong {
+  display: grid;
+  color: rgba(247, 247, 242, 0.54);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.upcoming-races small {
+  color: rgba(247, 247, 242, 0.28);
+  font-size: 9px;
+}
+
+.upcoming-races em {
+  color: rgba(247, 247, 242, 0.36);
+  font-size: 10px;
+  font-style: normal;
 }
 
 .pit-message {
@@ -1300,6 +1548,10 @@ h2 {
   text-decoration: none;
 }
 
+.my-parties-box button {
+  border-radius: 0;
+}
+
 .party-venue-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1340,9 +1592,21 @@ h2 {
 }
 
 .my-parties-box {
+  position: relative;
   margin-top: 18px;
-  background: rgb(29, 30, 35);
-  padding: 16px;
+  border-radius: 0;
+  background: rgba(34, 34, 34, 0.9);
+  padding: 18px 18px 18px 24px;
+}
+
+.my-parties-box::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  bottom: -1px;
+  width: 5px;
+  background: var(--red);
 }
 
 .my-parties-header {
@@ -1369,7 +1633,7 @@ h2 {
   min-width: 0;
   height: 42px;
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: 0;
   background: rgba(0, 0, 0, 0.28);
   color: white;
   padding: 0 10px;
@@ -2022,6 +2286,50 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .race-shell-start {
+    width: 100%;
+    padding: 0;
+  }
+
+  .start-screen {
+    overflow: visible;
+  }
+
+  .topbar {
+    min-height: auto;
+    align-items: flex-start;
+    padding: 14px 18px;
+  }
+
+  .topbar-left {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .topbar-left > span:last-child,
+  .topbar-right {
+    display: none;
+  }
+
+  .hero-grid {
+    min-height: auto;
+  }
+
+  .hero-copy {
+    min-height: calc(100vh - 64px);
+    padding: 34px 18px 26px;
+  }
+
+  .hero-copy h1 {
+    max-width: 620px;
+    font-size: 74px;
+  }
+
+  .race-panel {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-left: 0;
+  }
+
   .hero-copy,
   .race-panel,
   .landing-copy {
@@ -2038,6 +2346,11 @@ h3 {
   .race-shell {
     width: min(100% - 24px, 1180px);
     padding-top: 16px;
+  }
+
+  .race-shell-start {
+    width: 100%;
+    padding: 0;
   }
 
   .dedicated-invite-page {
@@ -2092,11 +2405,17 @@ h3 {
 
   .landing-copy,
   .live-sport-panel,
-  .hero-copy,
-  .race-panel,
   .dedicated-venue-summary,
   .invite-content {
     padding: 18px;
+  }
+
+  .hero-copy {
+    padding: 28px 18px 24px;
+  }
+
+  .race-panel {
+    padding: 0;
   }
 
   .landing-copy h1 {
@@ -2116,12 +2435,15 @@ h3 {
     font-size: 31px;
   }
 
-  h1 {
-    font-size: 44px;
+  .hero-copy h1 {
+    border-left-width: 5px;
+    padding-left: 12px;
+    font-size: 58px;
+    line-height: 0.86;
   }
 
   .lead {
-    font-size: 17px;
+    font-size: 14px;
   }
 
   .hero-copy::after {
@@ -2135,6 +2457,43 @@ h3 {
 
   .area-form button {
     width: 100%;
+  }
+
+  .area-form label,
+  .eyebrow {
+    letter-spacing: 2px;
+  }
+
+  .start-lights {
+    gap: 12px;
+    height: 52px;
+  }
+
+  .start-lights span {
+    width: 24px;
+    height: 24px;
+  }
+
+  .start-lights em {
+    display: none;
+  }
+
+  .quick-areas a {
+    min-height: 34px;
+    font-size: 11px;
+  }
+
+  .race-panel-title strong {
+    font-size: 44px;
+  }
+
+  .race-countdown div {
+    gap: 8px;
+  }
+
+  .race-countdown b {
+    min-height: 54px;
+    font-size: 24px;
   }
 
   .invite-reveal-header {
@@ -2276,10 +2635,6 @@ h3 {
 
   .invite-email-form button {
     width: 100%;
-  }
-
-  .race-panel strong {
-    font-size: 36px;
   }
 
   .result-label {
