@@ -241,7 +241,7 @@ export function rankVenueList(areaInput: string, venueList: Venue[]) {
   return {
     normalizedArea,
     isSupportedArea: Boolean(normalizedArea),
-    results: ranked.slice(0, 3),
+    results: ranked.slice(0, 6),
     popularAreas: ["Bellandur", "HSR Layout", "Sarjapur Road", "Koramangala", "Indiranagar", "MG Road", "Whitefield", "JP Nagar"]
   };
 }

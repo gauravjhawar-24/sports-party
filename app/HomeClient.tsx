@@ -84,7 +84,9 @@ export function HomeClient({
     return [...approvedVenues, ...venues];
   }, [approvedSignalRows]);
   const run = useMemo(() => rankVenueList(submittedArea, venueList), [submittedArea, venueList]);
-  const [bestVenue, ...backupVenues] = run.results;
+  const bestVenue = run.results[0];
+  const backupVenues = run.results.slice(1, 3);
+  const moreVenues = run.results.slice(3, 6);
   const primaryAction = bestVenue?.evidenceTag === "Verified" ? "Share invite" : "Call pub";
   const routePath = basePath || "/";
   const queryPrefix = routePath === "/" ? "/?" : `${routePath}?`;
@@ -515,6 +517,29 @@ export function HomeClient({
                   ))}
                 </div>
               </div>
+
+              {moreVenues.length ? (
+                <section className="more-options" aria-label="More F1 screening options">
+                  <div className="section-heading">
+                    <span>More options</span>
+                    <strong>Three more picks if the top choices are inconvenient</strong>
+                  </div>
+                  <div className="more-option-grid">
+                    {moreVenues.map((venue, index) => (
+                      <article className="more-option-card" key={venue.id}>
+                        <div>
+                          <span className="backup-number">0{index + 4}</span>
+                          <EvidenceBadge tag={venue.evidenceTag} />
+                        </div>
+                        <h3>{venue.name}</h3>
+                        <p>{venue.area}</p>
+                        <small>{venue.evidence}</small>
+                        <button type="button" onClick={() => startWatchParty(venue)}>Create Watch Party</button>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
             </>
           ) : null}
         </section>
@@ -621,12 +646,14 @@ function MyWatchParties({
 }) {
   return (
     <section className="my-parties-box" aria-label="Find your watch parties">
-      <div>
+      <div className="my-parties-header">
         <span>Already made a plan?</span>
         <strong>Find your watch parties</strong>
       </div>
       <form onSubmit={onSubmit}>
+        <label htmlFor="watch-party-email">Host email</label>
         <input
+          id="watch-party-email"
           value={lookupEmail}
           onChange={(event) => onLookupEmailChange(event.target.value)}
           placeholder="Email used by host"

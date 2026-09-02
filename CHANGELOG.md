@@ -53,3 +53,4 @@
 - Wed 2 Sep 2026: Added RCB Bar & Cafe and Pecos as real central Bangalore venue options that need a same-day F1 screening call.
 - Wed 2 Sep 2026: Added Pecos Stones Indiranagar as a real venue option that needs a same-day F1 screening call.
 - Wed 2 Sep 2026: Marked Pecos Brigade Road and Pecos Stones Indiranagar as verified after builder confirmation.
+- Wed 2 Sep 2026: Cleaned up the watch-party lookup box and expanded F1 results from three venues to six.
