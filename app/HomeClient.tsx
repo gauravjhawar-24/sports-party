@@ -13,6 +13,9 @@ type PendingActionTarget = {
   action: PendingAction;
   venue: Venue;
 };
+type PendingPartyTarget = {
+  venue: Venue;
+};
 type RevealedPhone = {
   venue: Venue;
   phone: string;
@@ -47,18 +50,24 @@ export function HomeClient({
   const [hasSearched, setHasSearched] = useState(Boolean(initialArea));
   const [copiedInvite, setCopiedInvite] = useState(false);
   const [pendingAction, setPendingAction] = useState<PendingActionTarget | null>(null);
+  const [pendingParty, setPendingParty] = useState<PendingPartyTarget | null>(null);
   const [email, setEmail] = useState("");
+  const [hostName, setHostName] = useState("");
+  const [hostEmail, setHostEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [hostError, setHostError] = useState("");
   const [areaError, setAreaError] = useState("");
   const [actionStatus, setActionStatus] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [isCompletingAction, setIsCompletingAction] = useState(false);
+  const [isCreatingParty, setIsCreatingParty] = useState(false);
   const [revealedPhone, setRevealedPhone] = useState<RevealedPhone>(null);
   const [revealedInvite, setRevealedInvite] = useState<RevealedInvite>(
     initialInviteVenue ? { venue: initialInviteVenue, text: buildInviteText(initialInviteVenue) } : null
   );
   const recordSearch = useMutation(api.actions.recordSearch);
   const recordAction = useMutation(api.actions.recordAction);
+  const createWatchParty = useMutation(api.actions.createWatchParty);
   const approvedSignals = useQuery(api.actions.approvedVenueCandidates);
   const approvedSignalRows = approvedSignals ?? initialApprovedSignals;
 
@@ -127,6 +136,73 @@ export function HomeClient({
     setActionStatus("");
     setRevealedPhone(null);
     setRevealedInvite(null);
+  }
+
+  function startWatchParty(venue: Venue) {
+    setPendingParty({ venue });
+    setHostError("");
+    setActionStatus("");
+    setRevealedPhone(null);
+    setRevealedInvite(null);
+  }
+
+  async function submitWatchParty(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!pendingParty || isCreatingParty) return;
+
+    const trimmedName = hostName.trim();
+    const trimmedEmail = hostEmail.trim();
+
+    if (!trimmedName) {
+      setHostError("Enter your name to create the watch party.");
+      return;
+    }
+
+    if (trimmedName.length > 60) {
+      setHostError("Keep the name under 60 characters.");
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
+      setHostError("Enter a valid email to create the watch party.");
+      return;
+    }
+
+    setIsCreatingParty(true);
+    setHostError("");
+
+    try {
+      const venue = pendingParty.venue;
+      const partyId = await createWatchParty({
+        hostName: trimmedName,
+        hostEmail: trimmedEmail,
+        areaInput: submittedArea || venue.area,
+        normalizedArea: run.normalizedArea || venue.area.toLowerCase(),
+        venueId: venue.id,
+        venueName: venue.name,
+        venueArea: venue.area,
+        venueEvidenceTag: venue.evidenceTag,
+        venueEvidence: venue.evidence,
+        venueVibe: venue.vibe,
+        mapUrl: venue.mapUrl,
+        raceName: nextRace.name,
+        raceDate: nextRace.raceDate,
+        raceTime: nextRace.raceTime
+      });
+
+      captureProductEvent("findmyscreen_watch_party_created", {
+        area_input: submittedArea || venue.area,
+        normalized_area: run.normalizedArea || venue.area.toLowerCase(),
+        venue_id: venue.id,
+        venue_name: venue.name
+      });
+
+      window.location.href = `/f1/party/${partyId}`;
+    } catch {
+      setHostError("Could not create the watch party. Please try again.");
+    } finally {
+      setIsCreatingParty(false);
+    }
   }
 
   async function revealInvite(venue: Venue) {
@@ -385,6 +461,9 @@ export function HomeClient({
                           Share invite
                         </a>
                       ) : null}
+                      <button type="button" onClick={() => startWatchParty(bestVenue)}>
+                        Create Watch Party
+                      </button>
                       <a className="secondary-action" href={bestVenue.mapUrl} target="_blank" rel="noreferrer">
                         Open map
                       </a>
@@ -419,6 +498,7 @@ export function HomeClient({
                       <div className="backup-actions">
                         <button type="button" onClick={() => startAction("call_pub", venue)}>Call pub</button>
                         <a href={inviteHref(venue)}>Share invite</a>
+                        <button type="button" onClick={() => startWatchParty(venue)}>Create Watch Party</button>
                         <a href={venue.mapUrl} target="_blank" rel="noreferrer">Map</a>
                       </div>
                     </article>
@@ -450,6 +530,35 @@ export function HomeClient({
               <button type="button" onClick={() => setPendingAction(null)} disabled={isCompletingAction}>Cancel</button>
               <button type="submit" disabled={isCompletingAction}>
                 {isCompletingAction ? "Loading..." : "Continue"}
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : null}
+
+      {pendingParty ? (
+        <div className="modal-backdrop" role="presentation">
+          <form className="email-modal" onSubmit={submitWatchParty}>
+            <span>Create Watch Party</span>
+            <h2>Enter your name and email</h2>
+            <p>You will be counted as I'm in for {pendingParty.venue.name}.</p>
+            <input
+              autoFocus
+              value={hostName}
+              onChange={(event) => setHostName(event.target.value)}
+              placeholder="Your name"
+              maxLength={60}
+            />
+            <input
+              value={hostEmail}
+              onChange={(event) => setHostEmail(event.target.value)}
+              placeholder="you@example.com"
+            />
+            {hostError ? <p className="email-error">{hostError}</p> : null}
+            <div>
+              <button type="button" onClick={() => setPendingParty(null)} disabled={isCreatingParty}>Cancel</button>
+              <button type="submit" disabled={isCreatingParty}>
+                {isCreatingParty ? "Creating..." : "Create party"}
               </button>
             </div>
           </form>
@@ -521,27 +630,7 @@ export function InviteReveal({
         <span>Invite ready</span>
         <strong>Send this to the group</strong>
       </div>
-      <div className="invite-card-preview" aria-label="Shareable race invite preview">
-        <div className="invite-topline">
-          <span>FindMyScreen race night</span>
-          <b>F1</b>
-        </div>
-        <div className="invite-race">
-          <span>Next main race</span>
-          <strong>{nextRace.name}</strong>
-          <p>{nextRace.raceDate} - {nextRace.raceTime}</p>
-        </div>
-        <div className="invite-place">
-          <span>Watching at</span>
-          <h3>{invite.venue.name}</h3>
-          <p>{invite.venue.area}</p>
-        </div>
-        <div className="invite-proof-row">
-          <small>{invite.venue.evidenceTag} pick</small>
-          <em>One plan. No group debate.</em>
-        </div>
-        <strong className="invite-question">Who's in?</strong>
-      </div>
+      <InviteCardPreview venue={invite.venue} />
       {!isUnlocked ? (
         <form className="invite-email-form" onSubmit={submitInviteEmail}>
           <label htmlFor="invite-email">Enter email to download or share this invite</label>
@@ -569,6 +658,32 @@ export function InviteReveal({
           <button type="button" onClick={onCopy}>Copy text</button>
         </div>
       )}
+    </div>
+  );
+}
+
+export function InviteCardPreview({ venue }: { venue: { name: string; area: string; evidenceTag: string } }) {
+  return (
+    <div className="invite-card-preview" aria-label="Shareable race invite preview">
+      <div className="invite-topline">
+        <span>FindMyScreen race night</span>
+        <b>F1</b>
+      </div>
+      <div className="invite-race">
+        <span>Next main race</span>
+        <strong>{nextRace.name}</strong>
+        <p>{nextRace.raceDate} - {nextRace.raceTime}</p>
+      </div>
+      <div className="invite-place">
+        <span>Watching at</span>
+        <h3>{venue.name}</h3>
+        <p>{venue.area}</p>
+      </div>
+      <div className="invite-proof-row">
+        <small>{venue.evidenceTag} pick</small>
+        <em>One plan. No group debate.</em>
+      </div>
+      <strong className="invite-question">Who's in?</strong>
     </div>
   );
 }

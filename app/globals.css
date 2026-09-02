@@ -1206,6 +1206,247 @@ h2 {
   text-decoration: none;
 }
 
+.party-page {
+  display: grid;
+  gap: 18px;
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.party-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+  gap: 18px;
+  align-items: stretch;
+  min-height: calc(100vh - 180px);
+}
+
+.party-main {
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(225, 6, 0, 0.12);
+  padding: 14px;
+}
+
+.party-main .invite-card-preview {
+  min-height: calc(100vh - 230px);
+}
+
+.party-share-box,
+.rsvp-form,
+.rsvp-stats,
+.party-summary {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 14px;
+}
+
+.party-share-box label,
+.rsvp-form > span,
+.party-summary > span {
+  color: rgba(247, 247, 242, 0.62);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.party-share-box div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+}
+
+.party-share-box input,
+.rsvp-form input {
+  min-width: 0;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.28);
+  color: white;
+  padding: 0 10px;
+}
+
+.party-share-box button,
+.rsvp-form button,
+.party-summary a {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 5px;
+  background: var(--red);
+  color: white;
+  cursor: pointer;
+  padding: 0 12px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.party-side {
+  display: grid;
+  gap: 14px;
+  grid-template-rows: auto auto minmax(24px, 1fr) auto auto auto;
+  min-height: calc(100vh - 230px);
+}
+
+.party-side .rsvp-form {
+  grid-row: 4;
+}
+
+.party-side .party-scroll-cue {
+  grid-row: 5;
+}
+
+.party-side .action-status {
+  grid-row: 6;
+}
+
+.party-summary {
+  background:
+    linear-gradient(135deg, rgba(225, 6, 0, 0.14), rgba(255, 255, 255, 0.05)),
+    rgba(10, 10, 10, 0.72);
+}
+
+.party-summary h1,
+.rsvp-form h2,
+.rsvp-stats h2 {
+  margin: 0;
+  color: white;
+  line-height: 1;
+}
+
+.rsvp-form h2 {
+  font-size: 24px;
+}
+
+.rsvp-hint {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.64);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.party-summary h1 {
+  font-size: clamp(32px, 4vw, 52px);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.party-summary p {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.72);
+  font-weight: 800;
+}
+
+.rsvp-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.rsvp-buttons button {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.08);
+  min-height: 38px;
+  padding: 0 8px;
+  font-size: 13px;
+}
+
+.rsvp-buttons button.selected {
+  border-color: var(--green);
+  background: var(--green);
+}
+
+.rsvp-form > button[type="submit"] {
+  width: 100%;
+  min-height: 40px;
+}
+
+.party-scroll-cue {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  min-height: 42px;
+  align-items: center;
+  border: 1px solid rgba(255, 176, 0, 0.36);
+  border-radius: 999px;
+  background: rgba(255, 176, 0, 0.12);
+  color: var(--amber);
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.rsvp-stats {
+  scroll-margin-top: 18px;
+}
+
+.rsvp-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.rsvp-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.rsvp-table th,
+.rsvp-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 13px 14px;
+  color: rgba(247, 247, 242, 0.76);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.rsvp-table th:first-child,
+.rsvp-table td:first-child {
+  width: 28%;
+}
+
+.rsvp-table th:nth-child(2),
+.rsvp-table td:nth-child(2) {
+  width: 18%;
+  text-align: center;
+}
+
+.rsvp-table th:nth-child(3),
+.rsvp-table td:nth-child(3) {
+  width: 54%;
+}
+
+.rsvp-table th {
+  color: rgba(247, 247, 242, 0.52);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.rsvp-table td:first-child,
+.rsvp-table td:nth-child(2) {
+  color: white;
+  font-weight: 900;
+}
+
+.rsvp-table tr:last-child td {
+  border-bottom: 0;
+}
+
 .backup-stack {
   display: grid;
   gap: 12px;
@@ -1604,6 +1845,7 @@ h3 {
   .hero-grid,
   .results-grid,
   .dedicated-invite-grid,
+  .party-grid,
   .admin-stats {
     grid-template-columns: 1fr;
   }
@@ -1628,6 +1870,41 @@ h3 {
 
   .dedicated-invite-page {
     padding: 0;
+  }
+
+  .party-page {
+    padding: 0;
+  }
+
+  .party-grid,
+  .party-side {
+    min-height: 0;
+  }
+
+  .party-side {
+    grid-template-rows: none;
+  }
+
+  .party-side .rsvp-form,
+  .party-side .party-scroll-cue,
+  .party-side .action-status {
+    grid-row: auto;
+  }
+
+  .party-side .rsvp-form {
+    order: 1;
+  }
+
+  .party-side .party-scroll-cue {
+    order: 2;
+  }
+
+  .party-share-box {
+    order: 3;
+  }
+
+  .party-summary {
+    order: 4;
   }
 
   .dedicated-invite-primary {
@@ -1725,6 +2002,96 @@ h3 {
 
   .invite-email-form div {
     grid-template-columns: 1fr;
+  }
+
+  .party-share-box div,
+  .rsvp-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .rsvp-table th,
+  .rsvp-table td {
+    padding: 11px 9px;
+    font-size: 13px;
+  }
+
+  .rsvp-table th {
+    font-size: 10px;
+  }
+
+  .rsvp-table,
+  .rsvp-table thead,
+  .rsvp-table tbody,
+  .rsvp-table tr,
+  .rsvp-table th,
+  .rsvp-table td {
+    display: block;
+  }
+
+  .rsvp-table thead {
+    display: none;
+  }
+
+  .rsvp-table tr {
+    display: block;
+    border-bottom: 1px solid var(--line);
+    padding: 12px 0;
+  }
+
+  .rsvp-table tr:last-child {
+    border-bottom: 0;
+  }
+
+  .rsvp-table td {
+    border-bottom: 0;
+    padding: 0 10px;
+  }
+
+  .rsvp-table td + td {
+    margin-top: 10px;
+  }
+
+  .rsvp-table td:first-child,
+  .rsvp-table td:nth-child(2),
+  .rsvp-table td:nth-child(3) {
+    width: auto;
+  }
+
+  .rsvp-table td:nth-child(2) {
+    display: inline-block;
+    min-width: 46px;
+    border: 1px solid rgba(247, 247, 242, 0.16);
+    border-radius: 8px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    text-align: left;
+  }
+
+  .rsvp-table td:nth-child(3) {
+    color: rgba(247, 247, 242, 0.7);
+    font-weight: 700;
+  }
+
+  .rsvp-table td::before {
+    display: block;
+    margin-bottom: 3px;
+    color: rgba(247, 247, 242, 0.46);
+    content: attr(data-label);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .party-main .invite-card-preview {
+    min-height: 390px;
+  }
+
+  .party-main .invite-race strong {
+    font-size: 25px;
+  }
+
+  .party-main .invite-card-preview h3 {
+    font-size: 30px;
   }
 
   .invite-email-form button {

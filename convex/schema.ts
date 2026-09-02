@@ -12,7 +12,7 @@ export default defineSchema({
 
   actions: defineTable({
     email: v.string(),
-    actionType: v.union(v.literal("share_invite"), v.literal("call_pub")),
+    actionType: v.union(v.literal("share_invite"), v.literal("call_pub"), v.literal("create_watch_party")),
     areaInput: v.string(),
     normalizedArea: v.string(),
     venueId: v.string(),
@@ -37,5 +37,33 @@ export default defineSchema({
     reviewedAt: v.optional(v.number())
   })
     .index("by_status_and_created_at", ["status", "createdAt"])
+    .index("by_created_at", ["createdAt"]),
+
+  watchParties: defineTable({
+    hostName: v.string(),
+    hostEmail: v.string(),
+    areaInput: v.string(),
+    normalizedArea: v.string(),
+    venueId: v.string(),
+    venueName: v.string(),
+    venueArea: v.string(),
+    venueEvidenceTag: v.string(),
+    venueEvidence: v.string(),
+    venueVibe: v.string(),
+    mapUrl: v.string(),
+    raceName: v.string(),
+    raceDate: v.string(),
+    raceTime: v.string(),
+    createdAt: v.number()
+  }).index("by_created_at", ["createdAt"]),
+
+  rsvps: defineTable({
+    partyId: v.id("watchParties"),
+    name: v.string(),
+    decision: v.union(v.literal("in"), v.literal("maybe"), v.literal("out")),
+    isHost: v.boolean(),
+    createdAt: v.number()
+  })
+    .index("by_party_and_created_at", ["partyId", "createdAt"])
     .index("by_created_at", ["createdAt"])
 });

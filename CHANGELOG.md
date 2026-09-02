@@ -48,3 +48,4 @@
 - Wed 2 Sep 2026: The broad landing page top nav no longer shows the F1 finder button.
 - Wed 2 Sep 2026: The visible app name changed to FindMyScreen across the product.
 - Wed 2 Sep 2026: The Vercel project was renamed and `https://findmyscreen.vercel.app` is now the public app URL.
+- Wed 2 Sep 2026: Locally added Watch Party creation and RSVP tracking so friends can respond In, Maybe or Out from one shared link.
