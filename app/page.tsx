@@ -23,12 +23,12 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
   }
 
   return (
-    <main className="fanzo-landing">
+    <main className="find-my-screen-landing">
       <section className="landing-hero">
-        <nav className="landing-nav" aria-label="Fanzo">
+        <nav className="landing-nav" aria-label="Find my Screen">
           <div className="landing-brand">
-            <span>FZ</span>
-            <strong>Fanzo</strong>
+            <span>FMS</span>
+            <strong>Find my Screen</strong>
           </div>
         </nav>
 
@@ -44,7 +44,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
             <p className="landing-eyebrow">Bangalore match nights</p>
             <h1>Find the sports bar where your game is actually on.</h1>
             <p>
-              Fanzo helps fans pick one place for live screenings nearby. Search what is live, see the strongest pub
+              Find my Screen helps fans pick one place for live screenings nearby. Search what is live, see the strongest pub
               pick, and send one plan to the group.
             </p>
           </div>
@@ -70,7 +70,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         </div>
       </section>
 
-      <section className="landing-strip" aria-label="How Fanzo helps">
+      <section className="landing-strip" aria-label="How Find my Screen helps">
         <div>
           <span>01</span>
           <strong>Search by area</strong>

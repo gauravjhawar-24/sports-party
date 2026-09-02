@@ -35,7 +35,7 @@
 - Wed 2 Sep 2026: Share Invite now jumps to the invite card automatically so users can see the result after opening invite mode.
 - Wed 2 Sep 2026: The invite card now looks like an F1 race-night ticket, with clearer group-share copy and mobile-safe layout.
 - Wed 2 Sep 2026: Approved online venue names now display cleaner names like Bira 91 Taproom, SkyDeck By Sherlock's and Watson's Pub instead of scraped title fragments.
-- Wed 2 Sep 2026: The root page now positions Fanzo as a broader sports bar finder, with the F1 finder moved to `/f1` as the current live sport.
+- Wed 2 Sep 2026: The root page now positions Find my Screen as a broader sports bar finder, with the F1 finder moved to `/f1` as the current live sport.
 - Wed 2 Sep 2026: The landing page now uses a general sports theme with country-style chips, while F1 appears only as the current live option.
 - Wed 2 Sep 2026: The broad sports landing page no longer shows the hero CTA button.
 - Wed 2 Sep 2026: Admin now links back to `/f1`, area search prevents duplicate submissions, verified backups use clearer copy, and the scope reflects the new `/f1` product route.
@@ -46,3 +46,4 @@
 - Wed 2 Sep 2026: Share invite now opens a dedicated venue invite page instead of showing the invite below other venue options.
 - Wed 2 Sep 2026: The invite page no longer repeats the WhatsApp text below the visual card after unlock.
 - Wed 2 Sep 2026: The broad landing page top nav no longer shows the F1 finder button.
+- Wed 2 Sep 2026: The visible app name changed to Find my Screen across the product.

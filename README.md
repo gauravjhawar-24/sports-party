@@ -1,4 +1,4 @@
-# Fanzo Bangalore
+# Find my Screen Bangalore
 
 A separate Build Week project for finding sports screenings in nearby Bangalore pubs.
 

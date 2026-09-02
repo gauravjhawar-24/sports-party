@@ -29,7 +29,7 @@
 
 | Decision | Locked answer |
 |---|---|
-| One-sentence product | Fanzo is a sports bar finder for Bangalore; V1 starts with F1 screenings where the user enters their area and gets one race-night pub invite plan plus two backups. |
+| One-sentence product | Find my Screen is a sports bar finder for Bangalore; V1 starts with F1 screenings where the user enters their area and gets one race-night pub invite plan plus two backups. |
 | The one person | Tapesh, 26, Bellandur, watches F1 with friends. |
 | The one moment | Before the next F1 main race, he wants to decide where the group should watch it. |
 | Current workaround | Google searches, Instagram checks, event apps, asking friends, and calling usual pubs. |
@@ -53,7 +53,7 @@ Finding a sports screening in Bangalore is messier than it should be. A fan has 
 
 #### decisive proof
 
-A stranger opens the broad Fanzo landing page, clicks into the F1 finder at `/f1`, enters "Bellandur" or "near HSR", sees the next F1 main race, gets one best pub invite and two backups, then clicks Share invite or Call pub. A reviewer sees the same flow live and sees Convex counts for meaningful actions plus analytics for visitors.
+A stranger opens the broad Find my Screen landing page, clicks into the F1 finder at `/f1`, enters "Bellandur" or "near HSR", sees the next F1 main race, gets one best pub invite and two backups, then clicks Share invite or Call pub. A reviewer sees the same flow live and sees Convex counts for meaningful actions plus analytics for visitors.
 
 ## 2. user and job
 
@@ -240,7 +240,7 @@ Do not count anonymous visits as meaningful actions. Do not count your own tests
 ### distribution posts, in my own words
 
 - Monday, after the first three users: "Testing a tiny Bangalore F1 screening finder. Enter your area, get one pub plan to send to friends. Can you try it once and tell me if you would actually use the result?"
-- Tuesday, the launch post: "Built a Fanzo-style F1 screening finder for Bangalore. It shows the next race, asks your area, then gives one pub invite plan plus two backups. Looking for Bangalore F1 fans to test it before race weekend."
+- Tuesday, the launch post: "Built Find my Screen, an F1 screening finder for Bangalore. It shows the next race, asks your area, then gives one pub invite plan plus two backups. Looking for Bangalore F1 fans to test it before race weekend."
 - Wednesday to Friday, one update each evening (what changed, one number): "Update: fixed [blocker]. [number] people clicked Share/Call."
 - Saturday, the shipped post: "Shipped the Bangalore F1 watch-plan finder for Build Week. Here is what changed from first user tests and the numbers I can prove."
 
@@ -386,7 +386,7 @@ Show what you shipped. Reproduce the numbers live. Do not pitch what it could be
 
 ### one-sentence setup
 
-Fanzo Bangalore helps F1 fans pick one pub plan for the next race without checking five apps and calling every venue.
+Find my Screen Bangalore helps F1 fans pick one pub plan for the next race without checking five apps and calling every venue.
 
 ### the proof
 
@@ -503,13 +503,13 @@ M1 — one ugly complete flow.
 ### working locally
 
 - Next.js app runs locally on `http://localhost:3002`.
-- `/` runs locally as the broad Fanzo sports landing page.
+- `/` runs locally as the broad Find my Screen sports landing page.
 - `/f1` runs locally as the customer F1 finder product.
 - `/admin` runs locally as the internal proof page.
 
 ### live
 
-- `https://sports-party.vercel.app` is live as the broad Fanzo sports landing page.
+- `https://sports-party.vercel.app` is live as the broad Find my Screen sports landing page.
 - `https://sports-party.vercel.app/f1` is live as the customer F1 finder product.
 - `https://sports-party.vercel.app/admin` is live as the internal proof page.
 - `https://sports-party.vercel.app/admin/venues` is live as the venue signal admin page.
@@ -532,7 +532,7 @@ Run the final phone check on `/`, `/f1`, area search, Share invite, email unlock
 
 | Time | Decision | Evidence/reason | Scope impact |
 |---|---|---|---|
-| Tue 1 Sep 2026 | Picked Fanzo Bangalore F1 screening finder | User chose this idea after pausing Creator Fit Finder | New project scope |
+| Tue 1 Sep 2026 | Picked Find my Screen Bangalore F1 screening finder | User chose this idea after pausing Creator Fit Finder | New project scope |
 | Tue 1 Sep 2026 | Primary track is Virality | WhatsApp invite is the share artifact | Build for Share/Call actions and visitors |
 | Tue 1 Sep 2026 | V1 supports F1 main race only | Most venues support main race watch parties, not practice/qualifying | Cuts sports/calendar scope |
 | Tue 1 Sep 2026 | Input is free-text Bangalore area | Whole Bangalore coverage matters, but area helps ranking | No full one-sentence brief needed |

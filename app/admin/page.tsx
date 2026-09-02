@@ -15,7 +15,7 @@ export default function AdminPage() {
         <Link href="/f1">Back to product</Link>
         <div>
           <span>Admin</span>
-          <strong>Fanzo proof table</strong>
+          <strong>Find my Screen proof table</strong>
         </div>
       </header>
 

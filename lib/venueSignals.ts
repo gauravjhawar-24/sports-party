@@ -105,7 +105,7 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
     phone: "Needs call",
     mapUrl: `https://www.google.com/maps/search/?api=1&query=${query}`,
     vibe: isManualVerified
-      ? `Verified ${area} option added by the Fanzo team for this race night.`
+      ? `Verified ${area} option added by the Find my Screen team for this race night.`
       : "Fresh online signal. Call once before you send the plan.",
     price: isManualVerified ? "Check with venue" : "Needs check",
     sourceLabel: sourceLabel(signal.sourceUrl),

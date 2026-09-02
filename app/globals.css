@@ -41,7 +41,7 @@ a {
   color: inherit;
 }
 
-.fanzo-landing {
+.find-my-screen-landing {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
   padding: 24px 0 56px;
@@ -1620,7 +1620,7 @@ h3 {
 }
 
 @media (max-width: 520px) {
-  .fanzo-landing,
+  .find-my-screen-landing,
   .race-shell {
     width: min(100% - 24px, 1180px);
     padding-top: 16px;
