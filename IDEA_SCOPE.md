@@ -12,7 +12,7 @@
 | Submission deadline | Sat 5 Sep 2026, 11:00 AM IST |
 | Demo | Sat 5 Sep 2026, 3:00 PM IST |
 | Current milestone | M4 |
-| Live URL | https://sports-party.vercel.app |
+| Live URL | https://findmyscreen.vercel.app |
 | Public repo | https://github.com/gauravjhawar-24/sports-party |
 | Last updated | Wed 2 Sep 2026, 2:45 PM IST |
 
@@ -509,10 +509,10 @@ M1 — one ugly complete flow.
 
 ### live
 
-- `https://sports-party.vercel.app` is live as the broad FindMyScreen sports landing page.
-- `https://sports-party.vercel.app/f1` is live as the customer F1 finder product.
-- `https://sports-party.vercel.app/admin` is live as the internal proof page.
-- `https://sports-party.vercel.app/admin/venues` is live as the venue signal admin page.
+- `https://findmyscreen.vercel.app` is live as the broad FindMyScreen sports landing page.
+- `https://findmyscreen.vercel.app/f1` is live as the customer F1 finder product.
+- `https://findmyscreen.vercel.app/admin` is live as the internal proof page.
+- `https://findmyscreen.vercel.app/admin/venues` is live as the venue signal admin page.
 
 ### verified
 
