@@ -527,13 +527,14 @@ export function InviteReveal({
           <b>F1</b>
         </div>
         <div className="invite-race">
-          <span>{nextRace.name}</span>
-          <strong>{nextRace.raceDate}</strong>
+          <span>Next main race</span>
+          <strong>{nextRace.name}</strong>
+          <p>{nextRace.raceDate} - {nextRace.raceTime}</p>
         </div>
         <div className="invite-place">
           <span>Watching at</span>
           <h3>{invite.venue.name}</h3>
-          <p>{invite.venue.area} - {nextRace.raceTime}</p>
+          <p>{invite.venue.area}</p>
         </div>
         <div className="invite-proof-row">
           <small>{invite.venue.evidenceTag} pick</small>
@@ -541,7 +542,6 @@ export function InviteReveal({
         </div>
         <strong className="invite-question">Who's in?</strong>
       </div>
-      <pre>{invite.text}</pre>
       {!isUnlocked ? (
         <form className="invite-email-form" onSubmit={submitInviteEmail}>
           <label htmlFor="invite-email">Enter email to download or share this invite</label>
@@ -569,6 +569,7 @@ export function InviteReveal({
           <button type="button" onClick={onCopy}>Copy text</button>
         </div>
       )}
+      {isUnlocked ? <pre>{invite.text}</pre> : null}
     </div>
   );
 }

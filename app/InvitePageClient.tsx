@@ -56,6 +56,10 @@ export function InvitePageClient({ venue, area }: { venue: Venue; area: string }
         </header>
 
         <div className="dedicated-invite-grid">
+          <div className="dedicated-invite-primary">
+            <InviteReveal invite={invite} onCopy={copyInvite} onUnlock={unlockInvite} />
+          </div>
+
           <aside className="dedicated-venue-summary">
             <span>{venue.evidenceTag}</span>
             <h1>{venue.name}</h1>
@@ -80,8 +84,6 @@ export function InvitePageClient({ venue, area }: { venue: Venue; area: string }
             </dl>
             <a href={venue.mapUrl} target="_blank" rel="noreferrer">Open map</a>
           </aside>
-
-          <InviteReveal invite={invite} onCopy={copyInvite} onUnlock={unlockInvite} />
         </div>
 
         {status ? <p className="action-status">{status}</p> : null}

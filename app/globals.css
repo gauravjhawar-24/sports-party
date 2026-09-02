@@ -858,7 +858,7 @@ h2 {
 
 .invite-reveal {
   display: grid;
-  gap: 12px;
+  gap: 14px;
   margin-top: 16px;
   scroll-margin-top: 18px;
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -866,7 +866,7 @@ h2 {
   background:
     linear-gradient(135deg, rgba(225, 6, 0, 0.18), rgba(255, 255, 255, 0.08)),
     rgba(0, 0, 0, 0.28);
-  padding: 12px;
+  padding: 14px;
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
 }
 
@@ -907,16 +907,16 @@ h2 {
 .invite-card-preview {
   position: relative;
   display: grid;
-  min-height: 470px;
+  min-height: 560px;
   align-content: space-between;
-  gap: 18px;
+  gap: 22px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 10px;
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.34) 42%, rgba(0, 0, 0, 0.86)),
     url("/invite-card-bg.png") center / cover;
-  padding: 26px;
+  padding: 30px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
@@ -925,8 +925,17 @@ h2 {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(115deg, transparent 0 62%, rgba(225, 6, 0, 0.9) 62% 67%, transparent 67%),
+    linear-gradient(115deg, transparent 0 73%, rgba(225, 6, 0, 0.72) 73% 78%, transparent 78%),
     repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 34px);
+  pointer-events: none;
+}
+
+.invite-card-preview::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 14px;
   pointer-events: none;
 }
 
@@ -949,21 +958,22 @@ h2 {
   background: var(--red);
   color: white;
   padding: 8px 10px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 900;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .invite-topline b {
   color: rgba(255, 255, 255, 0.9);
-  font-size: 78px;
+  font-size: clamp(52px, 8vw, 78px);
   line-height: 0.8;
 }
 
 .invite-race,
 .invite-place {
   display: grid;
-  gap: 5px;
+  gap: 8px;
 }
 
 .invite-race {
@@ -976,19 +986,23 @@ h2 {
   color: var(--amber);
   font-size: 12px;
   font-weight: 900;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .invite-race strong {
   color: rgba(247, 247, 242, 0.9);
-  font-size: 18px;
+  font-size: clamp(28px, 4.2vw, 44px);
+  line-height: 0.98;
+  text-wrap: balance;
 }
 
 .invite-card-preview h3 {
   margin: 0;
   color: white;
-  font-size: clamp(34px, 8vw, 58px);
-  line-height: 0.96;
+  max-width: 82%;
+  font-size: clamp(40px, 5.6vw, 64px);
+  line-height: 0.94;
   text-wrap: balance;
 }
 
@@ -997,6 +1011,7 @@ h2 {
   color: rgba(247, 247, 242, 0.82);
   font-size: 18px;
   font-weight: 800;
+  line-height: 1.25;
 }
 
 .invite-proof-row {
@@ -1027,7 +1042,7 @@ h2 {
 
 .invite-question {
   color: white;
-  font-size: 34px;
+  font-size: clamp(34px, 6vw, 52px);
   line-height: 1;
 }
 
@@ -1100,9 +1115,17 @@ h2 {
 
 .dedicated-invite-grid {
   display: grid;
-  grid-template-columns: minmax(280px, 0.75fr) minmax(0, 1.25fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
   gap: 18px;
   align-items: start;
+}
+
+.dedicated-invite-primary {
+  display: grid;
+}
+
+.dedicated-invite-primary .invite-reveal {
+  margin-top: 0;
 }
 
 .dedicated-venue-summary {
@@ -1131,8 +1154,9 @@ h2 {
 .dedicated-venue-summary h1 {
   margin: 0;
   color: white;
-  font-size: clamp(34px, 5vw, 62px);
-  line-height: 0.95;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1;
+  text-wrap: balance;
 }
 
 .dedicated-venue-summary p {
@@ -1606,6 +1630,10 @@ h3 {
     padding: 0;
   }
 
+  .dedicated-invite-primary {
+    order: -1;
+  }
+
   .landing-nav {
     align-items: flex-start;
     flex-direction: column;
@@ -1664,12 +1692,12 @@ h3 {
   }
 
   .invite-card-preview {
-    min-height: 430px;
-    padding: 20px;
+    min-height: 470px;
+    padding: 22px;
   }
 
   .invite-topline b {
-    font-size: 58px;
+    font-size: 46px;
   }
 
   .invite-topline span {
@@ -1678,7 +1706,21 @@ h3 {
   }
 
   .invite-card-preview h3 {
-    font-size: 38px;
+    max-width: 100%;
+    font-size: 34px;
+    line-height: 0.98;
+  }
+
+  .invite-race strong {
+    font-size: 28px;
+  }
+
+  .invite-card-preview p {
+    font-size: 16px;
+  }
+
+  .invite-question {
+    font-size: 34px;
   }
 
   .invite-email-form div {
