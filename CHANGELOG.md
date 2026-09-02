@@ -50,3 +50,4 @@
 - Wed 2 Sep 2026: The Vercel project was renamed and `https://findmyscreen.vercel.app` is now the public app URL.
 - Wed 2 Sep 2026: Locally added Watch Party creation and RSVP tracking so friends can respond In, Maybe or Out from one shared link.
 - Wed 2 Sep 2026: Watch Party creation is now the only action on venue cards, while the party page keeps call/map details, host recovery, and one RSVP per browser.
+- Wed 2 Sep 2026: Added RCB Bar & Cafe and Pecos as real central Bangalore venue options that need a same-day F1 screening call.

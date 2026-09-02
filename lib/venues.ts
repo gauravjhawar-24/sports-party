@@ -80,6 +80,34 @@ export const venues: Venue[] = [
     sourceUrl: "https://watchpartyradar.com/bangalore/"
   },
   {
+    id: "rcb-bar-cafe-brigade-road",
+    name: "RCB Bar & Cafe",
+    area: "Brigade Road",
+    zones: ["brigade road", "mg road", "church street", "central bangalore"],
+    evidenceTag: "Needs call",
+    evidence: "RCB Bar & Cafe is a real sports-themed Bengaluru venue, but the F1 screening needs a same-day confirmation.",
+    phone: "9980999944",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=RCB+Bar+Cafe+Garuda+Mall+Magrath+Road+Bangalore",
+    vibe: "Sports-first, big-brand bar setup near Brigade Road for groups that want a match-night atmosphere.",
+    price: "High",
+    sourceLabel: "Official venue page",
+    sourceUrl: "https://royalchallengers.com/rcb-bar-cafe"
+  },
+  {
+    id: "pecos-brigade-road",
+    name: "Pecos",
+    area: "Brigade Road",
+    zones: ["brigade road", "mg road", "church street", "central bangalore"],
+    evidenceTag: "Needs call",
+    evidence: "Pecos is a real Brigade Road pub, but the F1 screening needs a same-day confirmation.",
+    phone: "8041640022",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Pecos+Brigade+Road+Bangalore",
+    vibe: "Old-school Bangalore pub feel, better for a smaller group that wants a classic central venue.",
+    price: "Mid to high",
+    sourceLabel: "Venue website",
+    sourceUrl: "https://pecospub.com/"
+  },
+  {
     id: "big-pitcher-sarjapur",
     name: "Big Pitcher",
     area: "Sarjapur Road",
