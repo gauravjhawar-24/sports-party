@@ -148,7 +148,7 @@ export function HomeClient({
   const backupVenues = run.results.slice(1, 3);
   const moreVenues = run.results.slice(3, 6);
   const primaryAction =
-    bestVenue?.evidenceTag === "Verified" ? "Share invite" : "Call pub";
+    bestVenue?.evidenceTag === "Verified" ? "Share invite" : "Book Now";
   const routePath = basePath || "/";
   const queryPrefix = routePath === "/" ? "/?" : `${routePath}?`;
   const areaHref = (nextArea: string) =>
@@ -408,7 +408,7 @@ export function HomeClient({
           venue: actionToComplete.venue,
           phone: "Phone number not available yet",
         });
-        setActionStatus("Call action saved.");
+        setActionStatus("Booking action saved.");
       }
 
       setPendingAction(null);
@@ -708,8 +708,8 @@ export function HomeClient({
                     ) : null}
                     {bestVenue.evidenceTag !== "Verified" ? (
                       <p className="honesty-note">
-                        Not personally verified today. Call once before sending
-                        this to friends.
+                        Not personally verified today. Confirm once before
+                        sending this to friends.
                       </p>
                     ) : null}
                   </div>
@@ -803,12 +803,12 @@ export function HomeClient({
             <span>
               {pendingAction.action === "share_invite"
                 ? "Share invite"
-                : "Call pub"}
+                : "Book Now"}
             </span>
             <h2>
               {pendingAction.action === "share_invite"
                 ? "Please enter your email to create your invite"
-                : "Please enter your email to view phone number"}
+                : "Please enter your email to view booking details"}
             </h2>
             <input
               autoFocus

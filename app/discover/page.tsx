@@ -128,8 +128,8 @@ export default function DiscoverPage() {
                   aria-disabled="true"
                   key={sport.name}
                 >
-                  <strong>{sport.name}</strong>
-                  <span>{sport.state}</span>
+                  <span>{sport.name}</span>
+                  <strong>{sport.state}</strong>
                 </div>
               ),
             )}
@@ -158,8 +158,8 @@ export default function DiscoverPage() {
                   aria-disabled="true"
                   key={city.name}
                 >
-                  <strong>{city.name}</strong>
-                  <span>{city.state}</span>
+                  <span>{city.name}</span>
+                  <strong>{city.state}</strong>
                 </div>
               ),
             )}

@@ -30,6 +30,10 @@ export function PartyPageClient({
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [localSavedRsvp, setLocalSavedRsvp] = useState<{
+    name: string;
+    decision: Decision;
+  } | null>(null);
   const partyById = useQuery(
     api.actions.watchPartyWithRsvps,
     partyId ? { partyId: partyId as Id<"watchParties"> } : "skip",
@@ -56,6 +60,7 @@ export function PartyPageClient({
     if (!clientId) return null;
     return partyData?.rsvps.find((rsvp) => rsvp.clientId === clientId) ?? null;
   }, [clientId, partyData?.rsvps]);
+  const visibleDeviceRsvp = currentDeviceRsvp ?? localSavedRsvp;
 
   useEffect(() => {
     const nextClientId = getOrCreateClientId();
@@ -172,6 +177,7 @@ export function PartyPageClient({
       }
 
       setStatus("RSVP saved.");
+      setLocalSavedRsvp({ name: trimmedName, decision });
       setName("");
     } catch {
       setError("Could not save your RSVP. Try once more.");
@@ -253,9 +259,15 @@ export function PartyPageClient({
                   <i /> I'm in · Host
                 </span>
               </div>
+            ) : visibleDeviceRsvp ? (
+              <div className="host-rsvp-status">
+                <strong>{visibleDeviceRsvp.name}</strong>
+                <span>
+                  <i /> You said {decisionLabels[visibleDeviceRsvp.decision]}
+                </span>
+              </div>
             ) : (
               <RsvpForm
-                currentDecision={currentDeviceRsvp?.decision}
                 decision={decision}
                 error={error}
                 isSaving={isSaving}
@@ -283,7 +295,7 @@ export function PartyPageClient({
           </div>
           <div className="race-plan-venue-actions">
             {party.venuePhone && party.venuePhone !== "Needs call" ? (
-              <a href={`tel:${party.venuePhone}`}>Call pub</a>
+              <a href={`tel:${party.venuePhone}`}>Book Now</a>
             ) : (
               <span>Phone number needs a fresh check</span>
             )}
@@ -298,7 +310,6 @@ export function PartyPageClient({
 }
 
 function RsvpForm({
-  currentDecision,
   decision,
   error,
   isSaving,
@@ -307,7 +318,6 @@ function RsvpForm({
   onNameChange,
   onSubmit,
 }: {
-  currentDecision?: Decision;
   decision: Decision;
   error: string;
   isSaving: boolean;
@@ -321,9 +331,7 @@ function RsvpForm({
       <span>RSVP</span>
       <h2>Are you coming?</h2>
       <p className="rsvp-hint">
-        {currentDecision
-          ? `You already said ${decisionLabels[currentDecision]}. Submit again to update it.`
-          : "Vote here and your group status updates below."}
+        Vote here and your group status updates below.
       </p>
       <input
         value={name}

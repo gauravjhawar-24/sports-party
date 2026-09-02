@@ -41,7 +41,7 @@ export default function AdminPage() {
           <strong>{stats?.shareInvites ?? 0}</strong>
         </article>
         <article>
-          <span>Call pub clicks</span>
+          <span>Book Now clicks</span>
           <strong>{stats?.callPubs ?? 0}</strong>
         </article>
       </section>
@@ -49,7 +49,9 @@ export default function AdminPage() {
       <section className="proof-table" aria-label="Saved action proof table">
         <div className="section-heading">
           <span>Actions</span>
-          <strong>Latest Share invite and Call pub actions saved in Convex</strong>
+          <strong>
+            Latest Share invite and Book Now actions saved in Convex
+          </strong>
         </div>
         <div className="table-wrap">
           <table>
@@ -67,10 +69,19 @@ export default function AdminPage() {
                 latestActions?.map((action) => (
                   <tr key={action._id}>
                     <td>{action.email}</td>
-                    <td>{action.actionType === "share_invite" ? "Share invite" : "Call pub"}</td>
+                    <td>
+                      {action.actionType === "share_invite"
+                        ? "Share invite"
+                        : "Book Now"}
+                    </td>
                     <td>{action.venueName}</td>
                     <td>{action.areaInput || action.normalizedArea}</td>
-                    <td>{new Date(action.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</td>
+                    <td>
+                      {new Date(action.createdAt).toLocaleString("en-IN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -107,7 +118,12 @@ export default function AdminPage() {
                     <td>{search.normalizedArea || "Unsupported"}</td>
                     <td>{search.bestVenueId}</td>
                     <td>{search.resultVenueIds.length}</td>
-                    <td>{new Date(search.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</td>
+                    <td>
+                      {new Date(search.createdAt).toLocaleString("en-IN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </td>
                   </tr>
                 ))
               ) : (
