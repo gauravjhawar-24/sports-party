@@ -496,21 +496,24 @@ export function HomeClient({
           {bestVenue ? (
             <>
               <section className="trust-note" aria-label="Recommendation note">
-                <span>Best safe plan first</span>
-                <p>We picked the place you can trust most for race night. Closer options are below if you want to compare.</p>
+                <span>Starting grid locked</span>
+                <p>P1 is the strongest race-night plan. P2-P6 stay ready if the pole pick does not work for your group.</p>
               </section>
 
-              <div className="results-grid" aria-label="F1 screening recommendation">
-                <article className="invite-card">
-                  <div className="card-rail" />
-                  <div className="invite-content">
-                    <div className="result-label">
-                      <span>Best pick</span>
+              <div className="race-grid-results" aria-label="F1 screening recommendation">
+                <article className="pole-card">
+                  <div className="pole-position-mark">
+                    <span>P1</span>
+                    <strong>Pole position</strong>
+                  </div>
+                  <div className="pole-content">
+                    <div className="result-label race-result-label">
+                      <span>Most reliable plan</span>
                       <EvidenceBadge tag={bestVenue.evidenceTag} />
                     </div>
-                    <p className="pick-note">Most reliable pick for tonight's race plan.</p>
                     <h2>{bestVenue.name}</h2>
                     <p className="venue-area">{bestVenue.area}</p>
+                    <VenueStats venue={bestVenue} position={1} />
 
                     <div className="invite-lines">
                       <div>
@@ -540,29 +543,31 @@ export function HomeClient({
                     {revealedPhone ? (
                       <PhoneReveal venueName={revealedPhone.venue.name} phone={revealedPhone.phone} mapUrl={revealedPhone.venue.mapUrl} />
                     ) : null}
-              {bestVenue.evidenceTag !== "Verified" ? (
-                <p className="honesty-note">Not personally verified today. Call once before sending this to friends.</p>
-              ) : null}
+                    {bestVenue.evidenceTag !== "Verified" ? (
+                      <p className="honesty-note">Not personally verified today. Call once before sending this to friends.</p>
+                    ) : null}
                   </div>
                 </article>
 
-                <div className="backup-stack">
+                <div className="grid-pack">
                   <div className="section-heading">
-                    <span>Backups</span>
-                    <strong>Two options if the best pick does not work</strong>
+                    <span>P2-P6</span>
+                    <strong>Backups on the grid</strong>
                   </div>
-                  {backupVenues.map((venue, index) => (
-                    <article className="backup-card" key={venue.id}>
+                  {[...backupVenues, ...moreVenues].map((venue, index) => (
+                    <article className="grid-venue-card" key={venue.id}>
+                      <div className="grid-venue-top">
+                        <span className="grid-position">P{index + 2}</span>
+                        <EvidenceBadge tag={venue.evidenceTag} />
+                      </div>
                       <div>
-                        <span className="backup-number">0{index + 1}</span>
                         <h3>{venue.name}</h3>
                         <p>{venue.area}</p>
                       </div>
-                      <EvidenceBadge tag={venue.evidenceTag} />
+                      <VenueStats venue={venue} position={index + 2} />
                       <p className="pick-note">
-                        {venue.evidenceTag === "Verified" ? "Verified backup if the best pick does not work." : "Closer option, but call once before you go."}
+                        {venue.evidenceTag === "Verified" ? "Confirmed backup for race night." : "Good option, but call once before you go."}
                       </p>
-                      <p>{venue.evidence}</p>
                       <div className="backup-actions">
                         <button type="button" onClick={() => startWatchParty(venue)}>Create Watch Party</button>
                       </div>
@@ -570,29 +575,6 @@ export function HomeClient({
                   ))}
                 </div>
               </div>
-
-              {moreVenues.length ? (
-                <section className="more-options" aria-label="More F1 screening options">
-                  <div className="section-heading">
-                    <span>More options</span>
-                    <strong>Three more picks if the top choices are inconvenient</strong>
-                  </div>
-                  <div className="more-option-grid">
-                    {moreVenues.map((venue, index) => (
-                      <article className="more-option-card" key={venue.id}>
-                        <div>
-                          <span className="backup-number">0{index + 4}</span>
-                          <EvidenceBadge tag={venue.evidenceTag} />
-                        </div>
-                        <h3>{venue.name}</h3>
-                        <p>{venue.area}</p>
-                        <small>{venue.evidence}</small>
-                        <button type="button" onClick={() => startWatchParty(venue)}>Create Watch Party</button>
-                      </article>
-                    ))}
-                  </div>
-                </section>
-              ) : null}
             </>
           ) : null}
         </section>
@@ -733,6 +715,21 @@ function MyWatchParties({
 function EvidenceBadge({ tag }: { tag: string }) {
   const className = `evidence-badge ${tag.toLowerCase().replaceAll(" ", "-")}`;
   return <span className={className}>{tag}</span>;
+}
+
+function VenueStats({ venue, position }: { venue: Venue; position: number }) {
+  const booking = venue.evidenceTag === "Verified" ? "Ready" : "Call first";
+  const screen = venue.evidenceTag === "Verified" || venue.evidenceTag === "Posted about F1" ? "Confirmed signal" : "Likely";
+  const crowd = position === 1 ? "Best fit" : position <= 3 ? "Strong" : "Backup";
+
+  return (
+    <div className="venue-stats" aria-label={`${venue.name} quick stats`}>
+      <span><b>Distance</b>{venue.area}</span>
+      <span><b>Screen</b>{screen}</span>
+      <span><b>Crowd</b>{crowd}</span>
+      <span><b>Booking</b>{booking}</span>
+    </div>
+  );
 }
 
 async function copyTextAgain(text: string) {

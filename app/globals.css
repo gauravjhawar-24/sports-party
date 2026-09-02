@@ -2194,6 +2194,239 @@ h3 {
   background: var(--silver);
 }
 
+.race-grid-results {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+  gap: 16px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.pole-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  min-height: 540px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 18% 15%, rgba(225, 6, 0, 0.2), transparent 28%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 72px),
+    #181818;
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.28);
+}
+
+.pole-card::after {
+  content: "";
+  position: absolute;
+  right: -96px;
+  bottom: 54px;
+  width: 420px;
+  height: 94px;
+  border-top: 5px solid rgba(225, 6, 0, 0.8);
+  border-bottom: 5px solid rgba(255, 255, 255, 0.14);
+  transform: rotate(-12deg);
+}
+
+.pole-position-mark {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--red);
+  padding: 22px 14px;
+  color: white;
+}
+
+.pole-position-mark span {
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 0.85;
+}
+
+.pole-position-mark strong {
+  max-width: 60px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.pole-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  padding: clamp(24px, 4vw, 44px);
+}
+
+.race-result-label {
+  margin-bottom: 28px;
+}
+
+.pole-card h2 {
+  max-width: 610px;
+  margin: 0 0 10px;
+  color: white;
+  font-family: "Barlow Condensed", Arial, Helvetica, sans-serif;
+  font-size: clamp(58px, 7vw, 96px);
+  font-weight: 900;
+  line-height: 0.84;
+  text-transform: uppercase;
+}
+
+.pole-card .venue-area {
+  margin-bottom: 20px;
+  color: rgba(247, 247, 242, 0.66);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.venue-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0 0 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.venue-stats span {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  min-height: 70px;
+  align-content: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(247, 247, 242, 0.78);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 12px;
+}
+
+.venue-stats span:last-child {
+  border-right: 0;
+}
+
+.venue-stats b {
+  color: rgba(247, 247, 242, 0.36);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.pole-card .invite-lines {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.pole-card .actions button,
+.grid-venue-card .backup-actions button {
+  border-radius: 0;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.grid-pack {
+  display: grid;
+  gap: 10px;
+}
+
+.grid-pack .section-heading {
+  border-radius: 0;
+  background: #202020;
+}
+
+.grid-venue-card {
+  display: grid;
+  gap: 11px;
+  min-height: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
+  background:
+    linear-gradient(90deg, rgba(225, 6, 0, 0.12), transparent 34%),
+    #181818;
+  padding: 13px;
+}
+
+.grid-venue-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.grid-position {
+  color: var(--red);
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 0.82;
+}
+
+.grid-venue-card h3 {
+  margin: 0 0 4px;
+  color: white;
+  font-family: "Barlow Condensed", Arial, Helvetica, sans-serif;
+  font-size: 31px;
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.grid-venue-card p {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.6);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.grid-venue-card .venue-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 0;
+}
+
+.grid-venue-card .venue-stats span {
+  min-height: 52px;
+  padding: 9px;
+  font-size: 10px;
+}
+
+.grid-venue-card .venue-stats span:nth-child(2) {
+  border-right: 0;
+}
+
+.grid-venue-card .venue-stats span:nth-child(1),
+.grid-venue-card .venue-stats span:nth-child(2) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.grid-venue-card .pick-note {
+  margin: 0;
+}
+
+.grid-venue-card .backup-actions {
+  margin-top: 0;
+}
+
+.grid-venue-card .backup-actions button {
+  width: 100%;
+  min-height: 38px;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -2284,6 +2517,14 @@ h3 {
   .party-grid,
   .admin-stats {
     grid-template-columns: 1fr;
+  }
+
+  .race-grid-results {
+    grid-template-columns: 1fr;
+  }
+
+  .pole-card {
+    min-height: 0;
   }
 
   .race-shell-start {
@@ -2453,6 +2694,45 @@ h3 {
   .area-form div,
   .invite-lines div {
     grid-template-columns: 1fr;
+  }
+
+  .pole-card {
+    grid-template-columns: 1fr;
+  }
+
+  .pole-position-mark {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    padding: 14px 18px;
+  }
+
+  .pole-position-mark strong {
+    max-width: none;
+  }
+
+  .pole-content {
+    padding: 20px 18px;
+  }
+
+  .pole-card h2 {
+    font-size: 58px;
+  }
+
+  .venue-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .venue-stats span:nth-child(2) {
+    border-right: 0;
+  }
+
+  .venue-stats span:nth-child(1),
+  .venue-stats span:nth-child(2) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .grid-venue-card h3 {
+    font-size: 31px;
   }
 
   .area-form button {
