@@ -179,7 +179,7 @@ export const venues: Venue[] = [
     name: "Buffalo Wild Wings",
     area: "Indiranagar",
     zones: ["indiranagar", "domlur", "old airport road"],
-    evidenceTag: "Verified",
+    evidenceTag: "Regular F1 venue",
     evidence:
       "Older Bangalore F1 guides and fan posts mention Buffalo Wild Wings for Formula 1 screenings.",
     phone: "6360198721",
@@ -190,7 +190,6 @@ export const venues: Venue[] = [
     sourceLabel: "Public F1 guide",
     sourceUrl:
       "https://www.whatshot.in/bangalore/f1-fans-walk-into-these-pubs--bars-to-watch-the-main-sunday-race-live-on-the-big-screen-c-35096",
-    ...confirmedSep2Evening,
   },
   {
     id: "church-street-social",

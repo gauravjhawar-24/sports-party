@@ -77,3 +77,4 @@
 - Thu 3 Sep 2026: Venue result cards now show confirmation proof when all proof fields exist, mark missing proof as not confirmed, and link directly to Google Maps.
 - Thu 3 Sep 2026: Current venue records are now marked phone-confirmed by Gaurav on 1 Sep or 2 Sep evening.
 - Thu 3 Sep 2026: Venue cards now label neighbourhoods as Area, the F1 page has a real main heading, duplicate IST is removed, and phone tap targets are at least 44px.
+- Thu 3 Sep 2026: Buffalo Wild Wings is now treated as not yet confirmed instead of verified.
