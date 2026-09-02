@@ -493,6 +493,7 @@ export function InviteReveal({
   const [emailError, setEmailError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [shareStatus, setShareStatus] = useState("");
 
   async function submitInviteEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -560,78 +561,111 @@ export function InviteReveal({
         </form>
       ) : (
         <div className="invite-share-actions">
-          <button type="button" onClick={() => void createInviteImage(invite.venue, "download")}>
+          <button
+            type="button"
+            onClick={() => void createInviteImage(invite.venue, "download", setShareStatus)}
+          >
             Download card
           </button>
-          <button type="button" onClick={() => void createInviteImage(invite.venue, "share")}>
+          <button
+            type="button"
+            onClick={() => void createInviteImage(invite.venue, "share", setShareStatus)}
+          >
             Share image
           </button>
           <button type="button" onClick={onCopy}>Copy text</button>
         </div>
       )}
+      {shareStatus ? <p className="invite-share-status">{shareStatus}</p> : null}
     </div>
   );
 }
 
-async function createInviteImage(venue: Venue, action: InviteImageAction) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1080;
-  canvas.height = 1350;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+async function createInviteImage(
+  venue: Venue,
+  action: InviteImageAction,
+  onStatus: (message: string) => void
+) {
+  const eventProps = { action, venue_id: venue.id, venue_name: venue.name };
+  let blob: Blob | null = null;
+  let fileName = "";
+  onStatus("");
 
-  const background = await loadImage("/invite-card-bg.png");
-  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080;
+    canvas.height = 1350;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas 2D context is not available.");
 
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, "rgba(0, 0, 0, 0.08)");
-  gradient.addColorStop(0.42, "rgba(0, 0, 0, 0.4)");
-  gradient.addColorStop(1, "rgba(0, 0, 0, 0.74)");
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const background = await loadImage("/invite-card-bg.png");
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.26)";
-  ctx.lineWidth = 3;
-  roundRect(ctx, 70, 70, 940, 1210, 28);
-  ctx.stroke();
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, "rgba(0, 0, 0, 0.08)");
+    gradient.addColorStop(0.42, "rgba(0, 0, 0, 0.4)");
+    gradient.addColorStop(1, "rgba(0, 0, 0, 0.74)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "#e10600";
-  roundRect(ctx, 94, 94, 236, 58, 10);
-  ctx.fill();
-  drawText(ctx, "FINDMYSCREEN RACE NIGHT", 118, 132, 26, 900, "#ffffff", 620);
-  drawText(ctx, "F1", 820, 168, 118, 900, "rgba(255, 255, 255, 0.9)", 180);
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.26)";
+    ctx.lineWidth = 3;
+    roundRect(ctx, 70, 70, 940, 1210, 28);
+    ctx.stroke();
 
-  drawText(ctx, "ONE PLAN. NO GROUP DEBATE.", 94, 640, 30, 900, "#ffb000", 880);
-  drawText(ctx, nextRace.name.toUpperCase(), 94, 720, 58, 900, "#ffffff", 880);
-  drawText(ctx, `${nextRace.raceDate} - ${nextRace.raceTime}`, 94, 790, 34, 800, "#f7f7f2", 880);
+    ctx.fillStyle = "#e10600";
+    roundRect(ctx, 94, 94, 236, 58, 10);
+    ctx.fill();
+    drawText(ctx, "FINDMYSCREEN RACE NIGHT", 118, 132, 26, 900, "#ffffff", 620);
+    drawText(ctx, "F1", 820, 168, 118, 900, "rgba(255, 255, 255, 0.9)", 180);
 
-  drawText(ctx, "WATCHING AT", 94, 900, 24, 900, "rgba(247, 247, 242, 0.7)");
-  drawText(ctx, venue.name.toUpperCase(), 94, 972, 76, 900, "#ffffff", 880);
-  drawText(ctx, venue.area, 94, 1050, 36, 800, "#f7f7f2", 880);
+    drawText(ctx, "ONE PLAN. NO GROUP DEBATE.", 94, 640, 30, 900, "#ffb000", 880);
+    drawText(ctx, nextRace.name.toUpperCase(), 94, 720, 58, 900, "#ffffff", 880);
+    drawText(ctx, `${nextRace.raceDate} - ${nextRace.raceTime}`, 94, 790, 34, 800, "#f7f7f2", 880);
 
-  ctx.fillStyle = venue.evidenceTag === "Verified" ? "#00a86b" : "#ffb000";
-  roundRect(ctx, 94, 1110, 310, 60, 14);
-  ctx.fill();
-  drawText(ctx, venue.evidenceTag.toUpperCase(), 122, 1149, 26, 900, "#ffffff");
+    drawText(ctx, "WATCHING AT", 94, 900, 24, 900, "rgba(247, 247, 242, 0.7)");
+    drawText(ctx, venue.name.toUpperCase(), 94, 972, 76, 900, "#ffffff", 880);
+    drawText(ctx, venue.area, 94, 1050, 36, 800, "#f7f7f2", 880);
 
-  drawText(ctx, "Who's in?", 94, 1230, 54, 900, "#ffffff", 880);
+    ctx.fillStyle = venue.evidenceTag === "Verified" ? "#00a86b" : "#ffb000";
+    roundRect(ctx, 94, 1110, 310, 60, 14);
+    ctx.fill();
+    drawText(ctx, venue.evidenceTag.toUpperCase(), 122, 1149, 26, 900, "#ffffff");
 
-  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
-  if (!blob) return;
+    drawText(ctx, "Who's in?", 94, 1230, 54, 900, "#ffffff", 880);
 
-  const fileName = `findmyscreen-${slugify(venue.name)}-${slugify(nextRace.name)}.png`;
-  const file = new File([blob], fileName, { type: "image/png" });
+    blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+    if (!blob) throw new Error("Invite image could not be created.");
 
-  if (action === "share" && navigator.canShare?.({ files: [file] })) {
-    await navigator.share({
-      title: `${nextRace.name} watch plan`,
-      text: `${venue.name}, ${venue.area}`,
-      files: [file]
-    });
-    return;
+    fileName = `findmyscreen-${slugify(venue.name)}-${slugify(nextRace.name)}.png`;
+    const file = new File([blob], fileName, { type: "image/png" });
+
+    if (action === "share" && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        title: `${nextRace.name} watch plan`,
+        text: `${venue.name}, ${venue.area}`,
+        files: [file]
+      });
+      captureProductEvent("findmyscreen_invite_shared", eventProps);
+      return;
+    }
+
+    downloadBlob(blob, fileName);
+    captureProductEvent("findmyscreen_invite_downloaded", eventProps);
+  } catch (error) {
+    // A dismissed native share sheet rejects with AbortError. That is a normal
+    // cancel, not a failure, so there is nothing to report or capture.
+    if (error instanceof DOMException && error.name === "AbortError") return;
+
+    captureProductEvent("findmyscreen_invite_image_failed", eventProps);
+
+    if (blob) {
+      downloadBlob(blob, fileName);
+      onStatus("Share did not work. The invite image was downloaded instead.");
+    } else {
+      onStatus("Could not build the invite image. Please try again.");
+    }
   }
-
-  downloadBlob(blob, fileName);
 }
 
 function loadImage(src: string) {

@@ -1052,6 +1052,13 @@ h2 {
   gap: 8px;
 }
 
+.invite-share-status {
+  margin: 10px 0 0;
+  color: var(--amber);
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .invite-email-form {
   display: grid;
   gap: 8px;
