@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import posthog from "posthog-js";
 import { api } from "../convex/_generated/api";
@@ -28,6 +28,34 @@ type RevealedInvite = {
 const quickAreas = ["Bellandur", "HSR", "Indiranagar", "MG Road"];
 const clientIdKey = "findmyscreen-client-id";
 const hostPartiesKey = "findmyscreen-host-parties";
+const nextRaceStartsAt = Date.parse("2026-09-06T18:30:00+05:30");
+
+type RaceCountdown = {
+  days: string;
+  hours: string;
+  minutes: string;
+  seconds: string;
+};
+
+function padTime(value: number) {
+  return String(value).padStart(2, "0");
+}
+
+function getRaceCountdown(): RaceCountdown {
+  const remainingMs = Math.max(0, nextRaceStartsAt - Date.now());
+  const totalSeconds = Math.floor(remainingMs / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return {
+    days: padTime(days),
+    hours: padTime(hours),
+    minutes: padTime(minutes),
+    seconds: padTime(seconds)
+  };
+}
 
 export function HomeClient({
   initialArea = "",
@@ -61,6 +89,7 @@ export function HomeClient({
   const [hostError, setHostError] = useState("");
   const [areaError, setAreaError] = useState("");
   const [actionStatus, setActionStatus] = useState("");
+  const [raceCountdown, setRaceCountdown] = useState<RaceCountdown>(() => getRaceCountdown());
   const [isSearching, setIsSearching] = useState(false);
   const [isCompletingAction, setIsCompletingAction] = useState(false);
   const [isCreatingParty, setIsCreatingParty] = useState(false);
@@ -77,6 +106,14 @@ export function HomeClient({
     submittedLookupEmail ? { hostEmail: submittedLookupEmail } : "skip"
   );
   const approvedSignalRows = approvedSignals ?? initialApprovedSignals;
+
+  useEffect(() => {
+    const updateCountdown = () => setRaceCountdown(getRaceCountdown());
+    updateCountdown();
+    const intervalId = window.setInterval(updateCountdown, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   const venueList = useMemo(() => {
     const approvedVenues = approvedSignalRows.map(approvedSignalToVenue);
@@ -444,10 +481,10 @@ export function HomeClient({
               <div className="race-countdown" aria-label="Race countdown">
                 <span>Race starts in</span>
                 <div>
-                  <b>03<small>D</small></b>
-                  <b>18<small>H</small></b>
-                  <b>12<small>M</small></b>
-                  <b>15<small>S</small></b>
+                  <b>{raceCountdown.days}<small>D</small></b>
+                  <b>{raceCountdown.hours}<small>H</small></b>
+                  <b>{raceCountdown.minutes}<small>M</small></b>
+                  <b>{raceCountdown.seconds}<small>S</small></b>
                 </div>
               </div>
               <div className="upcoming-races">

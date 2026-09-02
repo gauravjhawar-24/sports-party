@@ -60,3 +60,4 @@
 - Thu 3 Sep 2026: Reworked the F1 recommendations page into a race-grid layout with P1 pole position and P2-P6 venue rankings.
 - Thu 3 Sep 2026: Split the race grid so P2-P3 are mid-size contenders and P4-P6 are compact backup venues.
 - Thu 3 Sep 2026: Redesigned the watch-party page as a unified F1 race plan with venue-led hero, stronger sharing, and visual RSVP groups.
+- Thu 3 Sep 2026: The F1 home page race counter now counts down live to the next main race instead of showing fixed numbers.
