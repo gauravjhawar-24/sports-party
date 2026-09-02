@@ -11,10 +11,10 @@
 | Build starts | Sat 29 Aug 2026, 11:00 AM IST |
 | Submission deadline | Sat 5 Sep 2026, 11:00 AM IST |
 | Demo | Sat 5 Sep 2026, 3:00 PM IST |
-| Current milestone | M1 |
-| Live URL | |
-| Public repo | |
-| Last updated | Tue 1 Sep 2026, 9:05 PM IST |
+| Current milestone | M4 |
+| Live URL | https://sports-party.vercel.app |
+| Public repo | https://github.com/gauravjhawar-24/sports-party |
+| Last updated | Wed 2 Sep 2026, 2:45 PM IST |
 
 ### status language
 
@@ -509,7 +509,10 @@ M1 — one ugly complete flow.
 
 ### live
 
--
+- `https://sports-party.vercel.app` is live as the broad Fanzo sports landing page.
+- `https://sports-party.vercel.app/f1` is live as the customer F1 finder product.
+- `https://sports-party.vercel.app/admin` is live as the internal proof page.
+- `https://sports-party.vercel.app/admin/venues` is live as the venue signal admin page.
 
 ### verified
 
@@ -519,11 +522,11 @@ M1 — one ugly complete flow.
 
 ### current blocker
 
-Vercel and visitor analytics are not set up for the new `sports-party` project yet.
+Visitor analytics are wired in code but not active because the PostHog project token has not been added yet.
 
 ### next single action
 
-Create the public GitHub repo, deploy to Vercel, then add visitor analytics with read-only access.
+Create a PostHog project, add `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` to Vercel, redeploy, and save read-only access for judging.
 
 ## 15. decision log
 

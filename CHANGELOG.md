@@ -39,3 +39,4 @@
 - Wed 2 Sep 2026: The landing page now uses a general sports theme with country-style chips, while F1 appears only as the current live option.
 - Wed 2 Sep 2026: The broad sports landing page no longer shows the hero CTA button.
 - Wed 2 Sep 2026: Admin now links back to `/f1`, area search prevents duplicate submissions, verified backups use clearer copy, and the scope reflects the new `/f1` product route.
+- Wed 2 Sep 2026: The app is live on Vercel with the public GitHub repo saved in the scope, and PostHog analytics wiring is ready for a project token.
