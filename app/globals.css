@@ -4383,6 +4383,11 @@ h3 {
   min-height: 38px;
 }
 
+.grid-venue-card .backup-actions {
+  display: grid;
+  grid-template-columns: 1fr 0.72fr;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;

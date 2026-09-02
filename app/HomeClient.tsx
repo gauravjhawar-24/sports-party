@@ -695,6 +695,13 @@ export function HomeClient({
                       >
                         Create Watch Party
                       </button>
+                      <button
+                        className="secondary-action"
+                        type="button"
+                        onClick={() => startAction("call_pub", bestVenue)}
+                      >
+                        Book Now
+                      </button>
                     </div>
                     {actionStatus ? (
                       <p className="action-status">{actionStatus}</p>
@@ -746,6 +753,12 @@ export function HomeClient({
                         >
                           Create Watch Party
                         </button>
+                        <button
+                          type="button"
+                          onClick={() => startAction("call_pub", venue)}
+                        >
+                          Book Now
+                        </button>
                       </div>
                     </article>
                   ))}
@@ -784,6 +797,12 @@ export function HomeClient({
                               onClick={() => startWatchParty(venue)}
                             >
                               Create Watch Party
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => startAction("call_pub", venue)}
+                            >
+                              Book Now
                             </button>
                           </div>
                         </article>
