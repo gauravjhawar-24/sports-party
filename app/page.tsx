@@ -155,6 +155,64 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         </div>
       </section>
 
+      <section className="journey-section" aria-label="Host and joiner flows">
+        <div className="landing-section-heading">
+          <span>Two ways into the plan</span>
+          <h2>Host the night. Or just say if you’re in.</h2>
+        </div>
+        <div className="journey-grid">
+          <JourneyColumn
+            label="Host flow"
+            summary="For the person making the plan and sending it to the group."
+            steps={[
+              {
+                title: "Find a screening",
+                detail: "Enter the area where the group can actually reach.",
+                image: "/landing-flow/host-01-find-screening.png"
+              },
+              {
+                title: "Pick the venue",
+                detail: "Choose the strongest screen from the ranked list.",
+                image: "/landing-flow/host-02-pick-venue.png"
+              },
+              {
+                title: "Create the plan",
+                detail: "Open one race plan with the venue, map and share link.",
+                image: "/landing-flow/host-03-race-plan.png"
+              },
+              {
+                title: "Track plans later",
+                detail: "Use host email to reopen every watch party created.",
+                image: "/landing-flow/host-04-my-plans.png"
+              }
+            ]}
+          />
+          <JourneyColumn
+            label="Joiner flow"
+            summary="For the friend who gets the link and needs to answer fast."
+            steps={[
+              {
+                title: "Open the invite",
+                detail: "See the race, venue, area and time in one place.",
+                image: "/landing-flow/joiner-01-open-invite.png"
+              },
+              {
+                title: "Check the group",
+                detail: "See who is in, maybe or out before deciding.",
+                image: "/landing-flow/joiner-02-rsvp-and-status.png",
+                crop: "mid"
+              },
+              {
+                title: "RSVP",
+                detail: "Enter name, choose in, maybe or out, and update the plan.",
+                image: "/landing-flow/joiner-02-rsvp-and-status.png",
+                crop: "low"
+              }
+            ]}
+          />
+        </div>
+      </section>
+
       <section className="verified-story" aria-label="Verified screenings">
         <div className="verified-copy">
           <h2><span>Not</span> “they probably have it on.”</h2>
@@ -228,6 +286,50 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         <span>Bangalore</span>
       </footer>
     </main>
+  );
+}
+
+function JourneyColumn({
+  label,
+  summary,
+  steps
+}: {
+  label: string;
+  summary: string;
+  steps: {
+    title: string;
+    detail: string;
+    image: string;
+    crop?: "mid" | "low";
+  }[];
+}) {
+  return (
+    <article className="journey-column">
+      <div className="journey-column-head">
+        <span>{label}</span>
+        <p>{summary}</p>
+      </div>
+      <div className="journey-steps">
+        {steps.map((step, index) => (
+          <section className="journey-step" key={step.title}>
+            <div className="journey-step-copy">
+              <b>{String(index + 1).padStart(2, "0")}</b>
+              <div>
+                <strong>{step.title}</strong>
+                <p>{step.detail}</p>
+              </div>
+            </div>
+            <div className="journey-phone-frame">
+              <img
+                src={step.image}
+                alt={`${label}: ${step.title}`}
+                className={step.crop ? `journey-crop-${step.crop}` : undefined}
+              />
+            </div>
+          </section>
+        ))}
+      </div>
+    </article>
   );
 }
 
