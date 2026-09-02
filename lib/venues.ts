@@ -108,6 +108,20 @@ export const venues: Venue[] = [
     sourceUrl: "https://pecospub.com/"
   },
   {
+    id: "pecos-stones-indiranagar",
+    name: "Pecos Stones",
+    area: "Indiranagar",
+    zones: ["indiranagar", "domlur", "old airport road"],
+    evidenceTag: "Needs call",
+    evidence: "Pecos Stones is a real Indiranagar pub, but the F1 screening needs a same-day confirmation.",
+    phone: "8971664068",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Pecos+Stones+Indiranagar+Bangalore",
+    vibe: "Old-school rock pub on 100 Feet Road, useful when the group wants an Indiranagar fallback.",
+    price: "Mid to high",
+    sourceLabel: "Zomato listing",
+    sourceUrl: "https://www.zomato.com/bangalore/pecos-stones-indiranagar-bangalore"
+  },
+  {
     id: "big-pitcher-sarjapur",
     name: "Big Pitcher",
     area: "Sarjapur Road",
