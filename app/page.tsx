@@ -20,7 +20,7 @@ const sampleVenues = [
 ].filter((venue): venue is Venue => Boolean(venue));
 
 const sports = [
-  { label: "F1", state: "live now" },
+  { label: "Formula 1", state: "live now" },
   { label: "Cricket", state: "coming next" },
   { label: "Football", state: "coming next" },
   { label: "UFC", state: "coming next" }
@@ -54,10 +54,10 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
 
       <section className="landing-hero" aria-label="Find live screenings">
         <div className="landing-hero-copy">
-          <p className="landing-kicker">Bangalore / live-screening discovery</p>
+          <p className="landing-kicker">Bangalore / sports-screening discovery</p>
           <h1>Where are you watching?</h1>
           <p>
-            Find bars and venues actually screening what you want to watch. Live now for F1 race nights in Bangalore.
+            Find bars and venues actually screening the match, race or fight you want to watch with your people.
           </p>
 
           <form className="landing-search" action="/f1">
@@ -83,7 +83,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
 
       <section className="landing-live-strip" aria-label="Bangalore live status">
         <span>Bangalore / live</span>
-        <strong><i /> {verifiedVenues.length} verified F1 screens</strong>
+        <strong><i /> {verifiedVenues.length} verified screens</strong>
         <strong>{activeVenueCount} venue signals</strong>
         <strong>{activeAreaCount} areas covered</strong>
       </section>
@@ -132,8 +132,8 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         <div className="flow-board">
           <div>
             <span>01 / Event</span>
-            <strong>{nextRace.name}</strong>
-            <p>Cricket, football and UFC come next.</p>
+            <strong>Match, race or fight</strong>
+            <p>Formula 1 is live first. Cricket, football and UFC follow the same flow.</p>
           </div>
           <div>
             <span>02 / Area</span>
@@ -159,6 +159,9 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         <div className="landing-section-heading">
           <span>Two ways into the plan</span>
           <h2>Host the night. Or just say if you’re in.</h2>
+          <p>
+            One person picks the screen and creates the plan. Everyone else gets one link, one decision and one live headcount.
+          </p>
         </div>
         <div className="journey-grid">
           <JourneyColumn
@@ -258,7 +261,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         <Link href="/f1">
           <time>18:30</time>
           <div>
-            <span>Formula 1</span>
+            <span>Live now</span>
             <strong>{nextRace.name}</strong>
           </div>
           <em>{verifiedVenues.length} verified screens</em>
@@ -268,7 +271,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
           <time>Next</time>
           <div>
             <span>Cricket / Football / UFC</span>
-            <strong>More sports coming after F1</strong>
+            <strong>More live boards coming next</strong>
           </div>
           <em>Not live yet</em>
           <b>→</b>

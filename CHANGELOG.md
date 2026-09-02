@@ -64,3 +64,4 @@
 - Thu 3 Sep 2026: Hosts can now open a dedicated My Plans page, enter their email, and reopen multiple watch parties with RSVP counts.
 - Thu 3 Sep 2026: The root page is now a broader FindMyScreen landing page that sends users into the existing F1 discovery flow without changing the product flow.
 - Thu 3 Sep 2026: The landing page now shows separate host and joiner flows with real mobile product screenshots.
+- Thu 3 Sep 2026: The landing page now presents Host and Joiner as separate full-width journeys and uses broader sports-screening language.

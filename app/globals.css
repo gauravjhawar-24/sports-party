@@ -382,6 +382,15 @@ a {
   margin-bottom: 26px;
 }
 
+.landing-section-heading p {
+  max-width: 760px;
+  margin: 0;
+  color: rgba(245, 245, 242, 0.66);
+  font-family: Inter, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.48;
+}
+
 .landing-section-heading h2,
 .watch-plan-preview h2,
 .landing-final-cta h2 {
@@ -537,21 +546,25 @@ a {
 
 .journey-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
+  gap: 30px;
 }
 
 .journey-column {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
   border-top: 1px solid rgba(225, 6, 0, 0.8);
   background:
-    linear-gradient(90deg, rgba(225, 6, 0, 0.08), transparent 36%),
+    radial-gradient(circle at 8% 20%, rgba(255, 184, 0, 0.1), transparent 24%),
+    linear-gradient(90deg, rgba(225, 6, 0, 0.07), transparent 28%),
     rgba(13, 13, 13, 0.74);
 }
 
 .journey-column-head {
   display: grid;
+  align-content: start;
   gap: 10px;
   padding: 22px;
+  border-right: 1px solid rgba(245, 245, 242, 0.1);
 }
 
 .journey-column-head span,
@@ -565,7 +578,7 @@ a {
 }
 
 .journey-column-head p {
-  max-width: 410px;
+  max-width: 210px;
   margin: 0;
   color: rgba(245, 245, 242, 0.68);
   font-size: 16px;
@@ -574,20 +587,23 @@ a {
 
 .journey-steps {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  border-top: 1px solid rgba(245, 245, 242, 0.12);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .journey-step {
   display: grid;
+  align-content: start;
   gap: 16px;
   border-right: 1px solid rgba(245, 245, 242, 0.1);
-  border-bottom: 1px solid rgba(245, 245, 242, 0.1);
   padding: 18px;
 }
 
-.journey-step:nth-child(2n) {
+.journey-step:last-child {
   border-right: 0;
+}
+
+.journey-column:last-child .journey-steps {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .journey-step-copy {
@@ -3863,10 +3879,28 @@ h3 {
   }
 
   .journey-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .journey-column,
+  .journey-column:last-child .journey-steps {
     grid-template-columns: 1fr;
   }
 
+  .journey-column-head {
+    border-right: 0;
+    border-bottom: 1px solid rgba(245, 245, 242, 0.1);
+  }
+
+  .journey-column-head p {
+    max-width: 620px;
+  }
+
   .journey-step {
+    border-bottom: 1px solid rgba(245, 245, 242, 0.1);
+  }
+
+  .journey-step:nth-child(2n) {
     border-right: 0;
   }
 
@@ -4077,6 +4111,15 @@ h3 {
   .journey-column-head,
   .journey-step {
     padding: 16px;
+  }
+
+  .journey-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-step,
+  .journey-step:nth-child(2n) {
+    border-right: 0;
   }
 
   .journey-step-copy strong {
