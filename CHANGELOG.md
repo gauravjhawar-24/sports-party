@@ -59,3 +59,4 @@
 - Thu 3 Sep 2026: Recreated the F1 finder start screen from the Figma reference with race-control styling, start lights, and a detailed race panel.
 - Thu 3 Sep 2026: Reworked the F1 recommendations page into a race-grid layout with P1 pole position and P2-P6 venue rankings.
 - Thu 3 Sep 2026: Split the race grid so P2-P3 are mid-size contenders and P4-P6 are compact backup venues.
+- Thu 3 Sep 2026: Redesigned the watch-party page as a unified F1 race plan with venue-led hero, stronger sharing, and visual RSVP groups.

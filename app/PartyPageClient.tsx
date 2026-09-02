@@ -5,8 +5,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import posthog from "posthog-js";
 import { api } from "../convex/_generated/api";
-import type { Id } from "../convex/_generated/dataModel";
-import { InviteCardPreview } from "./HomeClient";
+import type { Doc, Id } from "../convex/_generated/dataModel";
 
 type Decision = "in" | "maybe" | "out";
 
@@ -29,9 +28,9 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
   const submitRsvp = useMutation(api.actions.submitWatchPartyRsvp);
 
   const grouped = useMemo(() => {
-    const empty: Record<Decision, string[]> = { in: [], maybe: [], out: [] };
+    const empty: Record<Decision, Doc<"rsvps">[]> = { in: [], maybe: [], out: [] };
     for (const rsvp of partyData?.rsvps ?? []) {
-      empty[rsvp.decision].push(rsvp.isHost ? `${rsvp.name} (host)` : rsvp.name);
+      empty[rsvp.decision].push(rsvp);
     }
     return empty;
   }, [partyData?.rsvps]);
@@ -80,11 +79,7 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
 
   const { party } = partyData;
   const partyUrl = typeof window === "undefined" ? "" : window.location.href;
-  const venueForCard = {
-    name: party.venueName,
-    area: party.venueArea,
-    evidenceTag: party.venueEvidenceTag
-  };
+  const hostRsvp = partyData.rsvps.find((rsvp) => rsvp.isHost);
 
   async function copyPartyLink() {
     if (!partyUrl) return;
@@ -150,49 +145,54 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
 
   return (
     <main className="race-shell">
-      <section className="party-page">
-        <header className="result-topbar">
-          <Link href="/f1">Find another screening</Link>
-          <div>
-            <span>Watch party</span>
-            <strong>{party.venueName}</strong>
-          </div>
+      <section className="party-page race-plan-page">
+        <header className="race-plan-nav">
+          <Link href="/f1">← Find another screening</Link>
         </header>
 
-        <div className="party-grid">
-          <section className="party-main">
-            <InviteCardPreview venue={venueForCard} />
-          </section>
+        <section className="race-plan-hero" aria-label="Selected watch party">
+          <div className="race-plan-slash" aria-hidden="true" />
+          <div className="race-plan-meta">
+            <span>Race plan / 001</span>
+            <strong><i /> {party.venueEvidenceTag} screening</strong>
+          </div>
+          <div className="race-plan-copy">
+            <p>{party.raceName}</p>
+            <span>We're watching at</span>
+            <h1>{party.venueName}</h1>
+            <em>{party.venueArea}</em>
+          </div>
+          <div className="race-plan-time">
+            <strong>{formatRaceDate(party.raceDate)}</strong>
+            <strong>{formatRaceTime(party.raceTime)}</strong>
+          </div>
+          <div className="race-plan-actions">
+            <button type="button" onClick={() => void sharePartyLink()}>Share race plan →</button>
+            <a href={party.mapUrl} target="_blank" rel="noreferrer">Open map</a>
+            <Link href="/f1">Change venue</Link>
+          </div>
+        </section>
 
-          <aside className="party-side">
-            <div className="party-share-box">
-              <label htmlFor="party-link">Share this link with friends</label>
-              <div>
-                <input id="party-link" value={partyUrl} readOnly />
-                <button type="button" onClick={() => void copyPartyLink()}>Copy</button>
-                <button type="button" onClick={() => void sharePartyLink()}>Share</button>
-              </div>
-            </div>
+        <div className="race-plan-lower">
+          <RsvpStats grouped={grouped} />
 
-            <div className="party-summary">
-              <span>{party.venueEvidenceTag}</span>
-              <h1>{party.venueName}</h1>
-              <p>{party.venueArea}</p>
-              <div className="party-venue-actions">
-                {party.venuePhone && party.venuePhone !== "Needs call" ? (
-                  <a href={`tel:${party.venuePhone}`}>Call pub</a>
-                ) : (
-                  <span>Phone number needs a fresh check</span>
-                )}
-                <a href={party.mapUrl} target="_blank" rel="noreferrer">Open map</a>
-              </div>
+          <aside className="race-plan-invite">
+            <div className="race-plan-invite-copy">
+              <span>Invite your crew</span>
+              <h2>Your race plan is locked.</h2>
+              <p>Send it to the group and let people RSVP on this page.</p>
             </div>
+            <button type="button" onClick={() => void sharePartyLink()}>Share race plan →</button>
+            <div className="race-plan-copy-link">
+              <input id="party-link" value={partyUrl} readOnly aria-label="Watch party invite link" />
+              <button type="button" onClick={() => void copyPartyLink()}>Copy</button>
+            </div>
+            {status ? <p className="action-status">{status}</p> : null}
 
             {isHostDevice ? (
-              <div className="host-rsvp-lock">
-                <span>Host view</span>
-                <strong>You are already counted as I'm in.</strong>
-                <p>Share this link with friends and watch the group status below.</p>
+              <div className="host-rsvp-status">
+                <strong>{hostRsvp?.name ?? party.hostName}</strong>
+                <span><i /> I'm in · Host</span>
               </div>
             ) : (
               <RsvpForm
@@ -206,14 +206,29 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
                 onSubmit={submit}
               />
             )}
-            <a className="party-scroll-cue" href="#party-rsvps">
-              Scroll down to see who is in, maybe, and out
-            </a>
-            {status ? <p className="action-status">{status}</p> : null}
           </aside>
         </div>
 
-        <RsvpStats grouped={grouped} />
+        <section className="race-plan-venue" aria-label="Venue details">
+          <div>
+            <span>Venue</span>
+            <h2>{party.venueName}</h2>
+            <p>{party.venueArea}</p>
+          </div>
+          <div className="race-plan-venue-details">
+            <p><strong>{party.venueEvidenceTag} screening</strong></p>
+            <p>{party.venueEvidence}</p>
+            <p>{party.venueVibe}</p>
+          </div>
+          <div className="race-plan-venue-actions">
+            {party.venuePhone && party.venuePhone !== "Needs call" ? (
+              <a href={`tel:${party.venuePhone}`}>Call pub</a>
+            ) : (
+              <span>Phone number needs a fresh check</span>
+            )}
+            <a href={party.mapUrl} target="_blank" rel="noreferrer">Open in maps →</a>
+          </div>
+        </section>
       </section>
     </main>
   );
@@ -245,7 +260,7 @@ function RsvpForm({
       <p className="rsvp-hint">
         {currentDecision
           ? `You already said ${decisionLabels[currentDecision]}. Submit again to update it.`
-          : "Vote here. Scroll down after voting to see who is in, maybe, and out."}
+          : "Vote here and your group status updates below."}
       </p>
       <input
         value={name}
@@ -273,38 +288,54 @@ function RsvpForm({
   );
 }
 
-function RsvpStats({ grouped }: { grouped: Record<Decision, string[]> }) {
+function RsvpStats({ grouped }: { grouped: Record<Decision, Doc<"rsvps">[]> }) {
   const rows = (Object.keys(decisionLabels) as Decision[]).map((item) => ({
+    id: item,
     decision: decisionLabels[item],
     count: grouped[item].length,
-    names: grouped[item].length ? grouped[item].join(", ") : "No one yet"
+    people: grouped[item]
   }));
 
   return (
     <section className="rsvp-stats" id="party-rsvps" aria-label="Watch party RSVP stats">
-      <h2>Group status</h2>
-      <div className="rsvp-table-wrap">
-        <table className="rsvp-table">
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Count</th>
-              <th>People</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.decision}>
-                <td data-label="Status">{row.decision}</td>
-                <td data-label="Count">{row.count}</td>
-                <td data-label="People">{row.names}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <h2>Who's in?</h2>
+      <div className="rsvp-scoreboard">
+        {rows.map((row) => (
+          <div key={row.id}>
+            <strong>{String(row.count).padStart(2, "0")}</strong>
+            <span>{row.decision}</span>
+          </div>
+        ))}
+      </div>
+      <div className="rsvp-groups">
+        {rows.map((row) => (
+          <div className="rsvp-group" key={row.id}>
+            <h3>{row.decision}</h3>
+            {row.people.length ? (
+              <ul>
+                {row.people.map((person) => (
+                  <li key={person._id}>
+                    <span>{person.name}</span>
+                    {person.isHost ? <strong>Host</strong> : null}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No one yet</p>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );
+}
+
+function formatRaceDate(raceDate: string) {
+  return raceDate.replace("Sunday, ", "Sun ").replace(", 2026", "").toUpperCase();
+}
+
+function formatRaceTime(raceTime: string) {
+  return raceTime.replace(" PM", "").toUpperCase();
 }
 
 function getOrCreateClientId() {
