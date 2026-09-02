@@ -3449,6 +3449,7 @@ h2 {
 .race-plan-invite > button,
 .race-plan-copy-link button,
 .rsvp-form > button[type="submit"],
+.race-plan-venue-actions button,
 .race-plan-venue-actions a {
   display: inline-flex;
   min-height: 44px;
@@ -3710,6 +3711,58 @@ h2 {
   color: rgba(247, 247, 242, 0.52);
   font-size: 13px;
   font-weight: 800;
+}
+
+.race-plan-venue > .action-status {
+  grid-column: 1 / -1;
+}
+
+.booking-interest {
+  display: grid;
+  gap: 10px;
+  grid-column: 1 / -1;
+  border-top: 1px solid rgba(225, 6, 0, 0.58);
+  background:
+    linear-gradient(90deg, rgba(225, 6, 0, 0.13), transparent 38%),
+    rgba(10, 10, 10, 0.72);
+  padding: 16px;
+}
+
+.booking-interest strong {
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 28px;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.booking-interest p {
+  margin: 0;
+}
+
+.booking-interest div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.booking-interest button {
+  min-height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
+  background: var(--red);
+  color: white;
+  cursor: pointer;
+  padding: 0 18px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.booking-interest button:last-child {
+  background: transparent;
 }
 
 .backup-stack {
@@ -4381,11 +4434,6 @@ h3 {
 .grid-venue-card .backup-actions button {
   width: 100%;
   min-height: 38px;
-}
-
-.grid-venue-card .backup-actions {
-  display: grid;
-  grid-template-columns: 1fr 0.72fr;
 }
 
 .modal-backdrop {

@@ -34,6 +34,8 @@ export function PartyPageClient({
     name: string;
     decision: Decision;
   } | null>(null);
+  const [showBookingInterest, setShowBookingInterest] = useState(false);
+  const [bookingInterestStatus, setBookingInterestStatus] = useState("");
   const partyById = useQuery(
     api.actions.watchPartyWithRsvps,
     partyId ? { partyId: partyId as Id<"watchParties"> } : "skip",
@@ -140,6 +142,15 @@ export function PartyPageClient({
       return;
     }
     await copyPartyLink();
+  }
+
+  function answerBookingInterest(isInterested: boolean) {
+    setShowBookingInterest(false);
+    setBookingInterestStatus(
+      isInterested
+        ? "Interest registered. Booking will be live soon."
+        : "No problem. You can still use the map and share the race plan.",
+    );
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -294,15 +305,42 @@ export function PartyPageClient({
             <p>{party.venueVibe}</p>
           </div>
           <div className="race-plan-venue-actions">
-            {party.venuePhone && party.venuePhone !== "Needs call" ? (
-              <a href={`tel:${party.venuePhone}`}>Book Now</a>
-            ) : (
-              <span>Phone number needs a fresh check</span>
-            )}
+            <button
+              type="button"
+              onClick={() => {
+                setBookingInterestStatus("");
+                setShowBookingInterest(true);
+              }}
+            >
+              Book Now
+            </button>
             <a href={party.mapUrl} target="_blank" rel="noreferrer">
               Open in maps →
             </a>
           </div>
+          {showBookingInterest ? (
+            <div className="booking-interest" role="dialog" aria-modal="false">
+              <strong>This feature will be live soon.</strong>
+              <p>Register your interest?</p>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => answerBookingInterest(true)}
+                >
+                  Yes
+                </button>
+                <button
+                  type="button"
+                  onClick={() => answerBookingInterest(false)}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {bookingInterestStatus ? (
+            <p className="action-status">{bookingInterestStatus}</p>
+          ) : null}
         </section>
       </section>
     </main>

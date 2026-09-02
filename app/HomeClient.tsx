@@ -14,18 +14,9 @@ import {
 } from "../lib/venues";
 import { approvedSignalToVenue } from "../lib/venueSignals";
 
-type PendingAction = "share_invite" | "call_pub";
-type PendingActionTarget = {
-  action: PendingAction;
-  venue: Venue;
-};
 type PendingPartyTarget = {
   venue: Venue;
 };
-type RevealedPhone = {
-  venue: Venue;
-  phone: string;
-} | null;
 type RevealedInvite = {
   venue: Venue;
   text: string;
@@ -90,19 +81,15 @@ export function HomeClient({
   const [submittedArea, setSubmittedArea] = useState(initialArea);
   const [hasSearched, setHasSearched] = useState(Boolean(initialArea));
   const [copiedInvite, setCopiedInvite] = useState(false);
-  const [pendingAction, setPendingAction] =
-    useState<PendingActionTarget | null>(null);
   const [pendingParty, setPendingParty] = useState<PendingPartyTarget | null>(
     null,
   );
-  const [email, setEmail] = useState("");
   const [hostName, setHostName] = useState("");
   const [hostEmail, setHostEmail] = useState("");
   const [lookupEmail, setLookupEmail] = useState("");
   const [submittedLookupEmail, setSubmittedLookupEmail] = useState("");
   const [inviteCode, setInviteCode] = useState("");
   const [inviteCodeError, setInviteCodeError] = useState("");
-  const [emailError, setEmailError] = useState("");
   const [hostError, setHostError] = useState("");
   const [areaError, setAreaError] = useState("");
   const [actionStatus, setActionStatus] = useState("");
@@ -110,9 +97,7 @@ export function HomeClient({
     getRaceCountdown(),
   );
   const [isSearching, setIsSearching] = useState(false);
-  const [isCompletingAction, setIsCompletingAction] = useState(false);
   const [isCreatingParty, setIsCreatingParty] = useState(false);
-  const [revealedPhone, setRevealedPhone] = useState<RevealedPhone>(null);
   const [revealedInvite, setRevealedInvite] = useState<RevealedInvite>(
     initialInviteVenue
       ? { venue: initialInviteVenue, text: buildInviteText(initialInviteVenue) }
@@ -147,8 +132,6 @@ export function HomeClient({
   const bestVenue = run.results[0];
   const backupVenues = run.results.slice(1, 3);
   const moreVenues = run.results.slice(3, 6);
-  const primaryAction =
-    bestVenue?.evidenceTag === "Verified" ? "Share invite" : "Book Now";
   const routePath = basePath || "/";
   const queryPrefix = routePath === "/" ? "/?" : `${routePath}?`;
   const areaHref = (nextArea: string) =>
@@ -176,7 +159,6 @@ export function HomeClient({
     setHasSearched(true);
     setCopiedInvite(false);
     setActionStatus("");
-    setRevealedPhone(null);
     setRevealedInvite(null);
 
     if (nextRun.results[0]) {
@@ -204,19 +186,10 @@ export function HomeClient({
     }
   }
 
-  function startAction(action: PendingAction, venue: Venue) {
-    setPendingAction({ action, venue });
-    setEmailError("");
-    setActionStatus("");
-    setRevealedPhone(null);
-    setRevealedInvite(null);
-  }
-
   function startWatchParty(venue: Venue) {
     setPendingParty({ venue });
     setHostError("");
     setActionStatus("");
-    setRevealedPhone(null);
     setRevealedInvite(null);
   }
 
@@ -314,7 +287,6 @@ export function HomeClient({
 
     setCopiedInvite(false);
     setActionStatus("Invite ready. Enter email on the card to copy it.");
-    setRevealedPhone(null);
     setRevealedInvite({ venue, text });
 
     try {
@@ -346,78 +318,6 @@ export function HomeClient({
     });
 
     setActionStatus("Invite saved. You can now copy it.");
-  }
-
-  async function completeAction(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!pendingAction || isCompletingAction) return;
-
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setEmailError("Enter a valid email to continue.");
-      return;
-    }
-
-    const actionToComplete = pendingAction;
-    setIsCompletingAction(true);
-    setEmailError("");
-
-    try {
-      await recordAction({
-        email: email.trim(),
-        actionType: actionToComplete.action,
-        areaInput: submittedArea,
-        normalizedArea: run.normalizedArea,
-        venueId: actionToComplete.venue.id,
-        venueName: actionToComplete.venue.name,
-        raceName: nextRace.name,
-      });
-      captureProductEvent("findmyscreen_action_completed", {
-        action_type: actionToComplete.action,
-        area_input: submittedArea,
-        normalized_area: run.normalizedArea,
-        venue_id: actionToComplete.venue.id,
-        venue_name: actionToComplete.venue.name,
-      });
-
-      if (actionToComplete.action === "share_invite") {
-        const text = buildInviteText(actionToComplete.venue);
-
-        try {
-          await navigator.clipboard.writeText(text);
-          setCopiedInvite(true);
-          setActionStatus(
-            "Invite ready and text copied. Send it to your group.",
-          );
-        } catch {
-          setCopiedInvite(false);
-          setActionStatus("Invite ready. Use Copy text.");
-        }
-
-        setRevealedInvite({
-          venue: actionToComplete.venue,
-          text,
-        });
-      } else if (actionToComplete.venue.phone !== "Needs call") {
-        setRevealedPhone({
-          venue: actionToComplete.venue,
-          phone: actionToComplete.venue.phone,
-        });
-        setActionStatus("Phone number ready.");
-      } else {
-        setRevealedPhone({
-          venue: actionToComplete.venue,
-          phone: "Phone number not available yet",
-        });
-        setActionStatus("Booking action saved.");
-      }
-
-      setPendingAction(null);
-      setEmail("");
-    } catch {
-      setEmailError("Something went wrong. Please try again.");
-    } finally {
-      setIsCompletingAction(false);
-    }
   }
 
   return (
@@ -695,23 +595,9 @@ export function HomeClient({
                       >
                         Create Watch Party
                       </button>
-                      <button
-                        className="secondary-action"
-                        type="button"
-                        onClick={() => startAction("call_pub", bestVenue)}
-                      >
-                        Book Now
-                      </button>
                     </div>
                     {actionStatus ? (
                       <p className="action-status">{actionStatus}</p>
-                    ) : null}
-                    {revealedPhone ? (
-                      <PhoneReveal
-                        venueName={revealedPhone.venue.name}
-                        phone={revealedPhone.phone}
-                        mapUrl={revealedPhone.venue.mapUrl}
-                      />
                     ) : null}
                     {bestVenue.evidenceTag !== "Verified" ? (
                       <p className="honesty-note">
@@ -744,7 +630,7 @@ export function HomeClient({
                       <p className="pick-note">
                         {venue.evidenceTag === "Verified"
                           ? "Confirmed backup for race night."
-                          : "Good option, but call once before you go."}
+                          : "Good option, but confirm once before you go."}
                       </p>
                       <div className="backup-actions">
                         <button
@@ -752,12 +638,6 @@ export function HomeClient({
                           onClick={() => startWatchParty(venue)}
                         >
                           Create Watch Party
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => startAction("call_pub", venue)}
-                        >
-                          Book Now
                         </button>
                       </div>
                     </article>
@@ -789,7 +669,7 @@ export function HomeClient({
                           <p className="pick-note">
                             {venue.evidenceTag === "Verified"
                               ? "Confirmed backup for race night."
-                              : "Backup option. Call before you commit."}
+                              : "Backup option. Confirm before you commit."}
                           </p>
                           <div className="backup-actions">
                             <button
@@ -797,12 +677,6 @@ export function HomeClient({
                               onClick={() => startWatchParty(venue)}
                             >
                               Create Watch Party
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => startAction("call_pub", venue)}
-                            >
-                              Book Now
                             </button>
                           </div>
                         </article>
@@ -815,42 +689,6 @@ export function HomeClient({
           ) : null}
         </section>
       )}
-
-      {pendingAction ? (
-        <div className="modal-backdrop" role="presentation">
-          <form className="email-modal" onSubmit={completeAction}>
-            <span>
-              {pendingAction.action === "share_invite"
-                ? "Share invite"
-                : "Book Now"}
-            </span>
-            <h2>
-              {pendingAction.action === "share_invite"
-                ? "Please enter your email to create your invite"
-                : "Please enter your email to view booking details"}
-            </h2>
-            <input
-              autoFocus
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
-            />
-            {emailError ? <p className="email-error">{emailError}</p> : null}
-            <div>
-              <button
-                type="button"
-                onClick={() => setPendingAction(null)}
-                disabled={isCompletingAction}
-              >
-                Cancel
-              </button>
-              <button type="submit" disabled={isCompletingAction}>
-                {isCompletingAction ? "Loading..." : "Continue"}
-              </button>
-            </div>
-          </form>
-        </div>
-      ) : null}
 
       {pendingParty ? (
         <div className="modal-backdrop" role="presentation">
@@ -1188,33 +1026,6 @@ export function InviteCardPreview({
         <em>One plan. No group debate.</em>
       </div>
       <strong className="invite-question">Who's in?</strong>
-    </div>
-  );
-}
-
-function PhoneReveal({
-  venueName,
-  phone,
-  mapUrl,
-}: {
-  venueName: string;
-  phone: string;
-  mapUrl: string;
-}) {
-  const hasPhone = phone !== "Phone number not available yet";
-
-  return (
-    <div className="phone-reveal" role="status">
-      <span>Phone number</span>
-      <strong>{phone}</strong>
-      <p>{venueName}</p>
-      {hasPhone ? (
-        <a href={`tel:${phone}`}>Call now</a>
-      ) : (
-        <a href={mapUrl} target="_blank" rel="noreferrer">
-          Open map to find contact
-        </a>
-      )}
     </div>
   );
 }

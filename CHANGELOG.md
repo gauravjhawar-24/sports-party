@@ -71,3 +71,4 @@
 - Thu 3 Sep 2026: Added a Discover hub between the landing page and F1 product so users choose sport and city before entering live screenings.
 - Thu 3 Sep 2026: Renamed venue calling actions to Book Now and made the RSVP form disappear immediately after a saved response.
 - Thu 3 Sep 2026: Added Book Now as a visible action on every venue card in the F1 recommendations grid.
+- Thu 3 Sep 2026: Moved Book Now back inside the watch-party page and changed it to a coming-soon interest prompt instead of a phone-number flow.
