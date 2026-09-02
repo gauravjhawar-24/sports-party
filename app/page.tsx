@@ -30,7 +30,6 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
             <span>FZ</span>
             <strong>Fanzo</strong>
           </div>
-          <Link href="/f1">Open F1 finder</Link>
         </nav>
 
         <div className="landing-hero-grid">

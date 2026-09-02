@@ -45,3 +45,4 @@
 - Wed 2 Sep 2026: PostHog now shows live events and read-only judging access has been saved.
 - Wed 2 Sep 2026: Share invite now opens a dedicated venue invite page instead of showing the invite below other venue options.
 - Wed 2 Sep 2026: The invite page no longer repeats the WhatsApp text below the visual card after unlock.
+- Wed 2 Sep 2026: The broad landing page top nav no longer shows the F1 finder button.
