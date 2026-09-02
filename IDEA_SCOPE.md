@@ -256,8 +256,8 @@ Do not count anonymous visits as meaningful actions. Do not count your own tests
 
 ### analytics setup (do this on Sunday, not Saturday)
 
-- Analytics tool installed on the live URL:
-- Read-only access created and the link saved:
+- Analytics tool installed on the live URL: PostHog installed and confirmed by a live pageview event.
+- Read-only access created and the link saved: Done in PostHog for judging access.
 - Signup or first-use event writes to Convex:
 - Payment link, if any: none for V1.
 
@@ -522,11 +522,11 @@ M1 — one ugly complete flow.
 
 ### current blocker
 
-Visitor analytics are wired in code and the PostHog production env vars are added on Vercel. Read-only judging access still needs to be saved.
+No current blocker. Visitor analytics are wired, a live event has been seen in PostHog, and read-only judging access has been saved.
 
 ### next single action
 
-Open the live site in a browser, confirm the first pageview in PostHog, then save read-only analytics access for judging.
+Run the final phone check on `/`, `/f1`, area search, Share invite, email unlock and Call pub.
 
 ## 15. decision log
 
