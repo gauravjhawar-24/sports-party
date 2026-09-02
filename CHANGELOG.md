@@ -44,3 +44,4 @@
 - Wed 2 Sep 2026: PostHog production token was added to Vercel so live visitor analytics can start after redeploy.
 - Wed 2 Sep 2026: PostHog now shows live events and read-only judging access has been saved.
 - Wed 2 Sep 2026: Share invite now opens a dedicated venue invite page instead of showing the invite below other venue options.
+- Wed 2 Sep 2026: The invite page no longer repeats the WhatsApp text below the visual card after unlock.

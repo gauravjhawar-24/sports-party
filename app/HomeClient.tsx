@@ -569,7 +569,6 @@ export function InviteReveal({
           <button type="button" onClick={onCopy}>Copy text</button>
         </div>
       )}
-      {isUnlocked ? <pre>{invite.text}</pre> : null}
     </div>
   );
 }
