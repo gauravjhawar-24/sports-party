@@ -12,11 +12,17 @@ type Decision = "in" | "maybe" | "out";
 const decisionLabels: Record<Decision, string> = {
   in: "I'm in",
   maybe: "Maybe",
-  out: "Out"
+  out: "Out",
 };
 const clientIdKey = "findmyscreen-client-id";
 
-export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inviteCode?: string }) {
+export function PartyPageClient({
+  partyId,
+  inviteCode,
+}: {
+  partyId?: string;
+  inviteCode?: string;
+}) {
   const [name, setName] = useState("");
   const [decision, setDecision] = useState<Decision>("in");
   const [clientId, setClientId] = useState("");
@@ -26,17 +32,21 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
   const [isSaving, setIsSaving] = useState(false);
   const partyById = useQuery(
     api.actions.watchPartyWithRsvps,
-    partyId ? { partyId: partyId as Id<"watchParties"> } : "skip"
+    partyId ? { partyId: partyId as Id<"watchParties"> } : "skip",
   );
   const partyByCode = useQuery(
     api.actions.watchPartyWithRsvpsByInviteCode,
-    inviteCode ? { inviteCode } : "skip"
+    inviteCode ? { inviteCode } : "skip",
   );
   const partyData = partyId ? partyById : partyByCode;
   const submitRsvp = useMutation(api.actions.submitWatchPartyRsvp);
 
   const grouped = useMemo(() => {
-    const empty: Record<Decision, Doc<"rsvps">[]> = { in: [], maybe: [], out: [] };
+    const empty: Record<Decision, Doc<"rsvps">[]> = {
+      in: [],
+      maybe: [],
+      out: [],
+    };
     for (const rsvp of partyData?.rsvps ?? []) {
       empty[rsvp.decision].push(rsvp);
     }
@@ -56,9 +66,13 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
     const party = partyData?.party;
     if (!party) return;
 
-    const isHostById = window.localStorage.getItem(`findmyscreen-host-party:${party._id}`) === "true";
+    const isHostById =
+      window.localStorage.getItem(`findmyscreen-host-party:${party._id}`) ===
+      "true";
     const isHostByCode = party.inviteCode
-      ? window.localStorage.getItem(`findmyscreen-host-party-code:${party.inviteCode}`) === "true"
+      ? window.localStorage.getItem(
+          `findmyscreen-host-party-code:${party.inviteCode}`,
+        ) === "true"
       : false;
     setIsHostDevice(isHostById || isHostByCode);
   }, [partyData?.party]);
@@ -96,11 +110,12 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
   }
 
   const { party } = partyData;
-  const partyUrl = typeof window === "undefined"
-    ? ""
-    : party.inviteCode
-      ? `${window.location.origin}/f1/join/${party.inviteCode}`
-      : window.location.href;
+  const partyUrl =
+    typeof window === "undefined"
+      ? ""
+      : party.inviteCode
+        ? `${window.location.origin}/f1/join/${party.inviteCode}`
+        : window.location.href;
   const hostRsvp = partyData.rsvps.find((rsvp) => rsvp.isHost);
 
   async function copyPartyLink() {
@@ -115,7 +130,7 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
       await navigator.share({
         title: `${party.raceName} watch party`,
         text: `${party.raceName} at ${party.venueName}. RSVP here:`,
-        url: partyUrl
+        url: partyUrl,
       });
       return;
     }
@@ -144,7 +159,7 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
         partyId: party._id,
         name: trimmedName,
         clientId,
-        decision
+        decision,
       });
 
       if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
@@ -152,7 +167,7 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
           party_id: party._id,
           venue_id: party.venueId,
           venue_name: party.venueName,
-          decision
+          decision,
         });
       }
 
@@ -176,7 +191,9 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
           <div className="race-plan-slash" aria-hidden="true" />
           <div className="race-plan-meta">
             <span>Race plan / 001</span>
-            <strong><i /> {party.venueEvidenceTag} screening</strong>
+            <strong>
+              <i /> {party.venueEvidenceTag} screening
+            </strong>
           </div>
           <div className="race-plan-copy">
             <p>{party.raceName}</p>
@@ -189,8 +206,12 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
             <strong>{formatRaceTime(party.raceTime)}</strong>
           </div>
           <div className="race-plan-actions">
-            <button type="button" onClick={() => void sharePartyLink()}>Share race plan →</button>
-            <a href={party.mapUrl} target="_blank" rel="noreferrer">Open map</a>
+            <button type="button" onClick={() => void sharePartyLink()}>
+              Share race plan →
+            </button>
+            <a href={party.mapUrl} target="_blank" rel="noreferrer">
+              Open map
+            </a>
             <Link href="/f1">Change venue</Link>
           </div>
         </section>
@@ -204,20 +225,33 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
               <h2>Your race plan is locked.</h2>
               <p>Send it to the group and let people RSVP on this page.</p>
             </div>
-            <button type="button" onClick={() => void sharePartyLink()}>Share race plan →</button>
+            <button type="button" onClick={() => void sharePartyLink()}>
+              Share race plan →
+            </button>
             <div className="race-plan-copy-link">
-              <input id="party-link" value={partyUrl} readOnly aria-label="Watch party invite link" />
-              <button type="button" onClick={() => void copyPartyLink()}>Copy</button>
+              <input
+                id="party-link"
+                value={partyUrl}
+                readOnly
+                aria-label="Watch party invite link"
+              />
+              <button type="button" onClick={() => void copyPartyLink()}>
+                Copy
+              </button>
             </div>
             {party.inviteCode ? (
-              <p className="invite-code-note">Invite code: <strong>{party.inviteCode}</strong></p>
+              <p className="invite-code-note">
+                Invite code: <strong>{party.inviteCode}</strong>
+              </p>
             ) : null}
             {status ? <p className="action-status">{status}</p> : null}
 
             {isHostDevice ? (
               <div className="host-rsvp-status">
                 <strong>{hostRsvp?.name ?? party.hostName}</strong>
-                <span><i /> I'm in · Host</span>
+                <span>
+                  <i /> I'm in · Host
+                </span>
               </div>
             ) : (
               <RsvpForm
@@ -241,7 +275,9 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
             <p>{party.venueArea}</p>
           </div>
           <div className="race-plan-venue-details">
-            <p><strong>{party.venueEvidenceTag} screening</strong></p>
+            <p>
+              <strong>{party.venueEvidenceTag} screening</strong>
+            </p>
             <p>{party.venueEvidence}</p>
             <p>{party.venueVibe}</p>
           </div>
@@ -251,7 +287,9 @@ export function PartyPageClient({ partyId, inviteCode }: { partyId?: string; inv
             ) : (
               <span>Phone number needs a fresh check</span>
             )}
-            <a href={party.mapUrl} target="_blank" rel="noreferrer">Open in maps →</a>
+            <a href={party.mapUrl} target="_blank" rel="noreferrer">
+              Open in maps →
+            </a>
           </div>
         </section>
       </section>
@@ -267,7 +305,7 @@ function RsvpForm({
   name,
   onDecisionChange,
   onNameChange,
-  onSubmit
+  onSubmit,
 }: {
   currentDecision?: Decision;
   decision: Decision;
@@ -318,11 +356,15 @@ function RsvpStats({ grouped }: { grouped: Record<Decision, Doc<"rsvps">[]> }) {
     id: item,
     decision: decisionLabels[item],
     count: grouped[item].length,
-    people: grouped[item]
+    people: grouped[item],
   }));
 
   return (
-    <section className="rsvp-stats" id="party-rsvps" aria-label="Watch party RSVP stats">
+    <section
+      className="rsvp-stats"
+      id="party-rsvps"
+      aria-label="Watch party RSVP stats"
+    >
       <h2>Who's in?</h2>
       <div className="rsvp-scoreboard">
         {rows.map((row) => (
@@ -356,7 +398,10 @@ function RsvpStats({ grouped }: { grouped: Record<Decision, Doc<"rsvps">[]> }) {
 }
 
 function formatRaceDate(raceDate: string) {
-  return raceDate.replace("Sunday, ", "Sun ").replace(", 2026", "").toUpperCase();
+  return raceDate
+    .replace("Sunday, ", "Sun ")
+    .replace(", 2026", "")
+    .toUpperCase();
 }
 
 function formatRaceTime(raceTime: string) {
@@ -367,9 +412,10 @@ function getOrCreateClientId() {
   const existing = window.localStorage.getItem(clientIdKey);
   if (existing) return existing;
 
-  const nextId = typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : `client-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const nextId =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `client-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
   window.localStorage.setItem(clientIdKey, nextId);
   return nextId;

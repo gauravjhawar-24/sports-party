@@ -5,7 +5,13 @@ import { useMutation, useQuery } from "convex/react";
 import posthog from "posthog-js";
 import { api } from "../convex/_generated/api";
 import type { Doc } from "../convex/_generated/dataModel";
-import { buildInviteText, nextRace, rankVenueList, venues, type Venue } from "../lib/venues";
+import {
+  buildInviteText,
+  nextRace,
+  rankVenueList,
+  venues,
+  type Venue,
+} from "../lib/venues";
 import { approvedSignalToVenue } from "../lib/venueSignals";
 
 type PendingAction = "share_invite" | "call_pub";
@@ -53,7 +59,7 @@ function getRaceCountdown(): RaceCountdown {
     days: padTime(days),
     hours: padTime(hours),
     minutes: padTime(minutes),
-    seconds: padTime(seconds)
+    seconds: padTime(seconds),
   };
 }
 
@@ -61,7 +67,7 @@ export function HomeClient({
   initialArea = "",
   initialApprovedSignals,
   initialInvite = false,
-  basePath = ""
+  basePath = "",
 }: {
   initialArea?: string;
   initialApprovedSignals: Doc<"venueCandidates">[];
@@ -72,14 +78,23 @@ export function HomeClient({
     const approvedVenues = initialApprovedSignals.map(approvedSignalToVenue);
     return [...approvedVenues, ...venues];
   }, [initialApprovedSignals]);
-  const initialRun = useMemo(() => rankVenueList(initialArea, initialVenueList), [initialArea, initialVenueList]);
-  const initialInviteVenue = initialInvite && initialRun.results[0]?.evidenceTag === "Verified" ? initialRun.results[0] : null;
+  const initialRun = useMemo(
+    () => rankVenueList(initialArea, initialVenueList),
+    [initialArea, initialVenueList],
+  );
+  const initialInviteVenue =
+    initialInvite && initialRun.results[0]?.evidenceTag === "Verified"
+      ? initialRun.results[0]
+      : null;
   const [area, setArea] = useState(initialArea);
   const [submittedArea, setSubmittedArea] = useState(initialArea);
   const [hasSearched, setHasSearched] = useState(Boolean(initialArea));
   const [copiedInvite, setCopiedInvite] = useState(false);
-  const [pendingAction, setPendingAction] = useState<PendingActionTarget | null>(null);
-  const [pendingParty, setPendingParty] = useState<PendingPartyTarget | null>(null);
+  const [pendingAction, setPendingAction] =
+    useState<PendingActionTarget | null>(null);
+  const [pendingParty, setPendingParty] = useState<PendingPartyTarget | null>(
+    null,
+  );
   const [email, setEmail] = useState("");
   const [hostName, setHostName] = useState("");
   const [hostEmail, setHostEmail] = useState("");
@@ -91,13 +106,17 @@ export function HomeClient({
   const [hostError, setHostError] = useState("");
   const [areaError, setAreaError] = useState("");
   const [actionStatus, setActionStatus] = useState("");
-  const [raceCountdown, setRaceCountdown] = useState<RaceCountdown>(() => getRaceCountdown());
+  const [raceCountdown, setRaceCountdown] = useState<RaceCountdown>(() =>
+    getRaceCountdown(),
+  );
   const [isSearching, setIsSearching] = useState(false);
   const [isCompletingAction, setIsCompletingAction] = useState(false);
   const [isCreatingParty, setIsCreatingParty] = useState(false);
   const [revealedPhone, setRevealedPhone] = useState<RevealedPhone>(null);
   const [revealedInvite, setRevealedInvite] = useState<RevealedInvite>(
-    initialInviteVenue ? { venue: initialInviteVenue, text: buildInviteText(initialInviteVenue) } : null
+    initialInviteVenue
+      ? { venue: initialInviteVenue, text: buildInviteText(initialInviteVenue) }
+      : null,
   );
   const recordSearch = useMutation(api.actions.recordSearch);
   const recordAction = useMutation(api.actions.recordAction);
@@ -105,7 +124,7 @@ export function HomeClient({
   const approvedSignals = useQuery(api.actions.approvedVenueCandidates);
   const hostParties = useQuery(
     api.actions.watchPartiesByHostEmail,
-    submittedLookupEmail ? { hostEmail: submittedLookupEmail } : "skip"
+    submittedLookupEmail ? { hostEmail: submittedLookupEmail } : "skip",
   );
   const approvedSignalRows = approvedSignals ?? initialApprovedSignals;
 
@@ -121,14 +140,19 @@ export function HomeClient({
     const approvedVenues = approvedSignalRows.map(approvedSignalToVenue);
     return [...approvedVenues, ...venues];
   }, [approvedSignalRows]);
-  const run = useMemo(() => rankVenueList(submittedArea, venueList), [submittedArea, venueList]);
+  const run = useMemo(
+    () => rankVenueList(submittedArea, venueList),
+    [submittedArea, venueList],
+  );
   const bestVenue = run.results[0];
   const backupVenues = run.results.slice(1, 3);
   const moreVenues = run.results.slice(3, 6);
-  const primaryAction = bestVenue?.evidenceTag === "Verified" ? "Share invite" : "Call pub";
+  const primaryAction =
+    bestVenue?.evidenceTag === "Verified" ? "Share invite" : "Call pub";
   const routePath = basePath || "/";
   const queryPrefix = routePath === "/" ? "/?" : `${routePath}?`;
-  const areaHref = (nextArea: string) => `${queryPrefix}area=${encodeURIComponent(nextArea)}`;
+  const areaHref = (nextArea: string) =>
+    `${queryPrefix}area=${encodeURIComponent(nextArea)}`;
   const inviteHref = (venue: Venue) =>
     `${routePath === "/" ? "/f1" : routePath}/invite/${encodeURIComponent(venue.id)}?area=${encodeURIComponent(submittedArea || venue.area)}`;
 
@@ -163,15 +187,17 @@ export function HomeClient({
           areaInput: nextArea,
           normalizedArea: nextRun.normalizedArea,
           bestVenueId: nextRun.results[0].id,
-          resultVenueIds: nextRun.results.map((venue) => venue.id)
+          resultVenueIds: nextRun.results.map((venue) => venue.id),
         });
         captureProductEvent("findmyscreen_area_searched", {
           area_input: nextArea,
           normalized_area: nextRun.normalizedArea,
-          best_venue_id: nextRun.results[0].id
+          best_venue_id: nextRun.results[0].id,
         });
       } catch {
-        setActionStatus("Results are ready. We could not save this search, so try again if you need it counted.");
+        setActionStatus(
+          "Results are ready. We could not save this search, so try again if you need it counted.",
+        );
       } finally {
         setIsSearching(false);
       }
@@ -238,7 +264,7 @@ export function HomeClient({
         hostClientId,
         raceName: nextRace.name,
         raceDate: nextRace.raceDate,
-        raceTime: nextRace.raceTime
+        raceTime: nextRace.raceTime,
       });
       rememberHostParty(String(party.partyId), party.inviteCode);
 
@@ -246,7 +272,7 @@ export function HomeClient({
         area_input: submittedArea || venue.area,
         normalized_area: run.normalizedArea || venue.area.toLowerCase(),
         venue_id: venue.id,
-        venue_name: venue.name
+        venue_name: venue.name,
       });
 
       window.location.href = `/f1/join/${party.inviteCode}`;
@@ -294,7 +320,9 @@ export function HomeClient({
     try {
       await navigator.clipboard.writeText(text);
       setCopiedInvite(true);
-      setActionStatus("Invite ready and text copied. Enter email on the card to save this action.");
+      setActionStatus(
+        "Invite ready and text copied. Enter email on the card to save this action.",
+      );
     } catch {
       setCopiedInvite(false);
     }
@@ -308,13 +336,13 @@ export function HomeClient({
       normalizedArea: run.normalizedArea,
       venueId: venue.id,
       venueName: venue.name,
-      raceName: nextRace.name
+      raceName: nextRace.name,
     });
     captureProductEvent("findmyscreen_share_invite_unlocked", {
       area_input: submittedArea,
       normalized_area: run.normalizedArea,
       venue_id: venue.id,
-      venue_name: venue.name
+      venue_name: venue.name,
     });
 
     setActionStatus("Invite saved. You can now copy it.");
@@ -341,14 +369,14 @@ export function HomeClient({
         normalizedArea: run.normalizedArea,
         venueId: actionToComplete.venue.id,
         venueName: actionToComplete.venue.name,
-        raceName: nextRace.name
+        raceName: nextRace.name,
       });
       captureProductEvent("findmyscreen_action_completed", {
         action_type: actionToComplete.action,
         area_input: submittedArea,
         normalized_area: run.normalizedArea,
         venue_id: actionToComplete.venue.id,
-        venue_name: actionToComplete.venue.name
+        venue_name: actionToComplete.venue.name,
       });
 
       if (actionToComplete.action === "share_invite") {
@@ -357,7 +385,9 @@ export function HomeClient({
         try {
           await navigator.clipboard.writeText(text);
           setCopiedInvite(true);
-          setActionStatus("Invite ready and text copied. Send it to your group.");
+          setActionStatus(
+            "Invite ready and text copied. Send it to your group.",
+          );
         } catch {
           setCopiedInvite(false);
           setActionStatus("Invite ready. Use Copy text.");
@@ -365,18 +395,18 @@ export function HomeClient({
 
         setRevealedInvite({
           venue: actionToComplete.venue,
-          text
+          text,
         });
       } else if (actionToComplete.venue.phone !== "Needs call") {
         setRevealedPhone({
           venue: actionToComplete.venue,
-          phone: actionToComplete.venue.phone
+          phone: actionToComplete.venue.phone,
         });
         setActionStatus("Phone number ready.");
       } else {
         setRevealedPhone({
           venue: actionToComplete.venue,
-          phone: "Phone number not available yet"
+          phone: "Phone number not available yet",
         });
         setActionStatus("Call action saved.");
       }
@@ -398,7 +428,9 @@ export function HomeClient({
             <div className="topbar-left">
               <div className="brand-mark">FMS</div>
               <span>FindMyScreen Bangalore</span>
-              <span>RND 16 · Italian Grand Prix · Autodromo Nazionale Monza</span>
+              <span>
+                RND 16 · Italian Grand Prix · Autodromo Nazionale Monza
+              </span>
             </div>
             <div className="topbar-right">
               <span aria-hidden="true" />
@@ -420,11 +452,18 @@ export function HomeClient({
               <p className="eyebrow">Race control for pub plans</p>
               <h1>Pick one place for the next F1 race.</h1>
               <p className="lead">
-                Enter the Bangalore area you want to view it in. We will find one clear watch-party invite and two backups.
+                Enter the Bangalore area you want to view it in. We will find
+                one clear watch-party invite and two backups.
               </p>
 
-              <form className="area-form" onSubmit={submitArea} action={basePath || "/"}>
-                <label htmlFor="area">Please enter the area you want to view it in</label>
+              <form
+                className="area-form"
+                onSubmit={submitArea}
+                action={basePath || "/"}
+              >
+                <label htmlFor="area">
+                  Please enter the area you want to view it in
+                </label>
                 <div>
                   <input
                     id="area"
@@ -442,12 +481,16 @@ export function HomeClient({
 
               <div className="quick-areas" aria-label="Quick Bangalore areas">
                 {quickAreas.map((quickArea, index) => (
-                  <a href={areaHref(quickArea)} key={quickArea} onClick={(event) => {
-                    event.preventDefault();
-                    window.history.pushState(null, "", areaHref(quickArea));
-                    setArea(quickArea);
-                    if (!isSearching) void searchArea(quickArea);
-                  }}>
+                  <a
+                    href={areaHref(quickArea)}
+                    key={quickArea}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      window.history.pushState(null, "", areaHref(quickArea));
+                      setArea(quickArea);
+                      if (!isSearching) void searchArea(quickArea);
+                    }}
+                  >
                     <span>S{index + 1}</span>
                     {quickArea}
                   </a>
@@ -503,19 +546,55 @@ export function HomeClient({
               <div className="race-countdown" aria-label="Race countdown">
                 <span>Race starts in</span>
                 <div>
-                  <b>{raceCountdown.days}<small>D</small></b>
-                  <b>{raceCountdown.hours}<small>H</small></b>
-                  <b>{raceCountdown.minutes}<small>M</small></b>
-                  <b>{raceCountdown.seconds}<small>S</small></b>
+                  <b>
+                    {raceCountdown.days}
+                    <small>D</small>
+                  </b>
+                  <b>
+                    {raceCountdown.hours}
+                    <small>H</small>
+                  </b>
+                  <b>
+                    {raceCountdown.minutes}
+                    <small>M</small>
+                  </b>
+                  <b>
+                    {raceCountdown.seconds}
+                    <small>S</small>
+                  </b>
                 </div>
               </div>
               <div className="upcoming-races">
                 <span>Upcoming</span>
                 <ol>
-                  <li><b>17</b><strong>Singapore GP<small>Marina Bay</small></strong><em>21 Sep</em></li>
-                  <li><b>18</b><strong>USGP Austin<small>COTA</small></strong><em>19 Oct</em></li>
-                  <li><b>19</b><strong>Mexico City GP<small>Hermanos Rodriguez</small></strong><em>26 Oct</em></li>
-                  <li><b>20</b><strong>Sao Paulo GP<small>Interlagos</small></strong><em>09 Nov</em></li>
+                  <li>
+                    <b>17</b>
+                    <strong>
+                      Singapore GP<small>Marina Bay</small>
+                    </strong>
+                    <em>21 Sep</em>
+                  </li>
+                  <li>
+                    <b>18</b>
+                    <strong>
+                      USGP Austin<small>COTA</small>
+                    </strong>
+                    <em>19 Oct</em>
+                  </li>
+                  <li>
+                    <b>19</b>
+                    <strong>
+                      Mexico City GP<small>Hermanos Rodriguez</small>
+                    </strong>
+                    <em>26 Oct</em>
+                  </li>
+                  <li>
+                    <b>20</b>
+                    <strong>
+                      Sao Paulo GP<small>Interlagos</small>
+                    </strong>
+                    <em>09 Nov</em>
+                  </li>
                 </ol>
               </div>
             </aside>
@@ -538,14 +617,21 @@ export function HomeClient({
             <section className="pit-message" role="status">
               <strong>We are starting with Bangalore F1 screenings.</strong>
               <p>Try one of these areas instead.</p>
-              <div className="quick-areas compact" aria-label="Supported Bangalore areas">
+              <div
+                className="quick-areas compact"
+                aria-label="Supported Bangalore areas"
+              >
                 {quickAreas.map((quickArea) => (
-                  <a href={areaHref(quickArea)} key={quickArea} onClick={(event) => {
-                    event.preventDefault();
-                    window.history.pushState(null, "", areaHref(quickArea));
-                    setArea(quickArea);
-                    if (!isSearching) void searchArea(quickArea);
-                  }}>
+                  <a
+                    href={areaHref(quickArea)}
+                    key={quickArea}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      window.history.pushState(null, "", areaHref(quickArea));
+                      setArea(quickArea);
+                      if (!isSearching) void searchArea(quickArea);
+                    }}
+                  >
                     {quickArea}
                   </a>
                 ))}
@@ -557,10 +643,17 @@ export function HomeClient({
             <>
               <section className="trust-note" aria-label="Recommendation note">
                 <span>Starting grid locked</span>
-                <p>P1 is the strongest race-night plan. P2-P3 are solid alternatives. P4-P6 are backups if location or booking gets messy.</p>
+                <p>
+                  P1 is the strongest race-night plan. P2-P3 are solid
+                  alternatives. P4-P6 are backups if location or booking gets
+                  messy.
+                </p>
               </section>
 
-              <div className="race-grid-results" aria-label="F1 screening recommendation">
+              <div
+                className="race-grid-results"
+                aria-label="F1 screening recommendation"
+              >
                 <article className="pole-card">
                   <div className="pole-position-mark">
                     <span>P1</span>
@@ -595,16 +688,29 @@ export function HomeClient({
                     </div>
 
                     <div className="actions">
-                      <button className="primary-action" type="button" onClick={() => startWatchParty(bestVenue)}>
+                      <button
+                        className="primary-action"
+                        type="button"
+                        onClick={() => startWatchParty(bestVenue)}
+                      >
                         Create Watch Party
                       </button>
                     </div>
-                    {actionStatus ? <p className="action-status">{actionStatus}</p> : null}
+                    {actionStatus ? (
+                      <p className="action-status">{actionStatus}</p>
+                    ) : null}
                     {revealedPhone ? (
-                      <PhoneReveal venueName={revealedPhone.venue.name} phone={revealedPhone.phone} mapUrl={revealedPhone.venue.mapUrl} />
+                      <PhoneReveal
+                        venueName={revealedPhone.venue.name}
+                        phone={revealedPhone.phone}
+                        mapUrl={revealedPhone.venue.mapUrl}
+                      />
                     ) : null}
                     {bestVenue.evidenceTag !== "Verified" ? (
-                      <p className="honesty-note">Not personally verified today. Call once before sending this to friends.</p>
+                      <p className="honesty-note">
+                        Not personally verified today. Call once before sending
+                        this to friends.
+                      </p>
                     ) : null}
                   </div>
                 </article>
@@ -615,7 +721,10 @@ export function HomeClient({
                     <strong>Close contenders</strong>
                   </div>
                   {backupVenues.map((venue, index) => (
-                    <article className="grid-venue-card grid-venue-card-mid" key={venue.id}>
+                    <article
+                      className="grid-venue-card grid-venue-card-mid"
+                      key={venue.id}
+                    >
                       <div className="grid-venue-top">
                         <span className="grid-position">P{index + 2}</span>
                         <EvidenceBadge tag={venue.evidenceTag} />
@@ -626,22 +735,35 @@ export function HomeClient({
                       </div>
                       <VenueStats venue={venue} position={index + 2} />
                       <p className="pick-note">
-                        {venue.evidenceTag === "Verified" ? "Confirmed backup for race night." : "Good option, but call once before you go."}
+                        {venue.evidenceTag === "Verified"
+                          ? "Confirmed backup for race night."
+                          : "Good option, but call once before you go."}
                       </p>
                       <div className="backup-actions">
-                        <button type="button" onClick={() => startWatchParty(venue)}>Create Watch Party</button>
+                        <button
+                          type="button"
+                          onClick={() => startWatchParty(venue)}
+                        >
+                          Create Watch Party
+                        </button>
                       </div>
                     </article>
                   ))}
 
                   {moreVenues.length ? (
-                    <div className="reserve-grid" aria-label="P4 to P6 backup venues">
+                    <div
+                      className="reserve-grid"
+                      aria-label="P4 to P6 backup venues"
+                    >
                       <div className="section-heading reserve-heading">
                         <span>P4-P6</span>
                         <strong>Backup grid</strong>
                       </div>
                       {moreVenues.map((venue, index) => (
-                        <article className="grid-venue-card grid-venue-card-backup" key={venue.id}>
+                        <article
+                          className="grid-venue-card grid-venue-card-backup"
+                          key={venue.id}
+                        >
                           <div className="grid-venue-top">
                             <span className="grid-position">P{index + 4}</span>
                             <EvidenceBadge tag={venue.evidenceTag} />
@@ -652,10 +774,17 @@ export function HomeClient({
                           </div>
                           <VenueStats venue={venue} position={index + 4} />
                           <p className="pick-note">
-                            {venue.evidenceTag === "Verified" ? "Confirmed backup for race night." : "Backup option. Call before you commit."}
+                            {venue.evidenceTag === "Verified"
+                              ? "Confirmed backup for race night."
+                              : "Backup option. Call before you commit."}
                           </p>
                           <div className="backup-actions">
-                            <button type="button" onClick={() => startWatchParty(venue)}>Create Watch Party</button>
+                            <button
+                              type="button"
+                              onClick={() => startWatchParty(venue)}
+                            >
+                              Create Watch Party
+                            </button>
                           </div>
                         </article>
                       ))}
@@ -671,7 +800,11 @@ export function HomeClient({
       {pendingAction ? (
         <div className="modal-backdrop" role="presentation">
           <form className="email-modal" onSubmit={completeAction}>
-            <span>{pendingAction.action === "share_invite" ? "Share invite" : "Call pub"}</span>
+            <span>
+              {pendingAction.action === "share_invite"
+                ? "Share invite"
+                : "Call pub"}
+            </span>
             <h2>
               {pendingAction.action === "share_invite"
                 ? "Please enter your email to create your invite"
@@ -685,7 +818,13 @@ export function HomeClient({
             />
             {emailError ? <p className="email-error">{emailError}</p> : null}
             <div>
-              <button type="button" onClick={() => setPendingAction(null)} disabled={isCompletingAction}>Cancel</button>
+              <button
+                type="button"
+                onClick={() => setPendingAction(null)}
+                disabled={isCompletingAction}
+              >
+                Cancel
+              </button>
               <button type="submit" disabled={isCompletingAction}>
                 {isCompletingAction ? "Loading..." : "Continue"}
               </button>
@@ -714,7 +853,13 @@ export function HomeClient({
             />
             {hostError ? <p className="email-error">{hostError}</p> : null}
             <div>
-              <button type="button" onClick={() => setPendingParty(null)} disabled={isCreatingParty}>Cancel</button>
+              <button
+                type="button"
+                onClick={() => setPendingParty(null)}
+                disabled={isCreatingParty}
+              >
+                Cancel
+              </button>
               <button type="submit" disabled={isCreatingParty}>
                 {isCreatingParty ? "Creating..." : "Create party"}
               </button>
@@ -726,7 +871,10 @@ export function HomeClient({
   );
 }
 
-function captureProductEvent(event: string, properties: Record<string, string>) {
+function captureProductEvent(
+  event: string,
+  properties: Record<string, string>,
+) {
   if (!process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) return;
   posthog.capture(event, properties);
 }
@@ -737,9 +885,10 @@ function getOrCreateClientId() {
   const existing = window.localStorage.getItem(clientIdKey);
   if (existing) return existing;
 
-  const nextId = typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : `client-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const nextId =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `client-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
   window.localStorage.setItem(clientIdKey, nextId);
   return nextId;
@@ -748,21 +897,36 @@ function getOrCreateClientId() {
 function cleanInviteCode(value: string) {
   const trimmed = value.trim();
   const urlMatch = trimmed.match(/\/f1\/join\/([^/?#]+)/i);
-  if (urlMatch?.[1]) return urlMatch[1].trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (urlMatch?.[1])
+    return urlMatch[1]
+      .trim()
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, "");
 
   const lastToken = trimmed.split(/\s+/).at(-1) ?? trimmed;
-  return lastToken.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+  return lastToken
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "");
 }
 
 function rememberHostParty(partyId: string, inviteCode?: string) {
   if (typeof window === "undefined") return;
 
-  const current = JSON.parse(window.localStorage.getItem(hostPartiesKey) || "[]") as string[];
-  const next = [partyId, ...current.filter((item) => item !== partyId)].slice(0, 10);
+  const current = JSON.parse(
+    window.localStorage.getItem(hostPartiesKey) || "[]",
+  ) as string[];
+  const next = [partyId, ...current.filter((item) => item !== partyId)].slice(
+    0,
+    10,
+  );
   window.localStorage.setItem(hostPartiesKey, JSON.stringify(next));
   window.localStorage.setItem(`findmyscreen-host-party:${partyId}`, "true");
   if (inviteCode) {
-    window.localStorage.setItem(`findmyscreen-host-party-code:${inviteCode}`, "true");
+    window.localStorage.setItem(
+      `findmyscreen-host-party-code:${inviteCode}`,
+      "true",
+    );
   }
 }
 
@@ -770,7 +934,7 @@ function JoinWatchParty({
   error,
   inviteCode,
   onInviteCodeChange,
-  onSubmit
+  onSubmit,
 }: {
   error: string;
   inviteCode: string;
@@ -778,7 +942,10 @@ function JoinWatchParty({
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
   return (
-    <section className="my-parties-box join-party-box" aria-label="Join a watch party">
+    <section
+      className="my-parties-box join-party-box"
+      aria-label="Join a watch party"
+    >
       <div className="my-parties-header">
         <span>Have an invite code?</span>
         <strong>Join a watch party</strong>
@@ -803,7 +970,7 @@ function MyWatchParties({
   lookupEmail,
   onLookupEmailChange,
   onSubmit,
-  submittedLookupEmail
+  submittedLookupEmail,
 }: {
   hostParties: Doc<"watchParties">[] | undefined;
   lookupEmail: string;
@@ -830,12 +997,23 @@ function MyWatchParties({
       {submittedLookupEmail ? (
         <div className="my-party-results">
           {hostParties === undefined ? <p>Checking...</p> : null}
-          {hostParties?.length === 0 ? <p>No watch parties found for this email.</p> : null}
+          {hostParties?.length === 0 ? (
+            <p>No watch parties found for this email.</p>
+          ) : null}
           {hostParties?.map((party) => (
-            <a href={party.inviteCode ? `/f1/join/${party.inviteCode}` : `/f1/party/${party._id}`} key={party._id}>
+            <a
+              href={
+                party.inviteCode
+                  ? `/f1/join/${party.inviteCode}`
+                  : `/f1/party/${party._id}`
+              }
+              key={party._id}
+            >
               <span>{party.raceName}</span>
               <strong>{party.venueName}</strong>
-              <small>{party.raceDate} · {party.raceTime}</small>
+              <small>
+                {party.raceDate} · {party.raceTime}
+              </small>
             </a>
           ))}
         </div>
@@ -851,15 +1029,31 @@ function EvidenceBadge({ tag }: { tag: string }) {
 
 function VenueStats({ venue, position }: { venue: Venue; position: number }) {
   const booking = venue.evidenceTag === "Verified" ? "Ready" : "Call first";
-  const screen = venue.evidenceTag === "Verified" || venue.evidenceTag === "Posted about F1" ? "Confirmed signal" : "Likely";
-  const crowd = position === 1 ? "Best fit" : position <= 3 ? "Strong" : "Backup";
+  const screen =
+    venue.evidenceTag === "Verified" || venue.evidenceTag === "Posted about F1"
+      ? "Confirmed signal"
+      : "Likely";
+  const crowd =
+    position === 1 ? "Best fit" : position <= 3 ? "Strong" : "Backup";
 
   return (
     <div className="venue-stats" aria-label={`${venue.name} quick stats`}>
-      <span><b>Distance</b>{venue.area}</span>
-      <span><b>Screen</b>{screen}</span>
-      <span><b>Crowd</b>{crowd}</span>
-      <span><b>Booking</b>{booking}</span>
+      <span>
+        <b>Distance</b>
+        {venue.area}
+      </span>
+      <span>
+        <b>Screen</b>
+        {screen}
+      </span>
+      <span>
+        <b>Crowd</b>
+        {crowd}
+      </span>
+      <span>
+        <b>Booking</b>
+        {booking}
+      </span>
     </div>
   );
 }
@@ -875,7 +1069,7 @@ async function copyTextAgain(text: string) {
 export function InviteReveal({
   invite,
   onCopy,
-  onUnlock
+  onUnlock,
 }: {
   invite: {
     venue: Venue;
@@ -935,16 +1129,25 @@ export function InviteReveal({
         </form>
       ) : (
         <div className="invite-share-actions">
-          <button type="button" onClick={onCopy}>Copy text</button>
+          <button type="button" onClick={onCopy}>
+            Copy text
+          </button>
         </div>
       )}
     </div>
   );
 }
 
-export function InviteCardPreview({ venue }: { venue: { name: string; area: string; evidenceTag: string } }) {
+export function InviteCardPreview({
+  venue,
+}: {
+  venue: { name: string; area: string; evidenceTag: string };
+}) {
   return (
-    <div className="invite-card-preview" aria-label="Shareable race invite preview">
+    <div
+      className="invite-card-preview"
+      aria-label="Shareable race invite preview"
+    >
       <div className="invite-topline">
         <span>FindMyScreen race night</span>
         <b>F1</b>
@@ -952,7 +1155,9 @@ export function InviteCardPreview({ venue }: { venue: { name: string; area: stri
       <div className="invite-race">
         <span>Next main race</span>
         <strong>{nextRace.name}</strong>
-        <p>{nextRace.raceDate} - {nextRace.raceTime}</p>
+        <p>
+          {nextRace.raceDate} - {nextRace.raceTime}
+        </p>
       </div>
       <div className="invite-place">
         <span>Watching at</span>
@@ -968,7 +1173,15 @@ export function InviteCardPreview({ venue }: { venue: { name: string; area: stri
   );
 }
 
-function PhoneReveal({ venueName, phone, mapUrl }: { venueName: string; phone: string; mapUrl: string }) {
+function PhoneReveal({
+  venueName,
+  phone,
+  mapUrl,
+}: {
+  venueName: string;
+  phone: string;
+  mapUrl: string;
+}) {
   const hasPhone = phone !== "Phone number not available yet";
 
   return (
@@ -979,7 +1192,9 @@ function PhoneReveal({ venueName, phone, mapUrl }: { venueName: string; phone: s
       {hasPhone ? (
         <a href={`tel:${phone}`}>Call now</a>
       ) : (
-        <a href={mapUrl} target="_blank" rel="noreferrer">Open map to find contact</a>
+        <a href={mapUrl} target="_blank" rel="noreferrer">
+          Open map to find contact
+        </a>
       )}
     </div>
   );

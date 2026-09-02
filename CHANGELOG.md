@@ -67,3 +67,4 @@
 - Thu 3 Sep 2026: The landing page now presents Host and Joiner as separate full-width journeys and uses broader sports-screening language.
 - Thu 3 Sep 2026: The homepage visual skin now uses a neutral premium sports theme with lime accents instead of F1-red landing styling.
 - Thu 3 Sep 2026: Watch parties now create invite codes, shared links use the code URL, and friends can join from the homepage without host email.
+- Thu 3 Sep 2026: The landing hero headline now stays clear of the signal map on desktop and fits on mobile.

@@ -7,18 +7,22 @@ export default defineSchema({
     normalizedArea: v.string(),
     bestVenueId: v.string(),
     resultVenueIds: v.array(v.string()),
-    createdAt: v.number()
+    createdAt: v.number(),
   }).index("by_created_at", ["createdAt"]),
 
   actions: defineTable({
     email: v.string(),
-    actionType: v.union(v.literal("share_invite"), v.literal("call_pub"), v.literal("create_watch_party")),
+    actionType: v.union(
+      v.literal("share_invite"),
+      v.literal("call_pub"),
+      v.literal("create_watch_party"),
+    ),
     areaInput: v.string(),
     normalizedArea: v.string(),
     venueId: v.string(),
     venueName: v.string(),
     raceName: v.string(),
-    createdAt: v.number()
+    createdAt: v.number(),
   }).index("by_created_at", ["createdAt"]),
 
   venueCandidates: defineTable({
@@ -29,12 +33,21 @@ export default defineSchema({
     venueName: v.string(),
     area: v.string(),
     raceName: v.string(),
-    signalType: v.union(v.literal("Verified"), v.literal("Posted about F1"), v.literal("Regular F1 venue"), v.literal("Needs call")),
+    signalType: v.union(
+      v.literal("Verified"),
+      v.literal("Posted about F1"),
+      v.literal("Regular F1 venue"),
+      v.literal("Needs call"),
+    ),
     confidence: v.number(),
-    status: v.union(v.literal("needs_review"), v.literal("approved"), v.literal("rejected")),
+    status: v.union(
+      v.literal("needs_review"),
+      v.literal("approved"),
+      v.literal("rejected"),
+    ),
     rejectionReason: v.optional(v.string()),
     createdAt: v.number(),
-    reviewedAt: v.optional(v.number())
+    reviewedAt: v.optional(v.number()),
   })
     .index("by_status_and_created_at", ["status", "createdAt"])
     .index("by_created_at", ["createdAt"]),
@@ -56,7 +69,7 @@ export default defineSchema({
     raceName: v.string(),
     raceDate: v.string(),
     raceTime: v.string(),
-    createdAt: v.number()
+    createdAt: v.number(),
   })
     .index("by_created_at", ["createdAt"])
     .index("by_hostEmail_and_createdAt", ["hostEmail", "createdAt"])
@@ -68,8 +81,8 @@ export default defineSchema({
     decision: v.union(v.literal("in"), v.literal("maybe"), v.literal("out")),
     isHost: v.boolean(),
     clientId: v.optional(v.string()),
-    createdAt: v.number()
+    createdAt: v.number(),
   })
     .index("by_party_and_created_at", ["partyId", "createdAt"])
-    .index("by_created_at", ["createdAt"])
+    .index("by_created_at", ["createdAt"]),
 });

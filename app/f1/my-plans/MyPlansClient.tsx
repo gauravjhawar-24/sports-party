@@ -13,7 +13,7 @@ export function MyPlansClient() {
   const [error, setError] = useState("");
   const plans = useQuery(
     api.actions.watchPartiesWithStatsByHostEmail,
-    submittedEmail ? { hostEmail: submittedEmail } : "skip"
+    submittedEmail ? { hostEmail: submittedEmail } : "skip",
   );
 
   useEffect(() => {
@@ -55,7 +55,9 @@ export function MyPlansClient() {
         <div className="my-plans-copy">
           <p>Race control / My plans</p>
           <h1>Your watch parties.</h1>
-          <span>Enter the host email and reopen every race plan you created.</span>
+          <span>
+            Enter the host email and reopen every race plan you created.
+          </span>
         </div>
 
         <form className="my-plans-form" onSubmit={submit}>
@@ -81,7 +83,9 @@ export function MyPlansClient() {
         </div>
 
         {!submittedEmail ? (
-          <p className="my-plans-empty">Your plans will appear here after you search by host email.</p>
+          <p className="my-plans-empty">
+            Your plans will appear here after you search by host email.
+          </p>
         ) : null}
 
         {submittedEmail && plans === undefined ? (
@@ -89,7 +93,9 @@ export function MyPlansClient() {
         ) : null}
 
         {plans?.length === 0 ? (
-          <p className="my-plans-empty">No watch parties found for this email.</p>
+          <p className="my-plans-empty">
+            No watch parties found for this email.
+          </p>
         ) : null}
 
         {plans?.length ? (
@@ -100,14 +106,30 @@ export function MyPlansClient() {
                 <div className="my-plan-main">
                   <span>{party.raceName}</span>
                   <h2>{party.venueName}</h2>
-                  <p>{party.venueArea} · {party.raceDate} · {party.raceTime}</p>
+                  <p>
+                    {party.venueArea} · {party.raceDate} · {party.raceTime}
+                  </p>
                 </div>
                 <div className="my-plan-counts" aria-label="RSVP counts">
-                  <span><b>{counts.in}</b> In</span>
-                  <span><b>{counts.maybe}</b> Maybe</span>
-                  <span><b>{counts.out}</b> Out</span>
+                  <span>
+                    <b>{counts.in}</b> In
+                  </span>
+                  <span>
+                    <b>{counts.maybe}</b> Maybe
+                  </span>
+                  <span>
+                    <b>{counts.out}</b> Out
+                  </span>
                 </div>
-                <Link href={party.inviteCode ? `/f1/join/${party.inviteCode}` : `/f1/party/${party._id}`}>Open plan →</Link>
+                <Link
+                  href={
+                    party.inviteCode
+                      ? `/f1/join/${party.inviteCode}`
+                      : `/f1/party/${party._id}`
+                  }
+                >
+                  Open plan →
+                </Link>
               </article>
             ))}
           </div>

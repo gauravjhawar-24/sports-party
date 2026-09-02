@@ -9,8 +9,13 @@ const venueCandidateArgs = {
   venueName: v.string(),
   area: v.string(),
   raceName: v.string(),
-  signalType: v.union(v.literal("Verified"), v.literal("Posted about F1"), v.literal("Regular F1 venue"), v.literal("Needs call")),
-  confidence: v.number()
+  signalType: v.union(
+    v.literal("Verified"),
+    v.literal("Posted about F1"),
+    v.literal("Regular F1 venue"),
+    v.literal("Needs call"),
+  ),
+  confidence: v.number(),
 };
 
 const inviteAlphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -28,32 +33,36 @@ export const recordSearch = mutation({
     areaInput: v.string(),
     normalizedArea: v.string(),
     bestVenueId: v.string(),
-    resultVenueIds: v.array(v.string())
+    resultVenueIds: v.array(v.string()),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("searches", {
       ...args,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     });
-  }
+  },
 });
 
 export const recordAction = mutation({
   args: {
     email: v.string(),
-    actionType: v.union(v.literal("share_invite"), v.literal("call_pub"), v.literal("create_watch_party")),
+    actionType: v.union(
+      v.literal("share_invite"),
+      v.literal("call_pub"),
+      v.literal("create_watch_party"),
+    ),
     areaInput: v.string(),
     normalizedArea: v.string(),
     venueId: v.string(),
     venueName: v.string(),
-    raceName: v.string()
+    raceName: v.string(),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("actions", {
       ...args,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     });
-  }
+  },
 });
 
 export const latestActions = query({
@@ -64,7 +73,7 @@ export const latestActions = query({
       .withIndex("by_created_at")
       .order("desc")
       .take(25);
-  }
+  },
 });
 
 export const latestSearches = query({
@@ -75,7 +84,7 @@ export const latestSearches = query({
       .withIndex("by_created_at")
       .order("desc")
       .take(25);
-  }
+  },
 });
 
 export const proofStats = query({
@@ -85,8 +94,12 @@ export const proofStats = query({
     const actions = await ctx.db.query("actions").collect();
     const watchParties = await ctx.db.query("watchParties").collect();
     const rsvps = await ctx.db.query("rsvps").collect();
-    const shareInvites = actions.filter((action) => action.actionType === "share_invite").length;
-    const callPubs = actions.filter((action) => action.actionType === "call_pub").length;
+    const shareInvites = actions.filter(
+      (action) => action.actionType === "share_invite",
+    ).length;
+    const callPubs = actions.filter(
+      (action) => action.actionType === "call_pub",
+    ).length;
     const createdParties = watchParties.length;
 
     return {
@@ -95,9 +108,9 @@ export const proofStats = query({
       shareInvites,
       callPubs,
       createdParties,
-      rsvps: rsvps.length
+      rsvps: rsvps.length,
     };
-  }
+  },
 });
 
 export const createWatchParty = mutation({
@@ -117,7 +130,7 @@ export const createWatchParty = mutation({
     hostClientId: v.optional(v.string()),
     raceName: v.string(),
     raceDate: v.string(),
-    raceTime: v.string()
+    raceTime: v.string(),
   },
   handler: async (ctx, args) => {
     const createdAt = Date.now();
@@ -150,7 +163,7 @@ export const createWatchParty = mutation({
       raceName: args.raceName,
       raceDate: args.raceDate,
       raceTime: args.raceTime,
-      createdAt
+      createdAt,
     });
 
     await ctx.db.insert("rsvps", {
@@ -159,7 +172,7 @@ export const createWatchParty = mutation({
       decision: "in",
       isHost: true,
       clientId: args.hostClientId,
-      createdAt
+      createdAt,
     });
 
     await ctx.db.insert("actions", {
@@ -170,16 +183,16 @@ export const createWatchParty = mutation({
       venueId: args.venueId,
       venueName: args.venueName,
       raceName: args.raceName,
-      createdAt
+      createdAt,
     });
 
     return { partyId, inviteCode };
-  }
+  },
 });
 
 export const watchPartiesByHostEmail = query({
   args: {
-    hostEmail: v.string()
+    hostEmail: v.string(),
   },
   handler: async (ctx, args) => {
     const email = args.hostEmail.trim().toLowerCase();
@@ -190,12 +203,12 @@ export const watchPartiesByHostEmail = query({
       .withIndex("by_hostEmail_and_createdAt", (q) => q.eq("hostEmail", email))
       .order("desc")
       .take(10);
-  }
+  },
 });
 
 export const watchPartiesWithStatsByHostEmail = query({
   args: {
-    hostEmail: v.string()
+    hostEmail: v.string(),
   },
   handler: async (ctx, args) => {
     const email = args.hostEmail.trim().toLowerCase();
@@ -211,7 +224,9 @@ export const watchPartiesWithStatsByHostEmail = query({
       parties.map(async (party) => {
         const rsvps = await ctx.db
           .query("rsvps")
-          .withIndex("by_party_and_created_at", (q) => q.eq("partyId", party._id))
+          .withIndex("by_party_and_created_at", (q) =>
+            q.eq("partyId", party._id),
+          )
           .collect();
 
         return {
@@ -219,17 +234,17 @@ export const watchPartiesWithStatsByHostEmail = query({
           counts: {
             in: rsvps.filter((rsvp) => rsvp.decision === "in").length,
             maybe: rsvps.filter((rsvp) => rsvp.decision === "maybe").length,
-            out: rsvps.filter((rsvp) => rsvp.decision === "out").length
-          }
+            out: rsvps.filter((rsvp) => rsvp.decision === "out").length,
+          },
         };
-      })
+      }),
     );
-  }
+  },
 });
 
 export const watchPartyWithRsvps = query({
   args: {
-    partyId: v.id("watchParties")
+    partyId: v.id("watchParties"),
   },
   handler: async (ctx, args) => {
     const party = await ctx.db.get(args.partyId);
@@ -237,17 +252,19 @@ export const watchPartyWithRsvps = query({
 
     const rsvps = await ctx.db
       .query("rsvps")
-      .withIndex("by_party_and_created_at", (q) => q.eq("partyId", args.partyId))
+      .withIndex("by_party_and_created_at", (q) =>
+        q.eq("partyId", args.partyId),
+      )
       .order("asc")
       .collect();
 
     return { party, rsvps };
-  }
+  },
 });
 
 export const watchPartyWithRsvpsByInviteCode = query({
   args: {
-    inviteCode: v.string()
+    inviteCode: v.string(),
   },
   handler: async (ctx, args) => {
     const code = args.inviteCode.trim().toUpperCase();
@@ -266,7 +283,7 @@ export const watchPartyWithRsvpsByInviteCode = query({
       .collect();
 
     return { party, rsvps };
-  }
+  },
 });
 
 export const submitWatchPartyRsvp = mutation({
@@ -274,18 +291,22 @@ export const submitWatchPartyRsvp = mutation({
     partyId: v.id("watchParties"),
     name: v.string(),
     clientId: v.optional(v.string()),
-    decision: v.union(v.literal("in"), v.literal("maybe"), v.literal("out"))
+    decision: v.union(v.literal("in"), v.literal("maybe"), v.literal("out")),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("rsvps")
-      .withIndex("by_party_and_created_at", (q) => q.eq("partyId", args.partyId))
+      .withIndex("by_party_and_created_at", (q) =>
+        q.eq("partyId", args.partyId),
+      )
       .collect();
     const normalizedName = args.name.trim().toLowerCase();
     const duplicateByClient = args.clientId
       ? existing.find((rsvp) => rsvp.clientId === args.clientId)
       : null;
-    const duplicateByName = existing.find((rsvp) => rsvp.name.trim().toLowerCase() === normalizedName);
+    const duplicateByName = existing.find(
+      (rsvp) => rsvp.name.trim().toLowerCase() === normalizedName,
+    );
     const duplicate = duplicateByClient ?? duplicateByName;
 
     if (duplicate) {
@@ -296,7 +317,7 @@ export const submitWatchPartyRsvp = mutation({
       await ctx.db.patch(duplicate._id, {
         name: args.name.trim(),
         decision: args.decision,
-        clientId: args.clientId
+        clientId: args.clientId,
       });
       return duplicate._id;
     }
@@ -307,9 +328,9 @@ export const submitWatchPartyRsvp = mutation({
       decision: args.decision,
       isHost: false,
       clientId: args.clientId,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     });
-  }
+  },
 });
 
 export const createVenueCandidate = mutation({
@@ -324,7 +345,7 @@ export const createVenueCandidate = mutation({
     const duplicate = existing.find(
       (candidate) =>
         candidate.sourceUrl === args.sourceUrl &&
-        candidate.venueName.toLowerCase() === args.venueName.toLowerCase()
+        candidate.venueName.toLowerCase() === args.venueName.toLowerCase(),
     );
 
     if (duplicate) return duplicate._id;
@@ -332,9 +353,9 @@ export const createVenueCandidate = mutation({
     return await ctx.db.insert("venueCandidates", {
       ...args,
       status: "needs_review",
-      createdAt: Date.now()
+      createdAt: Date.now(),
     });
-  }
+  },
 });
 
 export const latestVenueCandidates = query({
@@ -345,7 +366,7 @@ export const latestVenueCandidates = query({
       .withIndex("by_created_at")
       .order("desc")
       .take(50);
-  }
+  },
 });
 
 export const approvedVenueCandidates = query({
@@ -356,22 +377,25 @@ export const approvedVenueCandidates = query({
       .withIndex("by_status_and_created_at", (q) => q.eq("status", "approved"))
       .order("desc")
       .take(50);
-  }
+  },
 });
 
 export const reviewVenueCandidate = mutation({
   args: {
     id: v.id("venueCandidates"),
     status: v.union(v.literal("approved"), v.literal("rejected")),
-    rejectionReason: v.optional(v.string())
+    rejectionReason: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.id, {
       status: args.status,
-      rejectionReason: args.status === "rejected" ? args.rejectionReason ?? "Not strong enough for V1" : undefined,
-      reviewedAt: Date.now()
+      rejectionReason:
+        args.status === "rejected"
+          ? (args.rejectionReason ?? "Not strong enough for V1")
+          : undefined,
+      reviewedAt: Date.now(),
     });
-  }
+  },
 });
 
 export const markManualVenueCandidatesVerified = mutation({
@@ -383,18 +407,21 @@ export const markManualVenueCandidatesVerified = mutation({
       .order("desc")
       .take(100);
 
-    const manualRows = rows.filter((row) => row.sourceQuery === "Manual venue entry");
+    const manualRows = rows.filter(
+      (row) => row.sourceQuery === "Manual venue entry",
+    );
 
     for (const row of manualRows) {
       await ctx.db.patch(row._id, {
         signalType: "Verified",
         confidence: 95,
-        rawSnippet: "Manually added by builder and treated as verified for V1 ranking.",
+        rawSnippet:
+          "Manually added by builder and treated as verified for V1 ranking.",
         status: "approved",
-        reviewedAt: Date.now()
+        reviewedAt: Date.now(),
       });
     }
 
     return manualRows.length;
-  }
+  },
 });

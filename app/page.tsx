@@ -9,21 +9,23 @@ type LandingPageProps = {
   }>;
 };
 
-const verifiedVenues = venues.filter((venue) => venue.evidenceTag === "Verified");
+const verifiedVenues = venues.filter(
+  (venue) => venue.evidenceTag === "Verified",
+);
 const activeVenueCount = venues.length;
 const activeAreaCount = new Set(venues.map((venue) => venue.area)).size;
 const sampleVenues = [
   verifiedVenues[0],
   verifiedVenues[1],
   venues.find((venue) => venue.name.includes("Buffalo")),
-  venues.find((venue) => venue.name.includes("Big Pitcher"))
+  venues.find((venue) => venue.name.includes("Big Pitcher")),
 ].filter((venue): venue is Venue => Boolean(venue));
 
 const sports = [
   { label: "Formula 1", state: "live now" },
   { label: "Cricket", state: "coming next" },
   { label: "Football", state: "coming next" },
-  { label: "UFC", state: "coming next" }
+  { label: "UFC", state: "coming next" },
 ];
 
 export default async function LandingPage({ searchParams }: LandingPageProps) {
@@ -36,7 +38,9 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
       nextParams.set("invite", params.invite);
     }
 
-    redirect(`/f1?${nextParams.toString()}${params.invite === "1" ? "#invite-card" : ""}`);
+    redirect(
+      `/f1?${nextParams.toString()}${params.invite === "1" ? "#invite-card" : ""}`,
+    );
   }
 
   return (
@@ -54,16 +58,23 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
 
       <section className="landing-hero" aria-label="Find live screenings">
         <div className="landing-hero-copy">
-          <p className="landing-kicker">Bangalore / sports-screening discovery</p>
+          <p className="landing-kicker">
+            Bangalore / sports-screening discovery
+          </p>
           <h1>Where are you watching?</h1>
           <p>
-            Find bars and venues actually screening the match, race or fight you want to watch with your people.
+            Find bars and venues actually screening the match, race or fight you
+            want to watch with your people.
           </p>
 
           <form className="landing-search" action="/f1">
             <label htmlFor="landing-event">Search a match, race or event</label>
             <div>
-              <input id="landing-event" value={`${nextRace.name} / live now`} readOnly />
+              <input
+                id="landing-event"
+                value={`${nextRace.name} / live now`}
+                readOnly
+              />
               <button type="submit">Find a screening →</button>
             </div>
           </form>
@@ -78,9 +89,15 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
           </div>
 
           <form className="landing-join-code" action="/f1/join">
-            <label htmlFor="landing-invite-code">Have a watch-party code?</label>
+            <label htmlFor="landing-invite-code">
+              Have a watch-party code?
+            </label>
             <div>
-              <input id="landing-invite-code" name="code" placeholder="Enter invite code" />
+              <input
+                id="landing-invite-code"
+                name="code"
+                placeholder="Enter invite code"
+              />
               <button type="submit">Join party</button>
             </div>
           </form>
@@ -89,9 +106,14 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         <SignalMap />
       </section>
 
-      <section className="landing-live-strip" aria-label="Bangalore live status">
+      <section
+        className="landing-live-strip"
+        aria-label="Bangalore live status"
+      >
         <span>Bangalore / live</span>
-        <strong><i /> {verifiedVenues.length} verified screens</strong>
+        <strong>
+          <i /> {verifiedVenues.length} verified screens
+        </strong>
         <strong>{activeVenueCount} venue signals</strong>
         <strong>{activeAreaCount} areas covered</strong>
       </section>
@@ -106,7 +128,10 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
             <span>01</span>
             <div>
               <h3>{nextRace.name}</h3>
-              <p>Formula 1 / {nextRace.raceDate.replace("Sunday, ", "Sun ")} / {nextRace.raceTime}</p>
+              <p>
+                Formula 1 / {nextRace.raceDate.replace("Sunday, ", "Sun ")} /{" "}
+                {nextRace.raceTime}
+              </p>
             </div>
             <strong>{verifiedVenues.length} verified screens</strong>
             <em>→</em>
@@ -132,7 +157,11 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         </div>
       </section>
 
-      <section className="landing-flow" id="how-it-works" aria-label="How it works">
+      <section
+        className="landing-flow"
+        id="how-it-works"
+        aria-label="How it works"
+      >
         <div className="landing-section-heading">
           <span>From event to screen in seconds</span>
           <h2>Pick the event. Pick the area. Pick the screen.</h2>
@@ -141,7 +170,10 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
           <div>
             <span>01 / Event</span>
             <strong>Match, race or fight</strong>
-            <p>Formula 1 is live first. Cricket, football and UFC follow the same flow.</p>
+            <p>
+              Formula 1 is live first. Cricket, football and UFC follow the same
+              flow.
+            </p>
           </div>
           <div>
             <span>02 / Area</span>
@@ -155,7 +187,9 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
                 <li key={venue.id}>
                   <b>0{index + 1}</b>
                   <strong>{venue.name}</strong>
-                  <small>{venue.evidenceTag} <i /></small>
+                  <small>
+                    {venue.evidenceTag} <i />
+                  </small>
                 </li>
               ))}
             </ol>
@@ -168,7 +202,8 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
           <span>Two ways into the plan</span>
           <h2>Host the night. Or just say if you’re in.</h2>
           <p>
-            One person picks the screen and creates the plan. Everyone else gets one link, one decision and one live headcount.
+            One person picks the screen and creates the plan. Everyone else gets
+            one link, one decision and one live headcount.
           </p>
         </div>
         <div className="journey-grid">
@@ -179,23 +214,24 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
               {
                 title: "Find a screening",
                 detail: "Enter the area where the group can actually reach.",
-                image: "/landing-flow/host-01-find-screening.png"
+                image: "/landing-flow/host-01-find-screening.png",
               },
               {
                 title: "Pick the venue",
                 detail: "Choose the strongest screen from the ranked list.",
-                image: "/landing-flow/host-02-pick-venue.png"
+                image: "/landing-flow/host-02-pick-venue.png",
               },
               {
                 title: "Create the plan",
-                detail: "Open one race plan with the venue, map and share link.",
-                image: "/landing-flow/host-03-race-plan.png"
+                detail:
+                  "Open one race plan with the venue, map and share link.",
+                image: "/landing-flow/host-03-race-plan.png",
               },
               {
                 title: "Track plans later",
                 detail: "Use host email to reopen every watch party created.",
-                image: "/landing-flow/host-04-my-plans.png"
-              }
+                image: "/landing-flow/host-04-my-plans.png",
+              },
             ]}
           />
           <JourneyColumn
@@ -205,20 +241,21 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
               {
                 title: "Open the invite",
                 detail: "See the race, venue, area and time in one place.",
-                image: "/landing-flow/joiner-01-open-invite.png"
+                image: "/landing-flow/joiner-01-open-invite.png",
               },
               {
                 title: "Check the group",
                 detail: "See who is in, maybe or out before deciding.",
                 image: "/landing-flow/joiner-02-rsvp-and-status.png",
-                crop: "mid"
+                crop: "mid",
               },
               {
                 title: "RSVP",
-                detail: "Enter name, choose in, maybe or out, and update the plan.",
+                detail:
+                  "Enter name, choose in, maybe or out, and update the plan.",
                 image: "/landing-flow/joiner-02-rsvp-and-status.png",
-                crop: "low"
-              }
+                crop: "low",
+              },
             ]}
           />
         </div>
@@ -226,18 +263,40 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
 
       <section className="verified-story" aria-label="Verified screenings">
         <div className="verified-copy">
-          <h2><span>Not</span> “they probably have it on.”</h2>
+          <h2>
+            <span>Not</span> “they probably have it on.”
+          </h2>
           <h3>Actually screening it.</h3>
-          <p>Stop calling five bars to find out who is showing the race. Start with the places that have the strongest signal.</p>
+          <p>
+            Stop calling five bars to find out who is showing the race. Start
+            with the places that have the strongest signal.
+          </p>
         </div>
         <div className="verified-pass">
-          <span><i /> Verified screening</span>
+          <span>
+            <i /> Verified screening
+          </span>
           <dl>
-            <div><dt>Screening</dt><dd>Confirmed</dd></div>
-            <div><dt>Event</dt><dd>{nextRace.name}</dd></div>
-            <div><dt>Start</dt><dd>{nextRace.raceTime}</dd></div>
-            <div><dt>Venue</dt><dd>{verifiedVenues[0]?.name ?? "Verified venue"}</dd></div>
-            <div><dt>Area</dt><dd>{verifiedVenues[0]?.area ?? "Bangalore"}</dd></div>
+            <div>
+              <dt>Screening</dt>
+              <dd>Confirmed</dd>
+            </div>
+            <div>
+              <dt>Event</dt>
+              <dd>{nextRace.name}</dd>
+            </div>
+            <div>
+              <dt>Start</dt>
+              <dd>{nextRace.raceTime}</dd>
+            </div>
+            <div>
+              <dt>Venue</dt>
+              <dd>{verifiedVenues[0]?.name ?? "Verified venue"}</dd>
+            </div>
+            <div>
+              <dt>Area</dt>
+              <dd>{verifiedVenues[0]?.area ?? "Bangalore"}</dd>
+            </div>
           </dl>
         </div>
       </section>
@@ -246,16 +305,25 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         <div>
           <span>Found the screen?</span>
           <h2>Send it to the group.</h2>
-          <p>Turn one venue into one shareable plan, then let friends RSVP in, maybe or out.</p>
+          <p>
+            Turn one venue into one shareable plan, then let friends RSVP in,
+            maybe or out.
+          </p>
         </div>
         <aside>
           <span>Watch plan / 014</span>
           <strong>{nextRace.name}</strong>
           <h3>{verifiedVenues[0]?.name ?? "Pecos"}</h3>
-          <p>{verifiedVenues[0]?.area ?? "Bangalore"} / {nextRace.raceTime}</p>
+          <p>
+            {verifiedVenues[0]?.area ?? "Bangalore"} / {nextRace.raceTime}
+          </p>
           <div>
-            <b>04<small>In</small></b>
-            <b>02<small>Maybe</small></b>
+            <b>
+              04<small>In</small>
+            </b>
+            <b>
+              02<small>Maybe</small>
+            </b>
           </div>
           <Link href="/f1">Share plan →</Link>
         </aside>
@@ -303,7 +371,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
 function JourneyColumn({
   label,
   summary,
-  steps
+  steps,
 }: {
   label: string;
   summary: string;
@@ -350,11 +418,27 @@ function SignalMap() {
       <div className="signal-core">
         <span>You</span>
       </div>
-      <div className="signal-point signal-point-one"><i />Pecos <small>Verified</small></div>
-      <div className="signal-point signal-point-two"><i />Doff <small>8:30 PM</small></div>
-      <div className="signal-point signal-point-three"><i />BWW <small>Live signal</small></div>
-      <div className="signal-point signal-point-four"><i />Big Pitcher <small>Near HSR</small></div>
-      <div className="signal-stat">Live<br />signals</div>
+      <div className="signal-point signal-point-one">
+        <i />
+        Pecos <small>Verified</small>
+      </div>
+      <div className="signal-point signal-point-two">
+        <i />
+        Doff <small>8:30 PM</small>
+      </div>
+      <div className="signal-point signal-point-three">
+        <i />
+        BWW <small>Live signal</small>
+      </div>
+      <div className="signal-point signal-point-four">
+        <i />
+        Big Pitcher <small>Near HSR</small>
+      </div>
+      <div className="signal-stat">
+        Live
+        <br />
+        signals
+      </div>
     </aside>
   );
 }

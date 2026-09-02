@@ -28,7 +28,9 @@ body {
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
     linear-gradient(180deg, #14151d 0%, var(--track) 46%, #030405 100%);
-  background-size: 64px 64px, 100% 100%;
+  background-size:
+    64px 64px,
+    100% 100%;
   color: var(--panel);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -50,7 +52,10 @@ a {
     radial-gradient(circle at 72% 12%, rgba(225, 6, 0, 0.2), transparent 19%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
     linear-gradient(180deg, #090909 0%, #0d0d0d 48%, #050505 100%);
-  background-size: auto, 72px 72px, 100% 100%;
+  background-size:
+    auto,
+    72px 72px,
+    100% 100%;
   color: #f5f5f2;
 }
 
@@ -122,6 +127,7 @@ a {
 .landing-hero-copy {
   position: relative;
   z-index: 1;
+  min-width: 0;
 }
 
 .landing-kicker,
@@ -156,10 +162,10 @@ a {
 }
 
 .landing-hero h1 {
-  max-width: 820px;
+  max-width: min(100%, 610px);
   margin-top: 20px;
-  font-size: clamp(86px, 14vw, 176px);
-  line-height: 0.78;
+  font-size: clamp(72px, 9.6vw, 120px);
+  line-height: 0.86;
   text-wrap: balance;
 }
 
@@ -305,7 +311,10 @@ a {
     radial-gradient(circle, rgba(225, 6, 0, 0.12), transparent 55%),
     linear-gradient(90deg, rgba(245, 245, 242, 0.04) 1px, transparent 1px),
     linear-gradient(180deg, rgba(245, 245, 242, 0.03) 1px, transparent 1px);
-  background-size: auto, 58px 58px, 58px 58px;
+  background-size:
+    auto,
+    58px 58px,
+    58px 58px;
 }
 
 .signal-core {
@@ -372,10 +381,22 @@ a {
   font-size: 9px;
 }
 
-.signal-point-one { left: 16%; top: 18%; }
-.signal-point-two { right: 8%; top: 28%; }
-.signal-point-three { left: 8%; bottom: 22%; }
-.signal-point-four { right: 18%; bottom: 13%; }
+.signal-point-one {
+  left: 16%;
+  top: 18%;
+}
+.signal-point-two {
+  right: 8%;
+  top: 28%;
+}
+.signal-point-three {
+  left: 8%;
+  bottom: 22%;
+}
+.signal-point-four {
+  right: 18%;
+  bottom: 13%;
+}
 
 .signal-stat {
   position: absolute;
@@ -460,7 +481,9 @@ a {
   border-bottom: 1px solid rgba(245, 245, 242, 0.14);
   color: #f5f5f2;
   text-decoration: none;
-  transition: background 160ms ease, padding-left 160ms ease;
+  transition:
+    background 160ms ease,
+    padding-left 160ms ease;
 }
 
 .event-row:hover,
@@ -912,11 +935,23 @@ a {
   --landing-verified: #44e28b;
   --landing-amber: #ffc857;
   background:
-    radial-gradient(circle at 78% 12%, rgba(200, 255, 61, 0.12), transparent 19%),
-    radial-gradient(circle at 16% 28%, rgba(255, 200, 87, 0.08), transparent 22%),
+    radial-gradient(
+      circle at 78% 12%,
+      rgba(200, 255, 61, 0.12),
+      transparent 19%
+    ),
+    radial-gradient(
+      circle at 16% 28%,
+      rgba(255, 200, 87, 0.08),
+      transparent 22%
+    ),
     linear-gradient(90deg, rgba(244, 241, 232, 0.028) 1px, transparent 1px),
     linear-gradient(180deg, var(--landing-bg) 0%, #0b0d0a 44%, #050605 100%);
-  background-size: auto, auto, 72px 72px, 100% 100%;
+  background-size:
+    auto,
+    auto,
+    72px 72px,
+    100% 100%;
   color: var(--landing-text);
   font-family: Inter, Arial, sans-serif;
 }
@@ -1050,7 +1085,10 @@ a {
     radial-gradient(circle, rgba(200, 255, 61, 0.1), transparent 55%),
     linear-gradient(90deg, rgba(244, 241, 232, 0.04) 1px, transparent 1px),
     linear-gradient(180deg, rgba(244, 241, 232, 0.03) 1px, transparent 1px);
-  background-size: auto, 58px 58px, 58px 58px;
+  background-size:
+    auto,
+    58px 58px,
+    58px 58px;
 }
 
 .findmyscreen-landing .signal-core {
@@ -1067,7 +1105,9 @@ a {
 .findmyscreen-landing .verified-pass i,
 .findmyscreen-landing .flow-board li i {
   background: var(--landing-accent);
-  box-shadow: 0 0 0 6px var(--landing-accent-soft), 0 0 30px rgba(200, 255, 61, 0.28);
+  box-shadow:
+    0 0 0 6px var(--landing-accent-soft),
+    0 0 30px rgba(200, 255, 61, 0.28);
 }
 
 .findmyscreen-landing .event-row-live strong,
@@ -1088,7 +1128,11 @@ a {
 
 .findmyscreen-landing .journey-column {
   background:
-    radial-gradient(circle at 8% 20%, rgba(200, 255, 61, 0.08), transparent 24%),
+    radial-gradient(
+      circle at 8% 20%,
+      rgba(200, 255, 61, 0.08),
+      transparent 24%
+    ),
     linear-gradient(90deg, rgba(200, 255, 61, 0.055), transparent 28%),
     rgba(16, 18, 15, 0.8);
 }
@@ -1157,7 +1201,10 @@ a {
     radial-gradient(circle at 9% 13%, rgba(225, 6, 0, 0.18), transparent 15%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     linear-gradient(180deg, #191919 0%, #151515 46%, #101010 100%);
-  background-size: auto, 72px 72px, 100% 100%;
+  background-size:
+    auto,
+    72px 72px,
+    100% 100%;
 }
 
 .topbar {
@@ -1313,7 +1360,9 @@ a {
   height: 28px;
   border-radius: 999px;
   background: #f20a05;
-  box-shadow: 0 0 28px rgba(242, 10, 5, 0.72), 0 0 52px rgba(242, 10, 5, 0.22);
+  box-shadow:
+    0 0 28px rgba(242, 10, 5, 0.72),
+    0 0 52px rgba(242, 10, 5, 0.22);
 }
 
 .start-lights span::before {
@@ -1434,7 +1483,9 @@ p {
   font-weight: 900;
   letter-spacing: 1px;
   text-decoration: none;
-  transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1), background 140ms ease;
+  transition:
+    transform 140ms cubic-bezier(0.23, 1, 0.32, 1),
+    background 140ms ease;
   text-transform: uppercase;
 }
 
@@ -1991,7 +2042,12 @@ h2 {
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 10px;
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.34) 42%, rgba(0, 0, 0, 0.86)),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.02),
+      rgba(0, 0, 0, 0.34) 42%,
+      rgba(0, 0, 0, 0.86)
+    ),
     url("/invite-card-bg.png") center / cover;
   padding: 30px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
@@ -2002,8 +2058,17 @@ h2 {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(115deg, transparent 0 73%, rgba(225, 6, 0, 0.72) 73% 78%, transparent 78%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 34px);
+    linear-gradient(
+      115deg,
+      transparent 0 73%,
+      rgba(225, 6, 0, 0.72) 73% 78%,
+      transparent 78%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.08) 0 1px,
+      transparent 1px 34px
+    );
   pointer-events: none;
 }
 
@@ -2484,7 +2549,10 @@ h2 {
     radial-gradient(circle at 14% 12%, rgba(225, 6, 0, 0.18), transparent 18%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
     linear-gradient(180deg, #191919 0%, #111217 48%, #06070a 100%);
-  background-size: auto, 72px 72px, 100% 100%;
+  background-size:
+    auto,
+    72px 72px,
+    100% 100%;
 }
 
 .my-plans-topbar {
@@ -2907,7 +2975,11 @@ h2 {
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   background:
     radial-gradient(circle at 12% 15%, rgba(225, 6, 0, 0.18), transparent 28%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.026) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.026) 0 1px,
+      transparent 1px 72px
+    ),
     #151515;
   padding: clamp(24px, 5vw, 56px);
 }
@@ -3705,7 +3777,11 @@ h3 {
   border-radius: 0;
   background:
     radial-gradient(circle at 18% 15%, rgba(225, 6, 0, 0.2), transparent 28%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 0 1px,
+      transparent 1px 72px
+    ),
     #181818;
   box-shadow: 0 24px 90px rgba(0, 0, 0, 0.28);
 }
@@ -3849,8 +3925,7 @@ h3 {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0;
   background:
-    linear-gradient(90deg, rgba(225, 6, 0, 0.12), transparent 34%),
-    #181818;
+    linear-gradient(90deg, rgba(225, 6, 0, 0.12), transparent 34%), #181818;
   padding: 13px;
 }
 
@@ -3859,8 +3934,7 @@ h3 {
   padding: 18px;
   background:
     radial-gradient(circle at 8% 10%, rgba(225, 6, 0, 0.22), transparent 34%),
-    linear-gradient(90deg, rgba(225, 6, 0, 0.14), transparent 38%),
-    #181818;
+    linear-gradient(90deg, rgba(225, 6, 0, 0.14), transparent 38%), #181818;
 }
 
 .reserve-grid {
@@ -3877,8 +3951,7 @@ h3 {
   gap: 9px;
   padding: 12px;
   background:
-    linear-gradient(90deg, rgba(225, 6, 0, 0.08), transparent 38%),
-    #151515;
+    linear-gradient(90deg, rgba(225, 6, 0, 0.08), transparent 38%), #151515;
 }
 
 .grid-venue-top {
@@ -4361,7 +4434,7 @@ h3 {
   }
 
   .landing-hero h1 {
-    font-size: 76px;
+    font-size: clamp(62px, 17vw, 68px);
   }
 
   .landing-hero-copy > p:not(.landing-kicker),

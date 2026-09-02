@@ -12,7 +12,9 @@ type JoinPageProps = {
   }>;
 };
 
-export async function generateMetadata({ params }: JoinPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: JoinPageProps): Promise<Metadata> {
   const { inviteCode } = await params;
   const code = inviteCode.trim().toUpperCase();
   const partyData = await loadPartyDataByCode(code);
@@ -21,7 +23,7 @@ export async function generateMetadata({ params }: JoinPageProps): Promise<Metad
   if (!party) {
     return {
       title: "Watch party invite | FindMyScreen",
-      description: "Open this FindMyScreen watch-party invite and RSVP."
+      description: "Open this FindMyScreen watch-party invite and RSVP.",
     };
   }
 
@@ -34,7 +36,7 @@ export async function generateMetadata({ params }: JoinPageProps): Promise<Metad
     title,
     description,
     alternates: {
-      canonical: url
+      canonical: url,
     },
     openGraph: {
       title,
@@ -46,17 +48,17 @@ export async function generateMetadata({ params }: JoinPageProps): Promise<Metad
           url: image,
           width: 1200,
           height: 630,
-          alt: `${party.raceName} watch-party invite at ${party.venueName}`
-        }
+          alt: `${party.raceName} watch-party invite at ${party.venueName}`,
+        },
       ],
-      type: "website"
+      type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [image]
-    }
+      images: [image],
+    },
   };
 }
 
@@ -72,7 +74,7 @@ async function loadPartyDataByCode(inviteCode: string) {
   try {
     const convex = new ConvexHttpClient(convexUrl);
     return await convex.query(api.actions.watchPartyWithRsvpsByInviteCode, {
-      inviteCode
+      inviteCode,
     });
   } catch {
     return null;
