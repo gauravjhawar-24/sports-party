@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PartyPageProps): Promise<Meta
   const title = `You're invited: ${party.raceName} at ${party.venueName}`;
   const description = `RSVP for ${party.raceName} on ${party.raceDate} at ${party.venueName}, ${party.venueArea}.`;
   const url = `${siteUrl}/f1/party/${partyId}`;
-  const image = `${url}/opengraph-image`;
+  const image = `${url}/opengraph-image?v=2`;
 
   return {
     title,
