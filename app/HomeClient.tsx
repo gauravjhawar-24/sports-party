@@ -388,6 +388,7 @@ export function HomeClient({
             <div className="topbar-right">
               <span aria-hidden="true" />
               <strong>F1 race-night finder</strong>
+              <a href="/f1/my-plans">My plans</a>
             </div>
           </header>
 
@@ -505,6 +506,7 @@ export function HomeClient({
             <button type="button" onClick={() => setHasSearched(false)}>
               Change area
             </button>
+            <a href="/f1/my-plans">My plans</a>
             <div>
               <span>Showing F1 screening plan for</span>
               <strong>{submittedArea || "Bangalore"}</strong>

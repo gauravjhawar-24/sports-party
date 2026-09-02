@@ -61,3 +61,4 @@
 - Thu 3 Sep 2026: Split the race grid so P2-P3 are mid-size contenders and P4-P6 are compact backup venues.
 - Thu 3 Sep 2026: Redesigned the watch-party page as a unified F1 race plan with venue-led hero, stronger sharing, and visual RSVP groups.
 - Thu 3 Sep 2026: The F1 home page race counter now counts down live to the next main race instead of showing fixed numbers.
+- Thu 3 Sep 2026: Hosts can now open a dedicated My Plans page, enter their email, and reopen multiple watch parties with RSVP counts.

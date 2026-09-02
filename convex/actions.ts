@@ -170,6 +170,40 @@ export const watchPartiesByHostEmail = query({
   }
 });
 
+export const watchPartiesWithStatsByHostEmail = query({
+  args: {
+    hostEmail: v.string()
+  },
+  handler: async (ctx, args) => {
+    const email = args.hostEmail.trim().toLowerCase();
+    if (!email) return [];
+
+    const parties = await ctx.db
+      .query("watchParties")
+      .withIndex("by_hostEmail_and_createdAt", (q) => q.eq("hostEmail", email))
+      .order("desc")
+      .take(20);
+
+    return await Promise.all(
+      parties.map(async (party) => {
+        const rsvps = await ctx.db
+          .query("rsvps")
+          .withIndex("by_party_and_created_at", (q) => q.eq("partyId", party._id))
+          .collect();
+
+        return {
+          party,
+          counts: {
+            in: rsvps.filter((rsvp) => rsvp.decision === "in").length,
+            maybe: rsvps.filter((rsvp) => rsvp.decision === "maybe").length,
+            out: rsvps.filter((rsvp) => rsvp.decision === "out").length
+          }
+        };
+      })
+    );
+  }
+});
+
 export const watchPartyWithRsvps = query({
   args: {
     partyId: v.id("watchParties")

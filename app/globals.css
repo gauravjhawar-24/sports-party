@@ -402,6 +402,19 @@ a {
   letter-spacing: 4px;
 }
 
+.topbar-right a {
+  min-height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(247, 247, 242, 0.82);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 11px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-decoration: none;
+}
+
 .brand-mark {
   display: grid;
   width: 34px;
@@ -1652,6 +1665,245 @@ h2 {
   color: white;
   padding: 10px;
   text-decoration: none;
+}
+
+.my-plans-page {
+  min-height: 100vh;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 14% 12%, rgba(225, 6, 0, 0.18), transparent 18%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, #191919 0%, #111217 48%, #06070a 100%);
+  background-size: auto, 72px 72px, 100% 100%;
+}
+
+.my-plans-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(1120px, 100%);
+  margin: 0 auto 18px;
+  color: rgba(247, 247, 242, 0.62);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.my-plans-topbar a {
+  color: rgba(247, 247, 242, 0.82);
+  text-decoration: none;
+}
+
+.my-plans-hero,
+.my-plans-results {
+  position: relative;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  border-top: 1px solid var(--red);
+  background: rgba(17, 18, 23, 0.78);
+}
+
+.my-plans-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  gap: 40px;
+  overflow: hidden;
+  min-height: 430px;
+  align-items: end;
+  padding: 64px;
+}
+
+.my-plans-hero .race-plan-slash {
+  right: 34%;
+  top: 16%;
+  height: 88%;
+  opacity: 0.55;
+}
+
+.my-plans-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.my-plans-copy p,
+.my-plans-results-header span,
+.my-plan-main span,
+.my-plan-rank,
+.my-plans-form label {
+  margin: 0;
+  color: var(--red);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.my-plans-copy h1 {
+  max-width: 680px;
+  margin: 18px 0;
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: clamp(74px, 12vw, 144px);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 0.82;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.my-plans-copy > span {
+  display: block;
+  max-width: 460px;
+  color: rgba(247, 247, 242, 0.68);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.my-plans-form {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+  border-left: 5px solid var(--red);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 22px;
+}
+
+.my-plans-form div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.my-plans-form input {
+  min-width: 0;
+  height: 52px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-right: 0;
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.38);
+  color: white;
+  padding: 0 14px;
+}
+
+.my-plans-form button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 0;
+  background: var(--red);
+  color: white;
+  cursor: pointer;
+  padding: 0 18px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.my-plans-results {
+  margin-top: 18px;
+  padding: 26px;
+}
+
+.my-plans-results-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 18px;
+}
+
+.my-plans-results-header strong {
+  color: rgba(247, 247, 242, 0.62);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.my-plans-empty {
+  margin: 28px 0 4px;
+  color: rgba(247, 247, 242, 0.64);
+}
+
+.my-plans-grid {
+  display: grid;
+  gap: 0;
+}
+
+.my-plan-card {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 240px auto;
+  gap: 20px;
+  align-items: center;
+  min-height: 122px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 22px 0;
+}
+
+.my-plan-rank {
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 42px;
+  letter-spacing: 0;
+}
+
+.my-plan-main h2 {
+  margin: 6px 0;
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.my-plan-main p {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.56);
+  font-size: 14px;
+}
+
+.my-plan-counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.my-plan-counts span {
+  display: grid;
+  gap: 4px;
+  color: rgba(247, 247, 242, 0.5);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.my-plan-counts b {
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.my-plan-card > a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  background: var(--red);
+  color: white;
+  padding: 0 16px;
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .my-party-results small {
@@ -3015,12 +3267,73 @@ h3 {
   }
 
   .race-plan-lower,
-  .race-plan-venue {
+  .race-plan-venue,
+  .my-plans-hero,
+  .my-plan-card {
     grid-template-columns: 1fr;
   }
 
   .race-plan-venue-actions {
     justify-content: flex-start;
+  }
+
+  .my-plans-page {
+    padding: 14px;
+  }
+
+  .my-plans-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .my-plans-hero {
+    gap: 28px;
+    min-height: auto;
+    padding: 38px 18px 22px;
+  }
+
+  .my-plans-hero .race-plan-slash {
+    right: 12px;
+    top: 40px;
+    height: 240px;
+  }
+
+  .my-plans-copy h1 {
+    font-size: 72px;
+  }
+
+  .my-plans-form {
+    padding: 16px;
+  }
+
+  .my-plans-form div {
+    grid-template-columns: 1fr;
+  }
+
+  .my-plans-form input {
+    border-right: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .my-plans-results {
+    padding: 18px;
+  }
+
+  .my-plans-results-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .my-plan-card {
+    gap: 14px;
+    align-items: start;
+  }
+
+  .my-plan-counts {
+    width: 100%;
+  }
+
+  .my-plan-card > a {
+    width: 100%;
   }
 
   .reserve-grid {
