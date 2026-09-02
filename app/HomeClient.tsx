@@ -497,7 +497,7 @@ export function HomeClient({
             <>
               <section className="trust-note" aria-label="Recommendation note">
                 <span>Starting grid locked</span>
-                <p>P1 is the strongest race-night plan. P2-P6 stay ready if the pole pick does not work for your group.</p>
+                <p>P1 is the strongest race-night plan. P2-P3 are solid alternatives. P4-P6 are backups if location or booking gets messy.</p>
               </section>
 
               <div className="race-grid-results" aria-label="F1 screening recommendation">
@@ -551,11 +551,11 @@ export function HomeClient({
 
                 <div className="grid-pack">
                   <div className="section-heading">
-                    <span>P2-P6</span>
-                    <strong>Backups on the grid</strong>
+                    <span>P2-P3</span>
+                    <strong>Close contenders</strong>
                   </div>
-                  {[...backupVenues, ...moreVenues].map((venue, index) => (
-                    <article className="grid-venue-card" key={venue.id}>
+                  {backupVenues.map((venue, index) => (
+                    <article className="grid-venue-card grid-venue-card-mid" key={venue.id}>
                       <div className="grid-venue-top">
                         <span className="grid-position">P{index + 2}</span>
                         <EvidenceBadge tag={venue.evidenceTag} />
@@ -573,6 +573,34 @@ export function HomeClient({
                       </div>
                     </article>
                   ))}
+
+                  {moreVenues.length ? (
+                    <div className="reserve-grid" aria-label="P4 to P6 backup venues">
+                      <div className="section-heading reserve-heading">
+                        <span>P4-P6</span>
+                        <strong>Backup grid</strong>
+                      </div>
+                      {moreVenues.map((venue, index) => (
+                        <article className="grid-venue-card grid-venue-card-backup" key={venue.id}>
+                          <div className="grid-venue-top">
+                            <span className="grid-position">P{index + 4}</span>
+                            <EvidenceBadge tag={venue.evidenceTag} />
+                          </div>
+                          <div>
+                            <h3>{venue.name}</h3>
+                            <p>{venue.area}</p>
+                          </div>
+                          <VenueStats venue={venue} position={index + 4} />
+                          <p className="pick-note">
+                            {venue.evidenceTag === "Verified" ? "Confirmed backup for race night." : "Backup option. Call before you commit."}
+                          </p>
+                          <div className="backup-actions">
+                            <button type="button" onClick={() => startWatchParty(venue)}>Create Watch Party</button>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </>

@@ -2361,6 +2361,33 @@ h3 {
   padding: 13px;
 }
 
+.grid-venue-card-mid {
+  gap: 14px;
+  padding: 18px;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(225, 6, 0, 0.22), transparent 34%),
+    linear-gradient(90deg, rgba(225, 6, 0, 0.14), transparent 38%),
+    #181818;
+}
+
+.reserve-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.reserve-heading {
+  grid-column: 1 / -1;
+}
+
+.grid-venue-card-backup {
+  gap: 9px;
+  padding: 12px;
+  background:
+    linear-gradient(90deg, rgba(225, 6, 0, 0.08), transparent 38%),
+    #151515;
+}
+
 .grid-venue-top {
   display: flex;
   align-items: center;
@@ -2376,6 +2403,14 @@ h3 {
   line-height: 0.82;
 }
 
+.grid-venue-card-mid .grid-position {
+  font-size: 52px;
+}
+
+.grid-venue-card-backup .grid-position {
+  font-size: 34px;
+}
+
 .grid-venue-card h3 {
   margin: 0 0 4px;
   color: white;
@@ -2385,6 +2420,14 @@ h3 {
   line-height: 0.9;
   text-transform: uppercase;
   text-wrap: balance;
+}
+
+.grid-venue-card-mid h3 {
+  font-size: 42px;
+}
+
+.grid-venue-card-backup h3 {
+  font-size: 25px;
 }
 
 .grid-venue-card p {
@@ -2403,6 +2446,24 @@ h3 {
   min-height: 52px;
   padding: 9px;
   font-size: 10px;
+}
+
+.grid-venue-card-mid .venue-stats span {
+  min-height: 58px;
+  font-size: 10px;
+}
+
+.grid-venue-card-backup .venue-stats {
+  display: none;
+}
+
+.grid-venue-card-backup .evidence-badge {
+  padding: 6px 8px;
+  font-size: 10px;
+}
+
+.grid-venue-card-backup .pick-note {
+  font-size: 12px;
 }
 
 .grid-venue-card .venue-stats span:nth-child(2) {
@@ -2520,6 +2581,10 @@ h3 {
   }
 
   .race-grid-results {
+    grid-template-columns: 1fr;
+  }
+
+  .reserve-grid {
     grid-template-columns: 1fr;
   }
 
