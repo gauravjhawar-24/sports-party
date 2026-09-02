@@ -36,7 +36,7 @@ export function InvitePageClient({ venue, area }: { venue: Venue; area: string }
       });
     }
 
-    setStatus("Invite saved. You can now download or share it.");
+    setStatus("Invite saved. You can now copy it.");
   }
 
   function copyInvite() {

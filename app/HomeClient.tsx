@@ -24,7 +24,6 @@ type RevealedInvite = {
   venue: Venue;
   text: string;
 } | null;
-type InviteImageAction = "download" | "share";
 
 const quickAreas = ["Bellandur", "HSR", "Indiranagar", "MG Road"];
 const clientIdKey = "findmyscreen-client-id";
@@ -236,14 +235,14 @@ export function HomeClient({
     const text = buildInviteText(venue);
 
     setCopiedInvite(false);
-    setActionStatus("Invite ready. Enter email on the card to download or share it.");
+    setActionStatus("Invite ready. Enter email on the card to copy it.");
     setRevealedPhone(null);
     setRevealedInvite({ venue, text });
 
     try {
       await navigator.clipboard.writeText(text);
       setCopiedInvite(true);
-      setActionStatus("Invite ready and text copied. Enter email on the card to download or share it.");
+      setActionStatus("Invite ready and text copied. Enter email on the card to save this action.");
     } catch {
       setCopiedInvite(false);
     }
@@ -266,7 +265,7 @@ export function HomeClient({
       venue_name: venue.name
     });
 
-    setActionStatus("Invite saved. You can now download or share it.");
+    setActionStatus("Invite saved. You can now copy it.");
   }
 
   async function completeAction(event: FormEvent<HTMLFormElement>) {
@@ -309,7 +308,7 @@ export function HomeClient({
           setActionStatus("Invite ready and text copied. Send it to your group.");
         } catch {
           setCopiedInvite(false);
-          setActionStatus("Invite ready. Use Copy text or Download card.");
+          setActionStatus("Invite ready. Use Copy text.");
         }
 
         setRevealedInvite({
@@ -737,7 +736,7 @@ export function InviteReveal({
       <InviteCardPreview venue={invite.venue} />
       {!isUnlocked ? (
         <form className="invite-email-form" onSubmit={submitInviteEmail}>
-          <label htmlFor="invite-email">Enter email to download or share this invite</label>
+          <label htmlFor="invite-email">Enter email to copy this invite</label>
           <div>
             <input
               id="invite-email"
@@ -753,12 +752,6 @@ export function InviteReveal({
         </form>
       ) : (
         <div className="invite-share-actions">
-          <button type="button" onClick={() => void createInviteImage(invite.venue, "download")}>
-            Download card
-          </button>
-          <button type="button" onClick={() => void createInviteImage(invite.venue, "share")}>
-            Share image
-          </button>
           <button type="button" onClick={onCopy}>Copy text</button>
         </div>
       )}
@@ -790,131 +783,6 @@ export function InviteCardPreview({ venue }: { venue: { name: string; area: stri
       <strong className="invite-question">Who's in?</strong>
     </div>
   );
-}
-
-async function createInviteImage(venue: Venue, action: InviteImageAction) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1080;
-  canvas.height = 1350;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  const background = await loadImage("/invite-card-bg.png");
-  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, "rgba(0, 0, 0, 0.08)");
-  gradient.addColorStop(0.42, "rgba(0, 0, 0, 0.4)");
-  gradient.addColorStop(1, "rgba(0, 0, 0, 0.74)");
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.26)";
-  ctx.lineWidth = 3;
-  roundRect(ctx, 70, 70, 940, 1210, 28);
-  ctx.stroke();
-
-  ctx.fillStyle = "#e10600";
-  roundRect(ctx, 94, 94, 236, 58, 10);
-  ctx.fill();
-  drawText(ctx, "FINDMYSCREEN RACE NIGHT", 118, 132, 26, 900, "#ffffff", 620);
-  drawText(ctx, "F1", 820, 168, 118, 900, "rgba(255, 255, 255, 0.9)", 180);
-
-  drawText(ctx, "ONE PLAN. NO GROUP DEBATE.", 94, 640, 30, 900, "#ffb000", 880);
-  drawText(ctx, nextRace.name.toUpperCase(), 94, 720, 58, 900, "#ffffff", 880);
-  drawText(ctx, `${nextRace.raceDate} - ${nextRace.raceTime}`, 94, 790, 34, 800, "#f7f7f2", 880);
-
-  drawText(ctx, "WATCHING AT", 94, 900, 24, 900, "rgba(247, 247, 242, 0.7)");
-  drawText(ctx, venue.name.toUpperCase(), 94, 972, 76, 900, "#ffffff", 880);
-  drawText(ctx, venue.area, 94, 1050, 36, 800, "#f7f7f2", 880);
-
-  ctx.fillStyle = venue.evidenceTag === "Verified" ? "#00a86b" : "#ffb000";
-  roundRect(ctx, 94, 1110, 310, 60, 14);
-  ctx.fill();
-  drawText(ctx, venue.evidenceTag.toUpperCase(), 122, 1149, 26, 900, "#ffffff");
-
-  drawText(ctx, "Who's in?", 94, 1230, 54, 900, "#ffffff", 880);
-
-  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
-  if (!blob) return;
-
-  const fileName = `findmyscreen-${slugify(venue.name)}-${slugify(nextRace.name)}.png`;
-  const file = new File([blob], fileName, { type: "image/png" });
-
-  if (action === "share" && navigator.canShare?.({ files: [file] })) {
-    await navigator.share({
-      title: `${nextRace.name} watch plan`,
-      text: `${venue.name}, ${venue.area}`,
-      files: [file]
-    });
-    return;
-  }
-
-  downloadBlob(blob, fileName);
-}
-
-function loadImage(src: string) {
-  return new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-    image.src = src;
-  });
-}
-
-function drawText(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  size: number,
-  weight: number,
-  color: string,
-  maxWidth?: number
-) {
-  ctx.fillStyle = color;
-  ctx.font = `${weight} ${size}px Arial, Helvetica, sans-serif`;
-  ctx.textBaseline = "alphabetic";
-
-  if (!maxWidth || ctx.measureText(text).width <= maxWidth) {
-    ctx.fillText(text, x, y);
-    return;
-  }
-
-  let output = text;
-  while (output.length > 3 && ctx.measureText(`${output}...`).width > maxWidth) {
-    output = output.slice(0, -1);
-  }
-  ctx.fillText(`${output}...`, x, y);
-}
-
-function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.lineTo(x + width - radius, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-  ctx.lineTo(x + width, y + height - radius);
-  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-  ctx.lineTo(x + radius, y + height);
-  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-  ctx.lineTo(x, y + radius);
-  ctx.quadraticCurveTo(x, y, x + radius, y);
-  ctx.closePath();
-}
-
-function slugify(text: string) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
-
-function downloadBlob(blob: Blob, fileName: string) {
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
 }
 
 function PhoneReveal({ venueName, phone, mapUrl }: { venueName: string; phone: string; mapUrl: string }) {
