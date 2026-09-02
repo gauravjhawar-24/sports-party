@@ -27,6 +27,8 @@ type RevealedInvite = {
 type InviteImageAction = "download" | "share";
 
 const quickAreas = ["Bellandur", "HSR", "Indiranagar", "MG Road"];
+const clientIdKey = "findmyscreen-client-id";
+const hostPartiesKey = "findmyscreen-host-parties";
 
 export function HomeClient({
   initialArea = "",
@@ -54,6 +56,8 @@ export function HomeClient({
   const [email, setEmail] = useState("");
   const [hostName, setHostName] = useState("");
   const [hostEmail, setHostEmail] = useState("");
+  const [lookupEmail, setLookupEmail] = useState("");
+  const [submittedLookupEmail, setSubmittedLookupEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [hostError, setHostError] = useState("");
   const [areaError, setAreaError] = useState("");
@@ -69,6 +73,10 @@ export function HomeClient({
   const recordAction = useMutation(api.actions.recordAction);
   const createWatchParty = useMutation(api.actions.createWatchParty);
   const approvedSignals = useQuery(api.actions.approvedVenueCandidates);
+  const hostParties = useQuery(
+    api.actions.watchPartiesByHostEmail,
+    submittedLookupEmail ? { hostEmail: submittedLookupEmail } : "skip"
+  );
   const approvedSignalRows = approvedSignals ?? initialApprovedSignals;
 
   const venueList = useMemo(() => {
@@ -173,9 +181,10 @@ export function HomeClient({
 
     try {
       const venue = pendingParty.venue;
+      const hostClientId = getOrCreateClientId();
       const partyId = await createWatchParty({
         hostName: trimmedName,
-        hostEmail: trimmedEmail,
+        hostEmail: trimmedEmail.toLowerCase(),
         areaInput: submittedArea || venue.area,
         normalizedArea: run.normalizedArea || venue.area.toLowerCase(),
         venueId: venue.id,
@@ -185,10 +194,13 @@ export function HomeClient({
         venueEvidence: venue.evidence,
         venueVibe: venue.vibe,
         mapUrl: venue.mapUrl,
+        venuePhone: venue.phone,
+        hostClientId,
         raceName: nextRace.name,
         raceDate: nextRace.raceDate,
         raceTime: nextRace.raceTime
       });
+      rememberHostParty(String(partyId));
 
       captureProductEvent("findmyscreen_watch_party_created", {
         area_input: submittedArea || venue.area,
@@ -203,6 +215,19 @@ export function HomeClient({
     } finally {
       setIsCreatingParty(false);
     }
+  }
+
+  function submitPartyLookup(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const nextEmail = lookupEmail.trim().toLowerCase();
+
+    if (!/^\S+@\S+\.\S+$/.test(nextEmail)) {
+      setActionStatus("Enter the email you used to create your watch party.");
+      return;
+    }
+
+    setActionStatus("");
+    setSubmittedLookupEmail(nextEmail);
   }
 
   async function revealInvite(venue: Venue) {
@@ -361,6 +386,14 @@ export function HomeClient({
                   </a>
                 ))}
               </div>
+
+              <MyWatchParties
+                hostParties={hostParties}
+                lookupEmail={lookupEmail}
+                onLookupEmailChange={setLookupEmail}
+                onSubmit={submitPartyLookup}
+                submittedLookupEmail={submittedLookupEmail}
+              />
             </div>
 
             <aside className="race-panel" aria-label="Next F1 race">
@@ -444,29 +477,9 @@ export function HomeClient({
                     </div>
 
                     <div className="actions">
-                      {bestVenue.evidenceTag === "Verified" ? (
-                        <a
-                          className="primary-action"
-                          href={inviteHref(bestVenue)}
-                        >
-                          {copiedInvite ? "Invite copied" : primaryAction}
-                        </a>
-                      ) : (
-                        <button type="button" onClick={() => startAction("call_pub", bestVenue)}>
-                          {primaryAction}
-                        </button>
-                      )}
-                      {bestVenue.evidenceTag !== "Verified" ? (
-                        <a className="secondary-action" href={inviteHref(bestVenue)}>
-                          Share invite
-                        </a>
-                      ) : null}
-                      <button type="button" onClick={() => startWatchParty(bestVenue)}>
+                      <button className="primary-action" type="button" onClick={() => startWatchParty(bestVenue)}>
                         Create Watch Party
                       </button>
-                      <a className="secondary-action" href={bestVenue.mapUrl} target="_blank" rel="noreferrer">
-                        Open map
-                      </a>
                     </div>
                     {actionStatus ? <p className="action-status">{actionStatus}</p> : null}
                     {revealedPhone ? (
@@ -496,10 +509,7 @@ export function HomeClient({
                       </p>
                       <p>{venue.evidence}</p>
                       <div className="backup-actions">
-                        <button type="button" onClick={() => startAction("call_pub", venue)}>Call pub</button>
-                        <a href={inviteHref(venue)}>Share invite</a>
                         <button type="button" onClick={() => startWatchParty(venue)}>Create Watch Party</button>
-                        <a href={venue.mapUrl} target="_blank" rel="noreferrer">Map</a>
                       </div>
                     </article>
                   ))}
@@ -571,6 +581,73 @@ export function HomeClient({
 function captureProductEvent(event: string, properties: Record<string, string>) {
   if (!process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) return;
   posthog.capture(event, properties);
+}
+
+function getOrCreateClientId() {
+  if (typeof window === "undefined") return undefined;
+
+  const existing = window.localStorage.getItem(clientIdKey);
+  if (existing) return existing;
+
+  const nextId = typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `client-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+  window.localStorage.setItem(clientIdKey, nextId);
+  return nextId;
+}
+
+function rememberHostParty(partyId: string) {
+  if (typeof window === "undefined") return;
+
+  const current = JSON.parse(window.localStorage.getItem(hostPartiesKey) || "[]") as string[];
+  const next = [partyId, ...current.filter((item) => item !== partyId)].slice(0, 10);
+  window.localStorage.setItem(hostPartiesKey, JSON.stringify(next));
+  window.localStorage.setItem(`findmyscreen-host-party:${partyId}`, "true");
+}
+
+function MyWatchParties({
+  hostParties,
+  lookupEmail,
+  onLookupEmailChange,
+  onSubmit,
+  submittedLookupEmail
+}: {
+  hostParties: Doc<"watchParties">[] | undefined;
+  lookupEmail: string;
+  onLookupEmailChange: (value: string) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  submittedLookupEmail: string;
+}) {
+  return (
+    <section className="my-parties-box" aria-label="Find your watch parties">
+      <div>
+        <span>Already made a plan?</span>
+        <strong>Find your watch parties</strong>
+      </div>
+      <form onSubmit={onSubmit}>
+        <input
+          value={lookupEmail}
+          onChange={(event) => onLookupEmailChange(event.target.value)}
+          placeholder="Email used by host"
+        />
+        <button type="submit">Find</button>
+      </form>
+      {submittedLookupEmail ? (
+        <div className="my-party-results">
+          {hostParties === undefined ? <p>Checking...</p> : null}
+          {hostParties?.length === 0 ? <p>No watch parties found for this email.</p> : null}
+          {hostParties?.map((party) => (
+            <a href={`/f1/party/${party._id}`} key={party._id}>
+              <span>{party.raceName}</span>
+              <strong>{party.venueName}</strong>
+              <small>{party.raceDate} · {party.raceTime}</small>
+            </a>
+          ))}
+        </div>
+      ) : null}
+    </section>
+  );
 }
 
 function EvidenceBadge({ tag }: { tag: string }) {

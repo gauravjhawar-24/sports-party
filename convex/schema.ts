@@ -51,17 +51,21 @@ export default defineSchema({
     venueEvidence: v.string(),
     venueVibe: v.string(),
     mapUrl: v.string(),
+    venuePhone: v.optional(v.string()),
     raceName: v.string(),
     raceDate: v.string(),
     raceTime: v.string(),
     createdAt: v.number()
-  }).index("by_created_at", ["createdAt"]),
+  })
+    .index("by_created_at", ["createdAt"])
+    .index("by_hostEmail_and_createdAt", ["hostEmail", "createdAt"]),
 
   rsvps: defineTable({
     partyId: v.id("watchParties"),
     name: v.string(),
     decision: v.union(v.literal("in"), v.literal("maybe"), v.literal("out")),
     isHost: v.boolean(),
+    clientId: v.optional(v.string()),
     createdAt: v.number()
   })
     .index("by_party_and_created_at", ["partyId", "createdAt"])

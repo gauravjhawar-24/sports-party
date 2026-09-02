@@ -103,6 +103,8 @@ export const createWatchParty = mutation({
     venueEvidence: v.string(),
     venueVibe: v.string(),
     mapUrl: v.string(),
+    venuePhone: v.optional(v.string()),
+    hostClientId: v.optional(v.string()),
     raceName: v.string(),
     raceDate: v.string(),
     raceTime: v.string()
@@ -110,20 +112,35 @@ export const createWatchParty = mutation({
   handler: async (ctx, args) => {
     const createdAt = Date.now();
     const partyId = await ctx.db.insert("watchParties", {
-      ...args,
+      hostName: args.hostName.trim(),
+      hostEmail: args.hostEmail.trim().toLowerCase(),
+      areaInput: args.areaInput,
+      normalizedArea: args.normalizedArea,
+      venueId: args.venueId,
+      venueName: args.venueName,
+      venueArea: args.venueArea,
+      venueEvidenceTag: args.venueEvidenceTag,
+      venueEvidence: args.venueEvidence,
+      venueVibe: args.venueVibe,
+      mapUrl: args.mapUrl,
+      venuePhone: args.venuePhone,
+      raceName: args.raceName,
+      raceDate: args.raceDate,
+      raceTime: args.raceTime,
       createdAt
     });
 
     await ctx.db.insert("rsvps", {
       partyId,
-      name: args.hostName,
+      name: args.hostName.trim(),
       decision: "in",
       isHost: true,
+      clientId: args.hostClientId,
       createdAt
     });
 
     await ctx.db.insert("actions", {
-      email: args.hostEmail,
+      email: args.hostEmail.trim().toLowerCase(),
       actionType: "create_watch_party",
       areaInput: args.areaInput,
       normalizedArea: args.normalizedArea,
@@ -134,6 +151,22 @@ export const createWatchParty = mutation({
     });
 
     return partyId;
+  }
+});
+
+export const watchPartiesByHostEmail = query({
+  args: {
+    hostEmail: v.string()
+  },
+  handler: async (ctx, args) => {
+    const email = args.hostEmail.trim().toLowerCase();
+    if (!email) return [];
+
+    return await ctx.db
+      .query("watchParties")
+      .withIndex("by_hostEmail_and_createdAt", (q) => q.eq("hostEmail", email))
+      .order("desc")
+      .take(10);
   }
 });
 
@@ -159,6 +192,7 @@ export const submitWatchPartyRsvp = mutation({
   args: {
     partyId: v.id("watchParties"),
     name: v.string(),
+    clientId: v.optional(v.string()),
     decision: v.union(v.literal("in"), v.literal("maybe"), v.literal("out"))
   },
   handler: async (ctx, args) => {
@@ -167,12 +201,21 @@ export const submitWatchPartyRsvp = mutation({
       .withIndex("by_party_and_created_at", (q) => q.eq("partyId", args.partyId))
       .collect();
     const normalizedName = args.name.trim().toLowerCase();
-    const duplicate = existing.find((rsvp) => rsvp.name.trim().toLowerCase() === normalizedName);
+    const duplicateByClient = args.clientId
+      ? existing.find((rsvp) => rsvp.clientId === args.clientId)
+      : null;
+    const duplicateByName = existing.find((rsvp) => rsvp.name.trim().toLowerCase() === normalizedName);
+    const duplicate = duplicateByClient ?? duplicateByName;
 
     if (duplicate) {
+      if (duplicate.isHost) {
+        return duplicate._id;
+      }
+
       await ctx.db.patch(duplicate._id, {
         name: args.name.trim(),
-        decision: args.decision
+        decision: args.decision,
+        clientId: args.clientId
       });
       return duplicate._id;
     }
@@ -182,6 +225,7 @@ export const submitWatchPartyRsvp = mutation({
       name: args.name.trim(),
       decision: args.decision,
       isHost: false,
+      clientId: args.clientId,
       createdAt: Date.now()
     });
   }

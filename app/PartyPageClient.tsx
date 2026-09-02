@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import posthog from "posthog-js";
 import { api } from "../convex/_generated/api";
@@ -15,10 +15,13 @@ const decisionLabels: Record<Decision, string> = {
   maybe: "Maybe",
   out: "Out"
 };
+const clientIdKey = "findmyscreen-client-id";
 
 export function PartyPageClient({ partyId }: { partyId: string }) {
   const [name, setName] = useState("");
   const [decision, setDecision] = useState<Decision>("in");
+  const [clientId, setClientId] = useState("");
+  const [isHostDevice, setIsHostDevice] = useState(false);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -32,6 +35,22 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
     }
     return empty;
   }, [partyData?.rsvps]);
+  const currentDeviceRsvp = useMemo(() => {
+    if (!clientId) return null;
+    return partyData?.rsvps.find((rsvp) => rsvp.clientId === clientId) ?? null;
+  }, [clientId, partyData?.rsvps]);
+
+  useEffect(() => {
+    const nextClientId = getOrCreateClientId();
+    setClientId(nextClientId);
+    setIsHostDevice(window.localStorage.getItem(`findmyscreen-host-party:${partyId}`) === "true");
+  }, [partyId]);
+
+  useEffect(() => {
+    if (!currentDeviceRsvp || name) return;
+    setName(currentDeviceRsvp.name);
+    setDecision(currentDeviceRsvp.decision);
+  }, [currentDeviceRsvp, name]);
 
   if (partyData === undefined) {
     return (
@@ -107,6 +126,7 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
       await submitRsvp({
         partyId: party._id,
         name: trimmedName,
+        clientId,
         decision
       });
 
@@ -158,18 +178,34 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
               <span>{party.venueEvidenceTag}</span>
               <h1>{party.venueName}</h1>
               <p>{party.venueArea}</p>
-              <a href={party.mapUrl} target="_blank" rel="noreferrer">Open map</a>
+              <div className="party-venue-actions">
+                {party.venuePhone && party.venuePhone !== "Needs call" ? (
+                  <a href={`tel:${party.venuePhone}`}>Call pub</a>
+                ) : (
+                  <span>Phone number needs a fresh check</span>
+                )}
+                <a href={party.mapUrl} target="_blank" rel="noreferrer">Open map</a>
+              </div>
             </div>
 
-            <RsvpForm
-              decision={decision}
-              error={error}
-              isSaving={isSaving}
-              name={name}
-              onDecisionChange={setDecision}
-              onNameChange={setName}
-              onSubmit={submit}
-            />
+            {isHostDevice ? (
+              <div className="host-rsvp-lock">
+                <span>Host view</span>
+                <strong>You are already counted as I'm in.</strong>
+                <p>Share this link with friends and watch the group status below.</p>
+              </div>
+            ) : (
+              <RsvpForm
+                currentDecision={currentDeviceRsvp?.decision}
+                decision={decision}
+                error={error}
+                isSaving={isSaving}
+                name={name}
+                onDecisionChange={setDecision}
+                onNameChange={setName}
+                onSubmit={submit}
+              />
+            )}
             <a className="party-scroll-cue" href="#party-rsvps">
               Scroll down to see who is in, maybe, and out
             </a>
@@ -184,6 +220,7 @@ export function PartyPageClient({ partyId }: { partyId: string }) {
 }
 
 function RsvpForm({
+  currentDecision,
   decision,
   error,
   isSaving,
@@ -192,6 +229,7 @@ function RsvpForm({
   onNameChange,
   onSubmit
 }: {
+  currentDecision?: Decision;
   decision: Decision;
   error: string;
   isSaving: boolean;
@@ -204,7 +242,11 @@ function RsvpForm({
     <form className="rsvp-form" onSubmit={onSubmit}>
       <span>RSVP</span>
       <h2>Are you coming?</h2>
-      <p className="rsvp-hint">Vote here. Scroll down after voting to see who is in, maybe, and out.</p>
+      <p className="rsvp-hint">
+        {currentDecision
+          ? `You already said ${decisionLabels[currentDecision]}. Submit again to update it.`
+          : "Vote here. Scroll down after voting to see who is in, maybe, and out."}
+      </p>
       <input
         value={name}
         onChange={(event) => onNameChange(event.target.value)}
@@ -263,4 +305,16 @@ function RsvpStats({ grouped }: { grouped: Record<Decision, string[]> }) {
       </div>
     </section>
   );
+}
+
+function getOrCreateClientId() {
+  const existing = window.localStorage.getItem(clientIdKey);
+  if (existing) return existing;
+
+  const nextId = typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `client-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+  window.localStorage.setItem(clientIdKey, nextId);
+  return nextId;
 }
