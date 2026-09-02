@@ -1,0 +1,41 @@
+# CHANGELOG
+
+- Tue 1 Sep 2026: Users can enter a Bangalore area and get one F1 race-night pub pick plus two backups from real venue data with evidence tags.
+- Tue 1 Sep 2026: Convex is connected and the app can save searches plus email-gated Share invite / Call pub actions.
+- Tue 1 Sep 2026: Call pub now opens the email gate for both the best pick and backup venues before saving the action.
+- Tue 1 Sep 2026: The email gate now says "Please enter your email to view phone number" so the reason is clear.
+- Tue 1 Sep 2026: The product now starts with a centered area-entry screen and moves to a separate recommendations screen after search.
+- Tue 1 Sep 2026: The recommendations screen now shows a Convex-backed proof table of the latest Share invite and Call pub actions.
+- Tue 1 Sep 2026: Internal proof tables moved from the customer-facing product to `/admin`.
+- Tue 1 Sep 2026: `/admin` now shows proof stats for total searches, meaningful actions, Share invites and Call pub clicks.
+- Tue 1 Sep 2026: After email capture, Call pub now reveals the venue phone number on screen with a clear Call now button.
+- Tue 1 Sep 2026: Doff Pub & Lounge in Indiranagar is now marked Verified for the Italian GP main race.
+- Tue 1 Sep 2026: After email capture, Share invite now reveals the exact WhatsApp-ready invite text with a Copy again button.
+- Tue 1 Sep 2026: The first screen now handles empty area input, explains Bangalore-only coverage and offers quick area buttons.
+- Tue 1 Sep 2026: Area search now supports common spellings like Indira nagar, indra nagar, h s r and kormangala.
+- Tue 1 Sep 2026: The recommendations screen now explains the best pick in user-friendly trust language without exposing ranking logic.
+- Tue 1 Sep 2026: Admin can now search Tavily for public F1 venue signals, save candidates, approve them, and approved rows can appear in customer recommendations.
+- Tue 1 Sep 2026: The Beer Cafe Koramangala and Socials Indiranagar were added as approved Convex venue entries with Needs call status.
+- Tue 1 Sep 2026: Underdogs Whitefield and JP Nagar Social were added as approved Convex venue entries with Needs call status.
+- Tue 1 Sep 2026: Studz Sports Bar Bellandur was added as an approved Convex venue entry with Needs call status.
+- Tue 1 Sep 2026: Venue approval now removes rows from the review queue immediately and shows a clear approved/rejected status message.
+- Tue 1 Sep 2026: Admin venue signals now shows an Approved bars table, and JP Nagar is supported as a searchable Bangalore area.
+- Wed 2 Sep 2026: Admin venue signals now renders approved bars from Convex on the server so saved manual venues are visible immediately.
+- Wed 2 Sep 2026: Next.js root is now pinned to the sports-party project so CSS loads correctly in local dev.
+- Wed 2 Sep 2026: Manual venue entries are now marked Verified with higher confidence so they rank above weaker online signals.
+- Wed 2 Sep 2026: Manual verified venues now use clearer customer-facing copy for Why this wins and Vibe.
+- Wed 2 Sep 2026: Hard Rock Cafe Church Street, Amoeba Church Street and Red Rhino Whitefield were added as approved verified manual venues.
+- Wed 2 Sep 2026: Share Invite now shows a race-car invitation card and can download or share it as a PNG image.
+- Wed 2 Sep 2026: Area search now recognizes Indranagar and Indranagara as Indiranagar.
+- Wed 2 Sep 2026: Quick area options now work as real links with area query params, so results load even if browser-side click handling is slow.
+- Wed 2 Sep 2026: Bellandur results now load approved Convex venues on the server, so Studz Sports Bar appears as the best pick before older static venues.
+- Wed 2 Sep 2026: Share Invite now shows a loading state, survives clipboard failures, and still reveals the invite card after email capture.
+- Wed 2 Sep 2026: Share Invite now reveals the invite card immediately, then asks for email inside the card before download, image share or copy.
+- Wed 2 Sep 2026: Share Invite now works as a normal link to invite mode, so the invite card and email field render even if browser click handling fails.
+- Wed 2 Sep 2026: Share Invite now jumps to the invite card automatically so users can see the result after opening invite mode.
+- Wed 2 Sep 2026: The invite card now looks like an F1 race-night ticket, with clearer group-share copy and mobile-safe layout.
+- Wed 2 Sep 2026: Approved online venue names now display cleaner names like Bira 91 Taproom, SkyDeck By Sherlock's and Watson's Pub instead of scraped title fragments.
+- Wed 2 Sep 2026: The root page now positions Fanzo as a broader sports bar finder, with the F1 finder moved to `/f1` as the current live sport.
+- Wed 2 Sep 2026: The landing page now uses a general sports theme with country-style chips, while F1 appears only as the current live option.
+- Wed 2 Sep 2026: The broad sports landing page no longer shows the hero CTA button.
+- Wed 2 Sep 2026: Admin now links back to `/f1`, area search prevents duplicate submissions, verified backups use clearer copy, and the scope reflects the new `/f1` product route.

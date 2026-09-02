@@ -1,0 +1,22 @@
+import type { Metadata } from "next";
+import { ConvexClientProvider } from "./ConvexClientProvider";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "Fanzo Bangalore",
+  description: "Find sports screenings in nearby Bangalore pubs."
+};
+
+export default function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body>
+        <ConvexClientProvider>{children}</ConvexClientProvider>
+      </body>
+    </html>
+  );
+}
