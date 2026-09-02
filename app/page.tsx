@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { nextRace } from "../lib/venues";
+import { nextRace, venues, type Venue } from "../lib/venues";
 
 type LandingPageProps = {
   searchParams: Promise<{
@@ -8,6 +8,23 @@ type LandingPageProps = {
     invite?: string;
   }>;
 };
+
+const verifiedVenues = venues.filter((venue) => venue.evidenceTag === "Verified");
+const activeVenueCount = venues.length;
+const activeAreaCount = new Set(venues.map((venue) => venue.area)).size;
+const sampleVenues = [
+  verifiedVenues[0],
+  verifiedVenues[1],
+  venues.find((venue) => venue.name.includes("Buffalo")),
+  venues.find((venue) => venue.name.includes("Big Pitcher"))
+].filter((venue): venue is Venue => Boolean(venue));
+
+const sports = [
+  { label: "F1", state: "live now" },
+  { label: "Cricket", state: "coming next" },
+  { label: "Football", state: "coming next" },
+  { label: "UFC", state: "coming next" }
+];
 
 export default async function LandingPage({ searchParams }: LandingPageProps) {
   const params = await searchParams;
@@ -24,69 +41,207 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
 
   return (
     <main className="findmyscreen-landing">
-      <section className="landing-hero">
-        <nav className="landing-nav" aria-label="FindMyScreen">
-          <div className="landing-brand">
-            <span>FMS</span>
-            <strong>FindMyScreen</strong>
-          </div>
-        </nav>
+      <nav className="landing-nav" aria-label="FindMyScreen">
+        <Link className="landing-wordmark" href="/">
+          FindMyScreen
+        </Link>
+        <div>
+          <span>Bangalore ↓</span>
+          <a href="#how-it-works">How it works</a>
+          <Link href="/f1">Find a screening →</Link>
+        </div>
+      </nav>
 
-        <div className="landing-hero-grid">
-          <div className="landing-copy">
-            <div className="flag-ribbon" aria-label="Sports countries">
-              <span>India</span>
-              <span>England</span>
-              <span>Italy</span>
-              <span>Spain</span>
-              <span>UAE</span>
-            </div>
-            <p className="landing-eyebrow">Bangalore match nights</p>
-            <h1>Find the sports bar where your game is actually on.</h1>
-            <p>
-              FindMyScreen helps fans pick one place for live screenings nearby. Search what is live, see the strongest pub
-              pick, and send one plan to the group.
-            </p>
-          </div>
+      <section className="landing-hero" aria-label="Find live screenings">
+        <div className="landing-hero-copy">
+          <p className="landing-kicker">Bangalore / live-screening discovery</p>
+          <h1>Where are you watching?</h1>
+          <p>
+            Find bars and venues actually screening what you want to watch. Live now for F1 race nights in Bangalore.
+          </p>
 
-          <aside className="live-sport-panel" aria-label="Live sports available">
-            <span>Live sports board</span>
-            <div className="sport-input">
-              <label htmlFor="sport-picker">What can I find today?</label>
-              <input id="sport-picker" value="Formula 1" readOnly />
+          <form className="landing-search" action="/f1">
+            <label htmlFor="landing-event">Search a match, race or event</label>
+            <div>
+              <input id="landing-event" value={`${nextRace.name} / live now`} readOnly />
+              <button type="submit">Find a screening →</button>
             </div>
-            <div className="sport-pills" aria-label="Upcoming sports">
-              <span>Cricket soon</span>
-              <span>Football soon</span>
-              <span>UFC soon</span>
+          </form>
+
+          <div className="landing-sport-chips" aria-label="Sports">
+            {sports.map((sport) => (
+              <span key={sport.label} data-live={sport.state === "live now"}>
+                <b>{sport.label}</b>
+                <small>{sport.state}</small>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <SignalMap />
+      </section>
+
+      <section className="landing-live-strip" aria-label="Bangalore live status">
+        <span>Bangalore / live</span>
+        <strong><i /> {verifiedVenues.length} verified F1 screens</strong>
+        <strong>{activeVenueCount} venue signals</strong>
+        <strong>{activeAreaCount} areas covered</strong>
+      </section>
+
+      <section className="landing-section" aria-label="What's on">
+        <div className="landing-section-heading">
+          <span>Bangalore / this week</span>
+          <h2>What’s on</h2>
+        </div>
+        <div className="event-row-list">
+          <Link className="event-row event-row-live" href="/f1">
+            <span>01</span>
+            <div>
+              <h3>{nextRace.name}</h3>
+              <p>Formula 1 / {nextRace.raceDate.replace("Sunday, ", "Sun ")} / {nextRace.raceTime}</p>
             </div>
-            <div className="sport-card">
-              <small>Live in V1</small>
-              <strong>{nextRace.name}</strong>
-              <p>{nextRace.raceDate} - {nextRace.raceTime}</p>
-              <Link href="/f1">See Bangalore pubs</Link>
+            <strong>{verifiedVenues.length} verified screens</strong>
+            <em>→</em>
+          </Link>
+          <div className="event-row event-row-muted">
+            <span>02</span>
+            <div>
+              <h3>Cricket watch nights</h3>
+              <p>Coming next</p>
             </div>
-          </aside>
+            <strong>Not live yet</strong>
+            <em>→</em>
+          </div>
+          <div className="event-row event-row-muted">
+            <span>03</span>
+            <div>
+              <h3>Football screenings</h3>
+              <p>Coming next</p>
+            </div>
+            <strong>Not live yet</strong>
+            <em>→</em>
+          </div>
         </div>
       </section>
 
-      <section className="landing-strip" aria-label="How FindMyScreen helps">
-        <div>
-          <span>01</span>
-          <strong>Search by area</strong>
-          <p>Start with where your group can actually reach.</p>
+      <section className="landing-flow" id="how-it-works" aria-label="How it works">
+        <div className="landing-section-heading">
+          <span>From event to screen in seconds</span>
+          <h2>Pick the event. Pick the area. Pick the screen.</h2>
         </div>
-        <div>
-          <span>02</span>
-          <strong>Get one best pick</strong>
-          <p>Verified and high-signal venues rank above guesswork.</p>
-        </div>
-        <div>
-          <span>03</span>
-          <strong>Share the plan</strong>
-          <p>Send one invite card instead of three links.</p>
+        <div className="flow-board">
+          <div>
+            <span>01 / Event</span>
+            <strong>{nextRace.name}</strong>
+            <p>Cricket, football and UFC come next.</p>
+          </div>
+          <div>
+            <span>02 / Area</span>
+            <strong>Indiranagar</strong>
+            <p>Also HSR, Bellandur, MG Road, Whitefield and more.</p>
+          </div>
+          <div>
+            <span>03 / Screen</span>
+            <ol>
+              {sampleVenues.slice(0, 3).map((venue, index) => (
+                <li key={venue.id}>
+                  <b>0{index + 1}</b>
+                  <strong>{venue.name}</strong>
+                  <small>{venue.evidenceTag} <i /></small>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </section>
+
+      <section className="verified-story" aria-label="Verified screenings">
+        <div className="verified-copy">
+          <h2><span>Not</span> “they probably have it on.”</h2>
+          <h3>Actually screening it.</h3>
+          <p>Stop calling five bars to find out who is showing the race. Start with the places that have the strongest signal.</p>
+        </div>
+        <div className="verified-pass">
+          <span><i /> Verified screening</span>
+          <dl>
+            <div><dt>Screening</dt><dd>Confirmed</dd></div>
+            <div><dt>Event</dt><dd>{nextRace.name}</dd></div>
+            <div><dt>Start</dt><dd>{nextRace.raceTime}</dd></div>
+            <div><dt>Venue</dt><dd>{verifiedVenues[0]?.name ?? "Verified venue"}</dd></div>
+            <div><dt>Area</dt><dd>{verifiedVenues[0]?.area ?? "Bangalore"}</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section className="watch-plan-preview" aria-label="Watch with friends">
+        <div>
+          <span>Found the screen?</span>
+          <h2>Send it to the group.</h2>
+          <p>Turn one venue into one shareable plan, then let friends RSVP in, maybe or out.</p>
+        </div>
+        <aside>
+          <span>Watch plan / 014</span>
+          <strong>{nextRace.name}</strong>
+          <h3>{verifiedVenues[0]?.name ?? "Pecos"}</h3>
+          <p>{verifiedVenues[0]?.area ?? "Bangalore"} / {nextRace.raceTime}</p>
+          <div>
+            <b>04<small>In</small></b>
+            <b>02<small>Maybe</small></b>
+          </div>
+          <Link href="/f1">Share plan →</Link>
+        </aside>
+      </section>
+
+      <section className="tonight-board" aria-label="Bangalore tonight">
+        <div className="landing-section-heading">
+          <span>Bangalore / tonight</span>
+          <h2>Live board</h2>
+        </div>
+        <Link href="/f1">
+          <time>18:30</time>
+          <div>
+            <span>Formula 1</span>
+            <strong>{nextRace.name}</strong>
+          </div>
+          <em>{verifiedVenues.length} verified screens</em>
+          <b>→</b>
+        </Link>
+        <div>
+          <time>Next</time>
+          <div>
+            <span>Cricket / Football / UFC</span>
+            <strong>More sports coming after F1</strong>
+          </div>
+          <em>Not live yet</em>
+          <b>→</b>
+        </div>
+      </section>
+
+      <section className="landing-final-cta" aria-label="Find your screen">
+        <h2>The game is on. Where are you?</h2>
+        <Link href="/f1">Find a screening →</Link>
+      </section>
+
+      <footer className="landing-footer">
+        <strong>FindMyScreen</strong>
+        <p>Find screenings. Pick a place. Bring your people.</p>
+        <span>Bangalore</span>
+      </footer>
     </main>
+  );
+}
+
+function SignalMap() {
+  return (
+    <aside className="signal-map" aria-label="City screening signals">
+      <div className="signal-core">
+        <span>You</span>
+      </div>
+      <div className="signal-point signal-point-one"><i />Pecos <small>Verified</small></div>
+      <div className="signal-point signal-point-two"><i />Doff <small>8:30 PM</small></div>
+      <div className="signal-point signal-point-three"><i />BWW <small>Live signal</small></div>
+      <div className="signal-point signal-point-four"><i />Big Pitcher <small>Near HSR</small></div>
+      <div className="signal-stat">Live<br />signals</div>
+    </aside>
   );
 }

@@ -62,3 +62,4 @@
 - Thu 3 Sep 2026: Redesigned the watch-party page as a unified F1 race plan with venue-led hero, stronger sharing, and visual RSVP groups.
 - Thu 3 Sep 2026: The F1 home page race counter now counts down live to the next main race instead of showing fixed numbers.
 - Thu 3 Sep 2026: Hosts can now open a dedicated My Plans page, enter their email, and reopen multiple watch parties with RSVP counts.
+- Thu 3 Sep 2026: The root page is now a broader FindMyScreen landing page that sends users into the existing F1 discovery flow without changing the product flow.
