@@ -68,3 +68,4 @@
 - Thu 3 Sep 2026: The homepage visual skin now uses a neutral premium sports theme with lime accents instead of F1-red landing styling.
 - Thu 3 Sep 2026: Watch parties now create invite codes, shared links use the code URL, and friends can join from the homepage without host email.
 - Thu 3 Sep 2026: The landing hero headline now stays clear of the signal map on desktop and fits on mobile.
+- Thu 3 Sep 2026: Added a Discover hub between the landing page and F1 product so users choose sport and city before entering live screenings.
