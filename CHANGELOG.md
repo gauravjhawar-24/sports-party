@@ -43,3 +43,4 @@
 - Wed 2 Sep 2026: PostHog wizard leftovers were cleaned up, and the PostHog host is configured on Vercel while the project token remains pending.
 - Wed 2 Sep 2026: PostHog production token was added to Vercel so live visitor analytics can start after redeploy.
 - Wed 2 Sep 2026: PostHog now shows live events and read-only judging access has been saved.
+- Wed 2 Sep 2026: Share invite now opens a dedicated venue invite page instead of showing the invite below other venue options.

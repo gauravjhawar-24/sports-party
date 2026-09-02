@@ -1091,6 +1091,97 @@ h2 {
   font-weight: 900;
 }
 
+.dedicated-invite-page {
+  display: grid;
+  gap: 18px;
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.dedicated-invite-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.75fr) minmax(0, 1.25fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.dedicated-venue-summary {
+  display: grid;
+  gap: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(225, 6, 0, 0.14), rgba(255, 255, 255, 0.05)),
+    rgba(10, 10, 10, 0.72);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.dedicated-venue-summary > span {
+  width: max-content;
+  border-radius: 5px;
+  background: var(--green);
+  color: white;
+  padding: 7px 9px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.dedicated-venue-summary h1 {
+  margin: 0;
+  color: white;
+  font-size: clamp(34px, 5vw, 62px);
+  line-height: 0.95;
+}
+
+.dedicated-venue-summary p {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.72);
+  font-weight: 800;
+}
+
+.dedicated-venue-summary dl {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.dedicated-venue-summary dl div {
+  display: grid;
+  gap: 4px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.dedicated-venue-summary dt {
+  color: rgba(247, 247, 242, 0.55);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.dedicated-venue-summary dd {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.9);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.dedicated-venue-summary a {
+  display: inline-flex;
+  width: max-content;
+  min-height: 42px;
+  align-items: center;
+  border-radius: 5px;
+  background: white;
+  color: #111;
+  padding: 0 14px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
 .backup-stack {
   display: grid;
   gap: 12px;
@@ -1488,6 +1579,7 @@ h3 {
   .landing-hero-grid,
   .hero-grid,
   .results-grid,
+  .dedicated-invite-grid,
   .admin-stats {
     grid-template-columns: 1fr;
   }
@@ -1510,6 +1602,10 @@ h3 {
     padding-top: 16px;
   }
 
+  .dedicated-invite-page {
+    padding: 0;
+  }
+
   .landing-nav {
     align-items: flex-start;
     flex-direction: column;
@@ -1519,6 +1615,7 @@ h3 {
   .live-sport-panel,
   .hero-copy,
   .race-panel,
+  .dedicated-venue-summary,
   .invite-content {
     padding: 18px;
   }

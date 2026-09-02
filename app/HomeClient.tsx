@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import posthog from "posthog-js";
 import { api } from "../convex/_generated/api";
@@ -72,16 +72,8 @@ export function HomeClient({
   const routePath = basePath || "/";
   const queryPrefix = routePath === "/" ? "/?" : `${routePath}?`;
   const areaHref = (nextArea: string) => `${queryPrefix}area=${encodeURIComponent(nextArea)}`;
-  const inviteHref = (nextArea: string) => `${queryPrefix}area=${encodeURIComponent(nextArea)}&invite=1#invite-card`;
-
-  useEffect(() => {
-    if (!revealedInvite) return;
-
-    document.getElementById("invite-card")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }, [revealedInvite]);
+  const inviteHref = (venue: Venue) =>
+    `${routePath === "/" ? "/f1" : routePath}/invite/${encodeURIComponent(venue.id)}?area=${encodeURIComponent(submittedArea || venue.area)}`;
 
   async function submitArea(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -379,7 +371,7 @@ export function HomeClient({
                       {bestVenue.evidenceTag === "Verified" ? (
                         <a
                           className="primary-action"
-                          href={inviteHref(submittedArea || bestVenue.area)}
+                          href={inviteHref(bestVenue)}
                         >
                           {copiedInvite ? "Invite copied" : primaryAction}
                         </a>
@@ -388,18 +380,16 @@ export function HomeClient({
                           {primaryAction}
                         </button>
                       )}
+                      {bestVenue.evidenceTag !== "Verified" ? (
+                        <a className="secondary-action" href={inviteHref(bestVenue)}>
+                          Share invite
+                        </a>
+                      ) : null}
                       <a className="secondary-action" href={bestVenue.mapUrl} target="_blank" rel="noreferrer">
                         Open map
                       </a>
                     </div>
                     {actionStatus ? <p className="action-status">{actionStatus}</p> : null}
-                    {revealedInvite ? (
-                      <InviteReveal
-                        invite={revealedInvite}
-                        onCopy={() => copyTextAgain(revealedInvite.text)}
-                        onUnlock={(emailAddress) => unlockInvite(emailAddress, revealedInvite.venue)}
-                      />
-                    ) : null}
                     {revealedPhone ? (
                       <PhoneReveal venueName={revealedPhone.venue.name} phone={revealedPhone.phone} mapUrl={revealedPhone.venue.mapUrl} />
                     ) : null}
@@ -428,6 +418,7 @@ export function HomeClient({
                       <p>{venue.evidence}</p>
                       <div className="backup-actions">
                         <button type="button" onClick={() => startAction("call_pub", venue)}>Call pub</button>
+                        <a href={inviteHref(venue)}>Share invite</a>
                         <a href={venue.mapUrl} target="_blank" rel="noreferrer">Map</a>
                       </div>
                     </article>
@@ -486,12 +477,15 @@ async function copyTextAgain(text: string) {
   }
 }
 
-function InviteReveal({
+export function InviteReveal({
   invite,
   onCopy,
   onUnlock
 }: {
-  invite: NonNullable<RevealedInvite>;
+  invite: {
+    venue: Venue;
+    text: string;
+  };
   onCopy: () => void;
   onUnlock: (emailAddress: string) => Promise<void>;
 }) {
