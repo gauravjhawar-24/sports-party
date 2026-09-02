@@ -4141,6 +4141,17 @@ h3 {
   background: var(--silver);
 }
 
+.evidence-badge.not-confirmed {
+  background: var(--silver);
+}
+
+.confirmation-proof {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
 .race-grid-results {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);

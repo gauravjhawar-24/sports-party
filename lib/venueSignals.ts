@@ -13,6 +13,9 @@ export type VenueSignalDraft = {
   raceName: string;
   signalType: SignalType;
   confidence: number;
+  verifiedBy?: string;
+  verifiedMethod?: string;
+  verifiedAt?: string;
 };
 
 export type ApprovedVenueSignal = VenueSignalDraft & {
@@ -30,7 +33,7 @@ const areaNames = [
   "Church Street",
   "Hebbal",
   "Whitefield",
-  "Marathahalli"
+  "Marathahalli",
 ];
 
 const weakVenueWords = new Set([
@@ -42,7 +45,7 @@ const weakVenueWords = new Set([
   "events",
   "tickets",
   "bookmyshow",
-  "district"
+  "district",
 ]);
 
 export function buildVenueSearchQuery(input: string) {
@@ -52,13 +55,20 @@ export function buildVenueSearchQuery(input: string) {
   return `${trimmed} Bangalore F1 screening pubs`;
 }
 
-export function draftsFromTavilyResults(sourceQuery: string, results: TavilyResult[]) {
+export function draftsFromTavilyResults(
+  sourceQuery: string,
+  results: TavilyResult[],
+) {
   const seen = new Set<string>();
 
   return results.flatMap((result) => {
     const text = `${result.title} ${result.content}`.toLowerCase();
-    const isBangalore = /bangalore|bengaluru|indiranagar|koramangala|bellandur|hsr|mg road|church street|hebbal|whitefield|sarjapur/i.test(text);
-    const isF1 = /f1|formula 1|grand prix|italian gp|race screening|screening/i.test(text);
+    const isBangalore =
+      /bangalore|bengaluru|indiranagar|koramangala|bellandur|hsr|mg road|church street|hebbal|whitefield|sarjapur/i.test(
+        text,
+      );
+    const isF1 =
+      /f1|formula 1|grand prix|italian gp|race screening|screening/i.test(text);
 
     if (!isBangalore || !isF1 || !result.url) return [];
 
@@ -83,8 +93,8 @@ export function draftsFromTavilyResults(sourceQuery: string, results: TavilyResu
         area: area || "Needs area check",
         raceName: nextRace.name,
         signalType,
-        confidence
-      }
+        confidence,
+      },
     ];
   });
 }
@@ -93,7 +103,13 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
   const area = signal.area === "Needs area check" ? "Bangalore" : signal.area;
   const venueName = cleanVenueDisplayName(signal);
   const query = encodeURIComponent(`${venueName} ${area} Bangalore`);
-  const isManualVerified = signal.sourceQuery === "Manual venue entry" && signal.signalType === "Verified";
+  const hasProof = Boolean(
+    signal.verifiedBy && signal.verifiedMethod && signal.verifiedAt,
+  );
+  const isManualVerified =
+    signal.sourceQuery === "Manual venue entry" &&
+    signal.signalType === "Verified" &&
+    hasProof;
 
   return {
     id: `approved-${signal._id}`,
@@ -109,7 +125,10 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
       : "Fresh online signal. Call once before you send the plan.",
     price: isManualVerified ? "Check with venue" : "Needs check",
     sourceLabel: sourceLabel(signal.sourceUrl),
-    sourceUrl: signal.sourceUrl
+    sourceUrl: signal.sourceUrl,
+    verifiedBy: signal.verifiedBy,
+    verifiedMethod: signal.verifiedMethod,
+    verifiedAt: signal.verifiedAt,
   };
 }
 
@@ -118,40 +137,67 @@ function cleanVenueDisplayName(signal: ApprovedVenueSignal) {
   const snippet = signal.rawSnippet.toLowerCase();
   const source = signal.sourceUrl.toLowerCase();
 
-  if (title.includes("bira") || snippet.includes("bira 91 tap room")) return "Bira 91 Taproom";
-  if (title.includes("skydeck") || snippet.includes("skydeck by sherlock")) return "SkyDeck By Sherlock's";
-  if (title.includes("watsons") || snippet.includes("watsons.pub") || source.includes("instagram.com")) return "Watson's Pub";
+  if (title.includes("bira") || snippet.includes("bira 91 tap room"))
+    return "Bira 91 Taproom";
+  if (title.includes("skydeck") || snippet.includes("skydeck by sherlock"))
+    return "SkyDeck By Sherlock's";
+  if (
+    title.includes("watsons") ||
+    snippet.includes("watsons.pub") ||
+    source.includes("instagram.com")
+  )
+    return "Watson's Pub";
 
   return signal.venueName;
 }
 
 function guessVenueName(title: string) {
   const cleaned = title
-    .replace(/\b(F1|Formula 1|Italian GP|Grand Prix|screening|watch party|tickets?|events?)\b/gi, "")
+    .replace(
+      /\b(F1|Formula 1|Italian GP|Grand Prix|screening|watch party|tickets?|events?)\b/gi,
+      "",
+    )
     .replace(/[|:–—-]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 
-  const firstChunk = cleaned.split(/ in Bengaluru| in Bangalore| Bengaluru| Bangalore/i)[0]?.trim();
+  const firstChunk = cleaned
+    .split(/ in Bengaluru| in Bangalore| Bengaluru| Bangalore/i)[0]
+    ?.trim();
   if (!firstChunk) return "";
   return firstChunk.length > 44 ? firstChunk.slice(0, 44).trim() : firstChunk;
 }
 
 function inferArea(text: string) {
-  const match = areaNames.find((area) => new RegExp(area.replace(" ", "\\s+"), "i").test(text));
+  const match = areaNames.find((area) =>
+    new RegExp(area.replace(" ", "\\s+"), "i").test(text),
+  );
   return match ?? "";
 }
 
 function inferSignalType(text: string): SignalType {
-  if (/italian gp|grand prix|race screening|screening|watch party|live screening/i.test(text)) {
+  if (
+    /italian gp|grand prix|race screening|screening|watch party|live screening/i.test(
+      text,
+    )
+  ) {
     return "Posted about F1";
   }
   if (/formula 1|f1/i.test(text)) return "Regular F1 venue";
   return "Needs call";
 }
 
-function inferConfidence(text: string, signalType: SignalType, hasArea: boolean) {
-  let score = signalType === "Posted about F1" ? 70 : signalType === "Regular F1 venue" ? 54 : 38;
+function inferConfidence(
+  text: string,
+  signalType: SignalType,
+  hasArea: boolean,
+) {
+  let score =
+    signalType === "Posted about F1"
+      ? 70
+      : signalType === "Regular F1 venue"
+        ? 54
+        : 38;
   if (/italian gp|monza/i.test(text)) score += 12;
   if (/ticket|book|entry|cover/i.test(text)) score += 8;
   if (hasArea) score += 8;
@@ -163,9 +209,13 @@ function readableEvidence(signal: VenueSignalDraft) {
     return `${sourceLabel(signal.sourceUrl)} has a fresh F1 screening signal for ${signal.raceName}.`;
   }
   if (signal.signalType === "Verified") {
-    return signal.sourceQuery === "Manual venue entry"
-      ? "This venue was manually added as a verified race-night option."
-      : "This venue is marked verified for this race plan.";
+    if (signal.verifiedBy && signal.verifiedMethod && signal.verifiedAt) {
+      return signal.sourceQuery === "Manual venue entry"
+        ? "This venue was manually confirmed for this race-night plan."
+        : "This venue has direct confirmation for this race plan.";
+    }
+
+    return "This venue needs proof details before it can be treated as confirmed.";
   }
   if (signal.signalType === "Regular F1 venue") {
     return `${sourceLabel(signal.sourceUrl)} mentions F1 or regular sports screening.`;

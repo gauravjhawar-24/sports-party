@@ -14,6 +14,9 @@ export type Venue = {
   price: string;
   sourceLabel: string;
   sourceUrl: string;
+  verifiedBy?: string;
+  verifiedMethod?: string;
+  verifiedAt?: string;
 };
 
 export const nextRace = {
@@ -118,6 +121,9 @@ export const venues: Venue[] = [
     price: "Mid to high",
     sourceLabel: "Venue website",
     sourceUrl: "https://pecospub.com/",
+    verifiedBy: "Gaurav",
+    verifiedMethod: "manual confirmation",
+    verifiedAt: "2 Sep 8:42pm",
   },
   {
     id: "pecos-stones-indiranagar",
@@ -134,6 +140,9 @@ export const venues: Venue[] = [
     sourceLabel: "Zomato listing",
     sourceUrl:
       "https://www.zomato.com/bangalore/pecos-stones-indiranagar-bangalore",
+    verifiedBy: "Gaurav",
+    verifiedMethod: "manual confirmation",
+    verifiedAt: "2 Sep 8:42pm",
   },
   {
     id: "big-pitcher-sarjapur",
@@ -412,6 +421,16 @@ export function buildInviteText(venue: Venue) {
     `Map: ${venue.mapUrl}`,
     "Who's in?",
   ].join("\n");
+}
+
+export function hasVenueVerificationProof(venue: Venue) {
+  return Boolean(venue.verifiedBy && venue.verifiedMethod && venue.verifiedAt);
+}
+
+export function venueConfirmationLine(venue: Venue) {
+  if (!hasVenueVerificationProof(venue)) return "Not yet confirmed";
+
+  return `Confirmed by ${venue.verifiedBy}, ${venue.verifiedMethod}, ${venue.verifiedAt}`;
 }
 
 function normalizeArea(input: string) {

@@ -7,8 +7,10 @@ import { api } from "../convex/_generated/api";
 import type { Doc } from "../convex/_generated/dataModel";
 import {
   buildInviteText,
+  hasVenueVerificationProof,
   nextRace,
   rankVenueList,
+  venueConfirmationLine,
   venues,
   type Venue,
 } from "../lib/venues";
@@ -562,10 +564,11 @@ export function HomeClient({
                   <div className="pole-content">
                     <div className="result-label race-result-label">
                       <span>Most reliable plan</span>
-                      <EvidenceBadge tag={bestVenue.evidenceTag} />
+                      <EvidenceBadge venue={bestVenue} />
                     </div>
                     <h2>{bestVenue.name}</h2>
                     <p className="venue-area">{bestVenue.area}</p>
+                    <ConfirmationProof venue={bestVenue} />
                     <VenueStats venue={bestVenue} position={1} />
 
                     <div className="invite-lines">
@@ -595,14 +598,21 @@ export function HomeClient({
                       >
                         Create Watch Party
                       </button>
+                      <a
+                        className="map-action secondary-action"
+                        href={bestVenue.mapUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Open in Google Maps
+                      </a>
                     </div>
                     {actionStatus ? (
                       <p className="action-status">{actionStatus}</p>
                     ) : null}
-                    {bestVenue.evidenceTag !== "Verified" ? (
+                    {!hasVenueVerificationProof(bestVenue) ? (
                       <p className="honesty-note">
-                        Not personally verified today. Confirm once before
-                        sending this to friends.
+                        Confirm once before sending this to friends.
                       </p>
                     ) : null}
                   </div>
@@ -620,15 +630,16 @@ export function HomeClient({
                     >
                       <div className="grid-venue-top">
                         <span className="grid-position">P{index + 2}</span>
-                        <EvidenceBadge tag={venue.evidenceTag} />
+                        <EvidenceBadge venue={venue} />
                       </div>
                       <div>
                         <h3>{venue.name}</h3>
                         <p>{venue.area}</p>
+                        <ConfirmationProof venue={venue} />
                       </div>
                       <VenueStats venue={venue} position={index + 2} />
                       <p className="pick-note">
-                        {venue.evidenceTag === "Verified"
+                        {hasVenueVerificationProof(venue)
                           ? "Confirmed backup for race night."
                           : "Good option, but confirm once before you go."}
                       </p>
@@ -639,6 +650,14 @@ export function HomeClient({
                         >
                           Create Watch Party
                         </button>
+                        <a
+                          className="map-action"
+                          href={venue.mapUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Open in Google Maps
+                        </a>
                       </div>
                     </article>
                   ))}
@@ -659,15 +678,16 @@ export function HomeClient({
                         >
                           <div className="grid-venue-top">
                             <span className="grid-position">P{index + 4}</span>
-                            <EvidenceBadge tag={venue.evidenceTag} />
+                            <EvidenceBadge venue={venue} />
                           </div>
                           <div>
                             <h3>{venue.name}</h3>
                             <p>{venue.area}</p>
+                            <ConfirmationProof venue={venue} />
                           </div>
                           <VenueStats venue={venue} position={index + 4} />
                           <p className="pick-note">
-                            {venue.evidenceTag === "Verified"
+                            {hasVenueVerificationProof(venue)
                               ? "Confirmed backup for race night."
                               : "Backup option. Confirm before you commit."}
                           </p>
@@ -678,6 +698,14 @@ export function HomeClient({
                             >
                               Create Watch Party
                             </button>
+                            <a
+                              className="map-action"
+                              href={venue.mapUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              Open in Google Maps
+                            </a>
                           </div>
                         </article>
                       ))}
@@ -879,16 +907,30 @@ function MyWatchParties({
   );
 }
 
-function EvidenceBadge({ tag }: { tag: string }) {
-  const className = `evidence-badge ${tag.toLowerCase().replaceAll(" ", "-")}`;
-  return <span className={className}>{tag}</span>;
+function EvidenceBadge({ venue }: { venue: Venue }) {
+  if (!hasVenueVerificationProof(venue)) {
+    return (
+      <span className="evidence-badge not-confirmed">Not yet confirmed</span>
+    );
+  }
+
+  const className = `evidence-badge ${venue.evidenceTag
+    .toLowerCase()
+    .replaceAll(" ", "-")}`;
+  return <span className={className}>{venue.evidenceTag}</span>;
+}
+
+function ConfirmationProof({ venue }: { venue: Venue }) {
+  return <p className="confirmation-proof">{venueConfirmationLine(venue)}</p>;
 }
 
 function VenueStats({ venue, position }: { venue: Venue; position: number }) {
-  const booking = venue.evidenceTag === "Verified" ? "Ready" : "Call first";
-  const screen =
-    venue.evidenceTag === "Verified" || venue.evidenceTag === "Posted about F1"
-      ? "Confirmed signal"
+  const isConfirmed = hasVenueVerificationProof(venue);
+  const booking = isConfirmed ? "Ready" : "Call first";
+  const screen = isConfirmed
+    ? "Confirmed"
+    : venue.evidenceTag === "Posted about F1"
+      ? "Posted signal"
       : "Likely";
   const crowd =
     position === 1 ? "Best fit" : position <= 3 ? "Strong" : "Backup";

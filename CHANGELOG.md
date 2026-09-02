@@ -74,3 +74,4 @@
 - Thu 3 Sep 2026: Moved Book Now back inside the watch-party page and changed it to a coming-soon interest prompt instead of a phone-number flow.
 - Thu 3 Sep 2026: Book Now Yes/No interest responses now save to Convex and appear in the admin proof table.
 - Thu 3 Sep 2026: Unsupported area searches now show no venue results and suggest supported Bangalore areas instead.
+- Thu 3 Sep 2026: Venue result cards now show confirmation proof when all proof fields exist, mark missing proof as not confirmed, and link directly to Google Maps.

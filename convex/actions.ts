@@ -16,6 +16,9 @@ const venueCandidateArgs = {
     v.literal("Needs call"),
   ),
   confidence: v.number(),
+  verifiedBy: v.optional(v.string()),
+  verifiedMethod: v.optional(v.string()),
+  verifiedAt: v.optional(v.string()),
 };
 
 const inviteAlphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

@@ -54,6 +54,9 @@ export default defineSchema({
       v.literal("Needs call"),
     ),
     confidence: v.number(),
+    verifiedBy: v.optional(v.string()),
+    verifiedMethod: v.optional(v.string()),
+    verifiedAt: v.optional(v.string()),
     status: v.union(
       v.literal("needs_review"),
       v.literal("approved"),
