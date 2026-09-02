@@ -87,6 +87,17 @@ export const latestSearches = query({
   },
 });
 
+export const latestBookingInterests = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("bookingInterests")
+      .withIndex("by_created_at")
+      .order("desc")
+      .take(25);
+  },
+});
+
 export const proofStats = query({
   args: {},
   handler: async (ctx) => {
@@ -94,6 +105,7 @@ export const proofStats = query({
     const actions = await ctx.db.query("actions").collect();
     const watchParties = await ctx.db.query("watchParties").collect();
     const rsvps = await ctx.db.query("rsvps").collect();
+    const bookingInterests = await ctx.db.query("bookingInterests").collect();
     const shareInvites = actions.filter(
       (action) => action.actionType === "share_invite",
     ).length;
@@ -104,12 +116,38 @@ export const proofStats = query({
 
     return {
       searches: searches.length,
-      meaningfulActions: actions.length,
+      meaningfulActions: actions.length + bookingInterests.length,
       shareInvites,
       callPubs,
       createdParties,
       rsvps: rsvps.length,
+      bookingInterests: bookingInterests.length,
+      bookingInterestYes: bookingInterests.filter(
+        (interest) => interest.interested,
+      ).length,
+      bookingInterestNo: bookingInterests.filter(
+        (interest) => !interest.interested,
+      ).length,
     };
+  },
+});
+
+export const recordBookingInterest = mutation({
+  args: {
+    partyId: v.id("watchParties"),
+    inviteCode: v.optional(v.string()),
+    clientId: v.optional(v.string()),
+    interested: v.boolean(),
+    venueId: v.string(),
+    venueName: v.string(),
+    venueArea: v.string(),
+    raceName: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("bookingInterests", {
+      ...args,
+      createdAt: Date.now(),
+    });
   },
 });
 

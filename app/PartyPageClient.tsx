@@ -36,6 +36,7 @@ export function PartyPageClient({
   } | null>(null);
   const [showBookingInterest, setShowBookingInterest] = useState(false);
   const [bookingInterestStatus, setBookingInterestStatus] = useState("");
+  const [isSavingBookingInterest, setIsSavingBookingInterest] = useState(false);
   const partyById = useQuery(
     api.actions.watchPartyWithRsvps,
     partyId ? { partyId: partyId as Id<"watchParties"> } : "skip",
@@ -46,6 +47,7 @@ export function PartyPageClient({
   );
   const partyData = partyId ? partyById : partyByCode;
   const submitRsvp = useMutation(api.actions.submitWatchPartyRsvp);
+  const recordBookingInterest = useMutation(api.actions.recordBookingInterest);
 
   const grouped = useMemo(() => {
     const empty: Record<Decision, Doc<"rsvps">[]> = {
@@ -144,13 +146,44 @@ export function PartyPageClient({
     await copyPartyLink();
   }
 
-  function answerBookingInterest(isInterested: boolean) {
-    setShowBookingInterest(false);
-    setBookingInterestStatus(
-      isInterested
-        ? "Interest registered. Booking will be live soon."
-        : "No problem. You can still use the map and share the race plan.",
-    );
+  async function answerBookingInterest(isInterested: boolean) {
+    if (isSavingBookingInterest) return;
+
+    setIsSavingBookingInterest(true);
+    setBookingInterestStatus("");
+
+    try {
+      await recordBookingInterest({
+        partyId: party._id,
+        inviteCode: party.inviteCode,
+        clientId,
+        interested: isInterested,
+        venueId: party.venueId,
+        venueName: party.venueName,
+        venueArea: party.venueArea,
+        raceName: party.raceName,
+      });
+
+      if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
+        posthog.capture("findmyscreen_booking_interest_recorded", {
+          party_id: party._id,
+          venue_id: party.venueId,
+          venue_name: party.venueName,
+          interested: isInterested,
+        });
+      }
+
+      setShowBookingInterest(false);
+      setBookingInterestStatus(
+        isInterested
+          ? "Interest registered. Booking will be live soon."
+          : "No problem. You can still use the map and share the race plan.",
+      );
+    } catch {
+      setBookingInterestStatus("Could not save this. Try once more.");
+    } finally {
+      setIsSavingBookingInterest(false);
+    }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -325,13 +358,15 @@ export function PartyPageClient({
               <div>
                 <button
                   type="button"
-                  onClick={() => answerBookingInterest(true)}
+                  disabled={isSavingBookingInterest}
+                  onClick={() => void answerBookingInterest(true)}
                 >
-                  Yes
+                  {isSavingBookingInterest ? "Saving..." : "Yes"}
                 </button>
                 <button
                   type="button"
-                  onClick={() => answerBookingInterest(false)}
+                  disabled={isSavingBookingInterest}
+                  onClick={() => void answerBookingInterest(false)}
                 >
                   No
                 </button>

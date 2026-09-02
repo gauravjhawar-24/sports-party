@@ -6,6 +6,7 @@ import { api } from "../../convex/_generated/api";
 
 export default function AdminPage() {
   const latestActions = useQuery(api.actions.latestActions);
+  const latestBookingInterests = useQuery(api.actions.latestBookingInterests);
   const latestSearches = useQuery(api.actions.latestSearches);
   const stats = useQuery(api.actions.proofStats);
 
@@ -42,8 +43,63 @@ export default function AdminPage() {
         </article>
         <article>
           <span>Book Now clicks</span>
-          <strong>{stats?.callPubs ?? 0}</strong>
+          <strong>{stats?.bookingInterests ?? 0}</strong>
         </article>
+        <article>
+          <span>Booking yes</span>
+          <strong>{stats?.bookingInterestYes ?? 0}</strong>
+        </article>
+        <article>
+          <span>Booking no</span>
+          <strong>{stats?.bookingInterestNo ?? 0}</strong>
+        </article>
+      </section>
+
+      <section
+        className="proof-table"
+        aria-label="Booking interest proof table"
+      >
+        <div className="section-heading">
+          <span>Booking interest</span>
+          <strong>Latest Book Now Yes/No responses saved in Convex</strong>
+        </div>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Response</th>
+                <th>Venue</th>
+                <th>Area</th>
+                <th>Race</th>
+                <th>Invite code</th>
+                <th>Saved</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(latestBookingInterests ?? []).length ? (
+                latestBookingInterests?.map((interest) => (
+                  <tr key={interest._id}>
+                    <td>{interest.interested ? "Yes" : "No"}</td>
+                    <td>{interest.venueName}</td>
+                    <td>{interest.venueArea}</td>
+                    <td>{interest.raceName}</td>
+                    <td>{interest.inviteCode ?? "Missing"}</td>
+                    <td>
+                      {new Date(interest.createdAt).toLocaleString("en-IN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6}>No booking interest saved yet.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="proof-table" aria-label="Saved action proof table">

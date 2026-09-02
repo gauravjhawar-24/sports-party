@@ -25,6 +25,20 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_created_at", ["createdAt"]),
 
+  bookingInterests: defineTable({
+    partyId: v.id("watchParties"),
+    inviteCode: v.optional(v.string()),
+    clientId: v.optional(v.string()),
+    interested: v.boolean(),
+    venueId: v.string(),
+    venueName: v.string(),
+    venueArea: v.string(),
+    raceName: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_created_at", ["createdAt"])
+    .index("by_party_and_created_at", ["partyId", "createdAt"]),
+
   venueCandidates: defineTable({
     sourceQuery: v.string(),
     sourceTitle: v.string(),
