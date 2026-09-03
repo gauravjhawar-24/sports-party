@@ -36,6 +36,13 @@ type RaceCountdown = {
   seconds: string;
 };
 
+const initialRaceCountdown: RaceCountdown = {
+  days: "--",
+  hours: "--",
+  minutes: "--",
+  seconds: "--",
+};
+
 function padTime(value: number) {
   return String(value).padStart(2, "0");
 }
@@ -95,9 +102,8 @@ export function HomeClient({
   const [hostError, setHostError] = useState("");
   const [areaError, setAreaError] = useState("");
   const [actionStatus, setActionStatus] = useState("");
-  const [raceCountdown, setRaceCountdown] = useState<RaceCountdown>(() =>
-    getRaceCountdown(),
-  );
+  const [raceCountdown, setRaceCountdown] =
+    useState<RaceCountdown>(initialRaceCountdown);
   const [isSearching, setIsSearching] = useState(false);
   const [isCreatingParty, setIsCreatingParty] = useState(false);
   const [revealedInvite, setRevealedInvite] = useState<RevealedInvite>(
