@@ -16,6 +16,10 @@ export default defineSchema({
       v.literal("share_invite"),
       v.literal("call_pub"),
       v.literal("create_watch_party"),
+      v.literal("lock_plan"),
+      v.literal("reservation_handoff_started"),
+      v.literal("reservation_confirmed_by_host"),
+      v.literal("calendar_add_clicked"),
     ),
     areaInput: v.string(),
     normalizedArea: v.string(),
@@ -86,6 +90,10 @@ export default defineSchema({
     raceName: v.string(),
     raceDate: v.string(),
     raceTime: v.string(),
+    lockedAt: v.optional(v.number()),
+    reservationHandoffAt: v.optional(v.number()),
+    reservationConfirmedAt: v.optional(v.number()),
+    calendarAddedAt: v.optional(v.number()),
     createdAt: v.number(),
   })
     .index("by_created_at", ["createdAt"])

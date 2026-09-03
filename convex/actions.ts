@@ -1,4 +1,5 @@
 import { mutation, query } from "./_generated/server";
+import type { MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 
 const venueCandidateArgs = {
@@ -53,6 +54,10 @@ export const recordAction = mutation({
       v.literal("share_invite"),
       v.literal("call_pub"),
       v.literal("create_watch_party"),
+      v.literal("lock_plan"),
+      v.literal("reservation_handoff_started"),
+      v.literal("reservation_confirmed_by_host"),
+      v.literal("calendar_add_clicked"),
     ),
     areaInput: v.string(),
     normalizedArea: v.string(),
@@ -108,7 +113,6 @@ export const proofStats = query({
     const actions = await ctx.db.query("actions").collect();
     const watchParties = await ctx.db.query("watchParties").collect();
     const rsvps = await ctx.db.query("rsvps").collect();
-    const bookingInterests = await ctx.db.query("bookingInterests").collect();
     const shareInvites = actions.filter(
       (action) => action.actionType === "share_invite",
     ).length;
@@ -116,21 +120,28 @@ export const proofStats = query({
       (action) => action.actionType === "call_pub",
     ).length;
     const createdParties = watchParties.length;
+    const lockedPlans = watchParties.filter((party) => party.lockedAt).length;
+    const reservationHandoffs = watchParties.filter(
+      (party) => party.reservationHandoffAt,
+    ).length;
+    const reservationConfirmations = watchParties.filter(
+      (party) => party.reservationConfirmedAt,
+    ).length;
+    const calendarAdds = watchParties.filter(
+      (party) => party.calendarAddedAt,
+    ).length;
 
     return {
       searches: searches.length,
-      meaningfulActions: actions.length + bookingInterests.length,
+      meaningfulActions: actions.length,
       shareInvites,
       callPubs,
       createdParties,
+      lockedPlans,
+      reservationHandoffs,
+      reservationConfirmations,
+      calendarAdds,
       rsvps: rsvps.length,
-      bookingInterests: bookingInterests.length,
-      bookingInterestYes: bookingInterests.filter(
-        (interest) => interest.interested,
-      ).length,
-      bookingInterestNo: bookingInterests.filter(
-        (interest) => !interest.interested,
-      ).length,
     };
   },
 });
@@ -228,6 +239,107 @@ export const createWatchParty = mutation({
     });
 
     return { partyId, inviteCode };
+  },
+});
+
+async function recordPartyAction(
+  ctx: MutationCtx,
+  party: {
+    hostEmail: string;
+    areaInput: string;
+    normalizedArea: string;
+    venueId: string;
+    venueName: string;
+    raceName: string;
+  },
+  actionType:
+    | "lock_plan"
+    | "reservation_handoff_started"
+    | "reservation_confirmed_by_host"
+    | "calendar_add_clicked",
+) {
+  await ctx.db.insert("actions", {
+    email: party.hostEmail,
+    actionType,
+    areaInput: party.areaInput,
+    normalizedArea: party.normalizedArea,
+    venueId: party.venueId,
+    venueName: party.venueName,
+    raceName: party.raceName,
+    createdAt: Date.now(),
+  });
+}
+
+export const lockWatchPartyPlan = mutation({
+  args: {
+    partyId: v.id("watchParties"),
+  },
+  handler: async (ctx, args) => {
+    const party = await ctx.db.get(args.partyId);
+    if (!party) throw new Error("Watch party not found");
+    if (party.lockedAt) return party.lockedAt;
+
+    const lockedAt = Date.now();
+    await ctx.db.patch(args.partyId, { lockedAt });
+    await recordPartyAction(ctx, party, "lock_plan");
+    return lockedAt;
+  },
+});
+
+export const startReservationHandoff = mutation({
+  args: {
+    partyId: v.id("watchParties"),
+  },
+  handler: async (ctx, args) => {
+    const party = await ctx.db.get(args.partyId);
+    if (!party) throw new Error("Watch party not found");
+
+    const reservationHandoffAt = party.reservationHandoffAt ?? Date.now();
+    await ctx.db.patch(args.partyId, { reservationHandoffAt });
+
+    if (!party.reservationHandoffAt) {
+      await recordPartyAction(ctx, party, "reservation_handoff_started");
+    }
+
+    return reservationHandoffAt;
+  },
+});
+
+export const confirmReservation = mutation({
+  args: {
+    partyId: v.id("watchParties"),
+  },
+  handler: async (ctx, args) => {
+    const party = await ctx.db.get(args.partyId);
+    if (!party) throw new Error("Watch party not found");
+
+    const reservationConfirmedAt = party.reservationConfirmedAt ?? Date.now();
+    await ctx.db.patch(args.partyId, { reservationConfirmedAt });
+
+    if (!party.reservationConfirmedAt) {
+      await recordPartyAction(ctx, party, "reservation_confirmed_by_host");
+    }
+
+    return reservationConfirmedAt;
+  },
+});
+
+export const recordCalendarAdd = mutation({
+  args: {
+    partyId: v.id("watchParties"),
+  },
+  handler: async (ctx, args) => {
+    const party = await ctx.db.get(args.partyId);
+    if (!party) throw new Error("Watch party not found");
+
+    const calendarAddedAt = party.calendarAddedAt ?? Date.now();
+    await ctx.db.patch(args.partyId, { calendarAddedAt });
+
+    if (!party.calendarAddedAt) {
+      await recordPartyAction(ctx, party, "calendar_add_clicked");
+    }
+
+    return calendarAddedAt;
   },
 });
 

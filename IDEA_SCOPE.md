@@ -4,17 +4,17 @@
 
 ## 0. scope status
 
-| Field | Value |
-|---|---|
-| Event | GrowthX Build Week · Season 03 |
-| Builder | you, solo, plus your coding agent (Codex or Claude Code) |
-| Build starts | Sat 29 Aug 2026, 11:00 AM IST |
-| Submission deadline | Sat 5 Sep 2026, 11:00 AM IST |
-| Demo | Sat 5 Sep 2026, 3:00 PM IST |
-| Current milestone | M4 |
-| Live URL | https://findmyscreen.vercel.app |
-| Public repo | https://github.com/gauravjhawar-24/sports-party |
-| Last updated | Wed 2 Sep 2026, 2:45 PM IST |
+| Field               | Value                                                    |
+| ------------------- | -------------------------------------------------------- |
+| Event               | GrowthX Build Week · Season 03                           |
+| Builder             | you, solo, plus your coding agent (Codex or Claude Code) |
+| Build starts        | Sat 29 Aug 2026, 11:00 AM IST                            |
+| Submission deadline | Sat 5 Sep 2026, 11:00 AM IST                             |
+| Demo                | Sat 5 Sep 2026, 3:00 PM IST                              |
+| Current milestone   | M4                                                       |
+| Live URL            | https://findmyscreen.vercel.app                          |
+| Public repo         | https://github.com/gauravjhawar-24/sports-party          |
+| Last updated        | Fri 4 Sep 2026, 12:10 AM IST                             |
 
 ### status language
 
@@ -27,23 +27,23 @@
 
 ## 1. idea lock
 
-| Decision | Locked answer |
-|---|---|
-| One-sentence product | FindMyScreen is a sports bar finder for Bangalore; V1 starts with F1 screenings where the user enters their area and gets one race-night pub invite plan plus two backups. |
-| The one person | Tapesh, 26, Bellandur, watches F1 with friends. |
-| The one moment | Before the next F1 main race, he wants to decide where the group should watch it. |
-| Current workaround | Google searches, Instagram checks, event apps, asking friends, and calling usual pubs. |
-| Core action (user does X -> gets Y) | User enters Bangalore area -> gets one best F1 race screening pub plus two backups. |
-| The one outcome the product must deliver | User sends one clear WhatsApp invite or calls the pub to confirm. |
-| Hard input or hard case | User enters vague locations like "near HSR" or "somewhere around Bellandur." |
-| Primary track | Virality |
-| Riskiest assumption | People trust the result enough to share/call instead of checking five apps. |
-| The 30-minute no-code test for it | Call/check 5 F1 pubs and send the draft result to Dhruva, Tapish and Shruti; see if at least 2 would use/share it. |
-| First three users (names, where they are) | Dhruva, Tapish, Shruti via WhatsApp. |
-| Tuesday channel (where those users already gather) | GrowthX community. |
-| Personal artifact a user would screenshot | WhatsApp-ready F1 watch invite with race, pub, evidence status and map link. |
-| Saturday numbers I expect to report | Visitors, share/call actions, GrowthX post reactions, first-user feedback. |
-| Library lineage (card or proven build, if any) | None. This is a brought idea. |
+| Decision                                           | Locked answer                                                                                                                                                              |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| One-sentence product                               | FindMyScreen is a sports bar finder for Bangalore; V1 starts with F1 screenings where the user enters their area and gets one race-night pub invite plan plus two backups. |
+| The one person                                     | Tapesh, 26, Bellandur, watches F1 with friends.                                                                                                                            |
+| The one moment                                     | Before the next F1 main race, he wants to decide where the group should watch it.                                                                                          |
+| Current workaround                                 | Google searches, Instagram checks, event apps, asking friends, and calling usual pubs.                                                                                     |
+| Core action (user does X -> gets Y)                | User enters Bangalore area -> gets one best F1 race screening pub plus two backups.                                                                                        |
+| The one outcome the product must deliver           | User turns a screening recommendation into a real outing plan: invited friends, RSVPs collected, plan locked, reservation handed off to the venue, and calendar added.     |
+| Hard input or hard case                            | User enters vague locations like "near HSR" or "somewhere around Bellandur."                                                                                               |
+| Primary track                                      | Virality                                                                                                                                                                   |
+| Riskiest assumption                                | People trust the result enough to share/call instead of checking five apps.                                                                                                |
+| The 30-minute no-code test for it                  | Call/check 5 F1 pubs and send the draft result to Dhruva, Tapish and Shruti; see if at least 2 would use/share it.                                                         |
+| First three users (names, where they are)          | Dhruva, Tapish, Shruti via WhatsApp.                                                                                                                                       |
+| Tuesday channel (where those users already gather) | GrowthX community.                                                                                                                                                         |
+| Personal artifact a user would screenshot          | WhatsApp-ready F1 watch invite with race, pub, evidence status and map link.                                                                                               |
+| Saturday numbers I expect to report                | Visitors, share/call actions, GrowthX post reactions, first-user feedback.                                                                                                 |
+| Library lineage (card or proven build, if any)     | None. This is a brought idea.                                                                                                                                              |
 
 ### why this idea
 
@@ -88,32 +88,39 @@ Advice, a transcript, an extraction, search results or a chat response alone do 
 3. User enters a free-text area such as "Bellandur" or "near HSR."
 4. Product ranks all Bangalore F1 venues by evidence tag first and nearby location second.
 5. Product shows one best pub plus two backup pubs.
-6. Host can click Call pub, Open map, or Create Watch Party on any venue.
+6. Host can open maps or Create Watch Party on any venue.
 7. Create Watch Party asks for host name and email, creates a dedicated party page, and counts the host as "I'm in."
 8. Host shares the watch-party link with friends.
 9. Friend opens the link, enters name, chooses "I'm in", "Maybe", or "Out", and sees live RSVP stats.
+10. Host locks the plan after enough RSVPs.
+11. Host clicks Reserve with venue, completes the booking outside FindMyScreen, and marks Reservation confirmed.
+12. Host and friends can add the locked outing to calendar.
 
 ### inputs
 
-| Input | Format/source | Hard characteristics | Validation |
-|---|---|---|---|
-| User area | Free text | May be vague, misspelled, or nearby-area language | Must map to a supported Bangalore zone or show a friendly fallback |
-| Venue data | Convex approved venue signals + code-file fallback | Must include evidence tag, source URL, area and review status | Only approved online signals can enter customer ranking |
-| Next F1 race | Manual entry from official F1 calendar for V1 | Must be main race only, not qualifying or practice | Race name and date shown in UI |
-| Email | User input after Share/Call click | Needed for meaningful action tracking | Basic email format check |
-| Host name | User input before watch party creation | Needed to count the host as attending | Required, max 60 characters |
-| RSVP name | Friend input on watch-party page | May include nicknames or emoji | Required, max 60 characters |
-| RSVP decision | Button choice | Must be one of "I'm in", "Maybe", "Out" | One choice required |
+| Input         | Format/source                                      | Hard characteristics                                          | Validation                                                         |
+| ------------- | -------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------ |
+| User area     | Free text                                          | May be vague, misspelled, or nearby-area language             | Must map to a supported Bangalore zone or show a friendly fallback |
+| Venue data    | Convex approved venue signals + code-file fallback | Must include evidence tag, source URL, area and review status | Only approved online signals can enter customer ranking            |
+| Next F1 race  | Manual entry from official F1 calendar for V1      | Must be main race only, not qualifying or practice            | Race name and date shown in UI                                     |
+| Email         | User input after Share/Call click                  | Needed for meaningful action tracking                         | Basic email format check                                           |
+| Host name     | User input before watch party creation             | Needed to count the host as attending                         | Required, max 60 characters                                        |
+| RSVP name     | Friend input on watch-party page                   | May include nicknames or emoji                                | Required, max 60 characters                                        |
+| RSVP decision | Button choice                                      | Must be one of "I'm in", "Maybe", "Out"                       | One choice required                                                |
 
 ### outputs and state changes
 
-| Output/state change | Consumer | Required format | Proof of completion |
-|---|---|---|---|
-| Watch party page | Host and friends | Race name/date, pub, area, invite card, map link, RSVP form and stats | Dedicated party URL opens |
-| Two backups | End user | Pub cards with reason and action | Visible on result screen |
-| Meaningful action | Builder/reviewer | `share_plan_clicked` or `call_pub_clicked` | Convex count and screenshot |
-| RSVP response | Host/friends/reviewer | Name grouped under In, Maybe, or Out | Convex count and watch-party page |
-| Visitor analytics | Builder/reviewer | Unique visitor count | Read-only analytics view |
+| Output/state change      | Consumer              | Required format                                                       | Proof of completion                   |
+| ------------------------ | --------------------- | --------------------------------------------------------------------- | ------------------------------------- |
+| Watch party page         | Host and friends      | Race name/date, pub, area, invite card, map link, RSVP form and stats | Dedicated party URL opens             |
+| Two backups              | End user              | Pub cards with reason and action                                      | Visible on result screen              |
+| Meaningful action        | Builder/reviewer      | `share_plan_clicked` or `call_pub_clicked`                            | Convex count and screenshot           |
+| RSVP response            | Host/friends/reviewer | Name grouped under In, Maybe, or Out                                  | Convex count and watch-party page     |
+| Locked plan              | Host/friends/reviewer | Plan status on the watch-party page                                   | Convex timestamp and watch-party page |
+| Reservation handoff      | Host/reviewer         | Reserve with venue action opens real venue/map handoff                | Convex timestamp and admin count      |
+| Reservation confirmation | Host/friends/reviewer | Host-confirmed final outing state                                     | Convex timestamp and watch-party page |
+| Calendar add             | Host/friends/reviewer | Downloadable `.ics` calendar file                                     | Convex timestamp and browser download |
+| Visitor analytics        | Builder/reviewer      | Unique visitor count                                                  | Read-only analytics view              |
 
 ### what the product must remember
 
@@ -144,27 +151,27 @@ The personalized artifact is the F1 watch-party invite card plus live RSVP page:
 
 ### ideas deliberately rejected
 
-| Rejected mechanic | Reason |
-|---|---|
-| Partner portal | Correct long-term, too much for this week |
-| All sports | Makes data verification too wide |
-| GPS nearby | Extra permission and mapping complexity |
-| Group size | Does not change the recommendation in V1 |
-| Qualifying/practice screenings | Most venues support main race watch parties only |
-| Booking/payment | Not needed to prove the first behaviour |
+| Rejected mechanic              | Reason                                                                                        |
+| ------------------------------ | --------------------------------------------------------------------------------------------- |
+| Partner portal                 | Correct long-term, too much for this week                                                     |
+| All sports                     | Makes data verification too wide                                                              |
+| GPS nearby                     | Extra permission and mapping complexity                                                       |
+| Group size                     | Does not change the recommendation in V1                                                      |
+| Qualifying/practice screenings | Most venues support main race watch parties only                                              |
+| In-product booking/payment     | Too risky for this week; V1 uses a real external venue handoff and host-confirmed reservation |
 
 ## 5. dependencies
 
 ### verified capability matrix
 
-| Required capability | Product/API/model | Exact endpoint/access | Limits | Verified how |
-|---|---|---|---|---|
-| F1 race schedule | Official Formula 1 calendar | `formula1.com/en/racing/2026` | Manual for V1 | Official calendar showed Italian GP race weekend 4-6 Sep 2026 |
-| Venue data | Manual verification + public venue pages | Phone/Instagram/Maps | Quality depends on fresh checks | To be verified by calling/checking 5 pubs |
-| Data storage | Convex | `convex/schema.ts`, `convex/actions.ts` | Requires `.env.local` with Convex deployment values | Convex project `sports-party` created and functions codegen passed |
-| Venue signal search | Tavily Search API | `POST https://api.tavily.com/search` through server route `/api/venue-signals` | Free tier is 1,000 credits/month; V1 uses basic search | Official Tavily docs checked; local API key still needed |
-| Hosting | Vercel | Project deployment | Not yet connected for sports-party | Must deploy empty app in M0 |
-| Analytics | PostHog | `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` on Vercel | Visitor row needs read-only access for judging | Token and host added to Vercel production |
+| Required capability | Product/API/model                        | Exact endpoint/access                                                          | Limits                                                 | Verified how                                                       |
+| ------------------- | ---------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| F1 race schedule    | Official Formula 1 calendar              | `formula1.com/en/racing/2026`                                                  | Manual for V1                                          | Official calendar showed Italian GP race weekend 4-6 Sep 2026      |
+| Venue data          | Manual verification + public venue pages | Phone/Instagram/Maps                                                           | Quality depends on fresh checks                        | To be verified by calling/checking 5 pubs                          |
+| Data storage        | Convex                                   | `convex/schema.ts`, `convex/actions.ts`                                        | Requires `.env.local` with Convex deployment values    | Convex project `sports-party` created and functions codegen passed |
+| Venue signal search | Tavily Search API                        | `POST https://api.tavily.com/search` through server route `/api/venue-signals` | Free tier is 1,000 credits/month; V1 uses basic search | Official Tavily docs checked; local API key still needed           |
+| Hosting             | Vercel                                   | Project deployment                                                             | Not yet connected for sports-party                     | Must deploy empty app in M0                                        |
+| Analytics           | PostHog                                  | `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` on Vercel   | Visitor row needs read-only access for judging         | Token and host added to Vercel production                          |
 
 ### unsupported assumptions
 
@@ -181,33 +188,33 @@ Pick **one primary track**: Virality, Revenue or AI Agent as a Service. You are 
 
 ### primary track
 
-| Decision | Answer |
-|---|---|
-| Primary track | Virality |
-| Why this track fits the idea and my advantage | The output is a WhatsApp-ready plan people send to friends. First users are reachable through WhatsApp and the Tuesday post is in GrowthX community. |
-| The one thing the track needs (a personal artifact people share / a named user who pays this week / a real task on a real surface unattended) | A personal artifact people share: the one-pub F1 watch invite. |
+| Decision                                                                                                                                      | Answer                                                                                                                                               |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Primary track                                                                                                                                 | Virality                                                                                                                                             |
+| Why this track fits the idea and my advantage                                                                                                 | The output is a WhatsApp-ready plan people send to friends. First users are reachable through WhatsApp and the Tuesday post is in GrowthX community. |
+| The one thing the track needs (a personal artifact people share / a named user who pays this week / a real task on a real surface unattended) | A personal artifact people share: the one-pub F1 watch invite.                                                                                       |
 
 ### the track's rows
 
 **Virality (164 base + overflow)**
 
-| Row | Weight | Max base | Current level | Target level | Target points (L-1)xweight | Observable proof | Work required | Milestone |
-|---|---:|---:|---|---|---:|---|---|---|
-| Impressions and views | 1x | 4 | L1: Under 500 | L2: 501 to 5k | 1 | GrowthX post views or screenshots | Post clear launch story | M3 |
-| Reactions and comments | 2x | 8 | L1: Under 15 | L2: 15 to 50 | 2 | GrowthX post screenshot | Ask for F1 fans to test | M3-M4 |
-| Amplification quality | 3x | 12 | L1: None | L2: 1-2 peer builders commenting or liking | 3 | Screenshot of peer engagement | DM peer builders after post | M3-M4 |
-| Visitors to product | 10x | 40 | L1: Under 50 | L2: 51 to 250 | 10 | Read-only analytics access | Install analytics on Sunday | M1-M3 |
-| Signups or meaningful actions | 25x | 100 | L1: Up to 25 | L2: 26 to 100 | 25 | Convex count of Share invite and Call pub actions | Track email-gated Share/Call clicks | M1-M4 |
-| **Virality total** | | **164** | | | **41 target base points** | | | |
+| Row                           | Weight | Max base | Current level | Target level                               | Target points (L-1)xweight | Observable proof                                  | Work required                       | Milestone |
+| ----------------------------- | -----: | -------: | ------------- | ------------------------------------------ | -------------------------: | ------------------------------------------------- | ----------------------------------- | --------- |
+| Impressions and views         |     1x |        4 | L1: Under 500 | L2: 501 to 5k                              |                          1 | GrowthX post views or screenshots                 | Post clear launch story             | M3        |
+| Reactions and comments        |     2x |        8 | L1: Under 15  | L2: 15 to 50                               |                          2 | GrowthX post screenshot                           | Ask for F1 fans to test             | M3-M4     |
+| Amplification quality         |     3x |       12 | L1: None      | L2: 1-2 peer builders commenting or liking |                          3 | Screenshot of peer engagement                     | DM peer builders after post         | M3-M4     |
+| Visitors to product           |    10x |       40 | L1: Under 50  | L2: 51 to 250                              |                         10 | Read-only analytics access                        | Install analytics on Sunday         | M1-M3     |
+| Signups or meaningful actions |    25x |      100 | L1: Up to 25  | L2: 26 to 100                              |                         25 | Convex count of Share invite and Call pub actions | Track email-gated Share/Call clicks | M1-M4     |
+| **Virality total**            |        |  **164** |               |                                            |  **41 target base points** |                                                   |                                     |           |
 
 ### bonus-eligible rows from the other tracks (0.5x, 50-point cap, same evidence)
 
-| Source track | Row | Original weight | Bonus weight | Max bonus | Will I claim it? | Proof |
-|---|---:|---:|---:|---:|---|---|
-| Revenue | Signups | 20x | 10x | 40 | Maybe | Same Convex email + first-use action count, if it meets Revenue signup definition |
-| Revenue | Live product quality | 8x | 4x | 16 | Maybe | Stranger completes core flow on phone without help |
-| AI Agent as a Service | Real output shipping | 20x | 10x | 40 | No | Not an agent-as-service build |
-| AI Agent as a Service | Observability | 7x | 3.5x | 14 | No | Not worth scope |
+| Source track          |                  Row | Original weight | Bonus weight | Max bonus | Will I claim it? | Proof                                                                             |
+| --------------------- | -------------------: | --------------: | -----------: | --------: | ---------------- | --------------------------------------------------------------------------------- |
+| Revenue               |              Signups |             20x |          10x |        40 | Maybe            | Same Convex email + first-use action count, if it meets Revenue signup definition |
+| Revenue               | Live product quality |              8x |           4x |        16 | Maybe            | Stranger completes core flow on phone without help                                |
+| AI Agent as a Service | Real output shipping |             20x |          10x |        40 | No               | Not an agent-as-service build                                                     |
+| AI Agent as a Service |        Observability |              7x |         3.5x |        14 | No               | Not worth scope                                                                   |
 
 ### level anchors (short form; the full ladders are in the rubric source)
 
@@ -237,11 +244,11 @@ Do not count anonymous visits as meaningful actions. Do not count your own tests
 
 ### where the users already are
 
-| Channel (group, feed, thread, office floor) | Who is there | How I reach them (post, DM, invite) | When (day) |
-|---|---|---|---|
-| WhatsApp DMs | Dhruva, Tapish, Shruti | Send the live link and watch them use it | Monday |
-| GrowthX community | Builders and operators, some Bangalore sports fans | Launch post asking people to test and share with F1 friends | Tuesday |
-| WhatsApp groups | Friends who watch F1 or go out in Bangalore | Direct invite after first user feedback | Tuesday-Wednesday |
+| Channel (group, feed, thread, office floor) | Who is there                                       | How I reach them (post, DM, invite)                         | When (day)        |
+| ------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------- | ----------------- |
+| WhatsApp DMs                                | Dhruva, Tapish, Shruti                             | Send the live link and watch them use it                    | Monday            |
+| GrowthX community                           | Builders and operators, some Bangalore sports fans | Launch post asking people to test and share with F1 friends | Tuesday           |
+| WhatsApp groups                             | Friends who watch F1 or go out in Bangalore        | Direct invite after first user feedback                     | Tuesday-Wednesday |
 
 ### distribution posts, in my own words
 
@@ -252,13 +259,13 @@ Do not count anonymous visits as meaningful actions. Do not count your own tests
 
 ### targets, per band of my track's rows
 
-| Row | Track | Floor I will hit (band) | Stretch (band) | How I will know (source) |
-|---|---|---|---|---|
-| Visitors to product | Virality | L2: 51 to 250 | L3: 251 to 1,000 | PostHog / Plausible / GA4 / Datafast, read-only access shared |
-| Signups or meaningful actions | Virality | L2: 26 to 100 | L3: 101 to 500 | Convex table count of Share invite / Call pub, screenshot |
-| Impressions and views | Virality | L2: 501 to 5k | L3: 5k to 15k | Platform analytics screenshots |
-| Reactions and comments | Virality | L2: 15 to 50 | L3: 51 to 150 | Platform post screenshot |
-| Amplification quality | Virality | L2: 1-2 peer builders | L3: 3+ peers or one sub-10k founder/operator | Screenshot of who engaged |
+| Row                           | Track    | Floor I will hit (band) | Stretch (band)                               | How I will know (source)                                      |
+| ----------------------------- | -------- | ----------------------- | -------------------------------------------- | ------------------------------------------------------------- |
+| Visitors to product           | Virality | L2: 51 to 250           | L3: 251 to 1,000                             | PostHog / Plausible / GA4 / Datafast, read-only access shared |
+| Signups or meaningful actions | Virality | L2: 26 to 100           | L3: 101 to 500                               | Convex table count of Share invite / Call pub, screenshot     |
+| Impressions and views         | Virality | L2: 501 to 5k           | L3: 5k to 15k                                | Platform analytics screenshots                                |
+| Reactions and comments        | Virality | L2: 15 to 50            | L3: 51 to 150                                | Platform post screenshot                                      |
+| Amplification quality         | Virality | L2: 1-2 peer builders   | L3: 3+ peers or one sub-10k founder/operator | Screenshot of who engaged                                     |
 
 ### analytics setup (do this on Sunday, not Saturday)
 
@@ -280,6 +287,7 @@ Every milestone has a purpose, what is required, an acceptance test, and an "if 
 **Purpose:** kill the unknown critical dependency and the riskiest assumption early.
 
 Required:
+
 - Setup page complete: GitHub, Vercel, Convex accounts; Codex or Claude Code logged in; skills installed.
 - The riskiest assumption tested with no code: call/check 5 F1 pubs and send a mock result to Dhruva, Tapish and Shruti.
 - One representative hard input handled manually: "near HSR."
@@ -300,6 +308,7 @@ Stop condition:
 **Rubric intent:** Virality: the personal artifact exists, even if ugly.
 
 Required:
+
 - next F1 main race shown;
 - one area input;
 - minimum venue ranking;
@@ -322,6 +331,7 @@ If I am behind, cut to: `one screen, hardcoded next race, 8 venue code-file list
 **Purpose:** milestone 03. Three people who have the problem use it while you watch.
 
 Required:
+
 - Dhruva, Tapish and Shruti reached on WhatsApp;
 - a first-use event recorded for each;
 - notes on where each one stopped;
@@ -338,6 +348,7 @@ If I am behind, cut to: `one user on a call, screen shared.`
 **Purpose:** milestone 04. Share it where those users already spend time. Direct invites. Track who signs up or replies.
 
 Required:
+
 - analytics live with read-only access;
 - GrowthX community launch post written in your own words;
 - direct WhatsApp invites sent;
@@ -354,6 +365,7 @@ If I am behind, cut to: `twenty direct WhatsApp messages, no public post.`
 **Purpose:** milestone 05. Speak to users, fix the biggest blocker, ship the next version. Repeat.
 
 Required each evening:
+
 - one user conversation;
 - one blocker fixed and deployed;
 - one update posted with one number;
@@ -371,18 +383,18 @@ If I am behind, cut to: `fix only the blocker that stops Share/Call; no new feat
 
 This is the approved refinement after user feedback: the invite should not restart messy WhatsApp debate. It should become a live decision page.
 
-| # | Milestone | Layer | Acceptance test | If behind, cut to this |
-|---:|---|---|---|---|
-| 1 | I can see `Create Watch Party` beside Call pub and Open map on the best venue and backup cards. | Frontend | Every visible venue card has the button. | Add it only to the best venue card. |
-| 2 | I can click `Create Watch Party` and see one small host form asking for name and email. | Frontend | Empty name/email shows a friendly error; valid input can continue. | Use browser prompt-style modal, no extra styling. |
-| 3 | I can submit host name and email and create a watch-party record. | Database | Convex stores venue id, venue name, race name, area, host name, host email and created time. | Store only venue id, host email and created time. |
-| 4 | I can automatically count the host as `I'm in`. | Database | Convex stores the host RSVP linked to the party. | Show host name locally on first load, then persist later. |
-| 5 | I can land on `/f1/party/[partyId]` and see only that party: invite card, venue, race time, map and shareable link. | Frontend / Backend | Opening the URL in a new tab loads the same party without the venue list. | Reuse the existing invite page layout. |
-| 6 | I can copy or share the party link from the party page. | Frontend | Copy button copies the party URL and shows a success message. | Show the link in a readonly input. |
-| 7 | A friend can enter name and choose `I'm in`, `Maybe`, or `Out` on one screen. | Frontend | Empty name is blocked; one choice is required; emoji names do not break layout. | Name + three buttons, no modal. |
-| 8 | A friend can submit once without duplicate rows from double-click. | Frontend / Database | Submit button disables while saving; Convex stores one response per submit. | Disable the button while saving. |
-| 9 | I can refresh or reopen the party link and still see grouped stats. | Database | In/Maybe/Out counts and names survive refresh. | Show counts only if names grouping takes too long. |
-| 10 | I can verify the proof in Convex and PostHog. | Database / Analytics | Convex shows watch party and RSVP rows; PostHog shows party page visits. | Convex proof only; PostHog pageview already covers visitors. |
+|   # | Milestone                                                                                                           | Layer                | Acceptance test                                                                              | If behind, cut to this                                       |
+| --: | ------------------------------------------------------------------------------------------------------------------- | -------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+|   1 | I can see `Create Watch Party` beside Call pub and Open map on the best venue and backup cards.                     | Frontend             | Every visible venue card has the button.                                                     | Add it only to the best venue card.                          |
+|   2 | I can click `Create Watch Party` and see one small host form asking for name and email.                             | Frontend             | Empty name/email shows a friendly error; valid input can continue.                           | Use browser prompt-style modal, no extra styling.            |
+|   3 | I can submit host name and email and create a watch-party record.                                                   | Database             | Convex stores venue id, venue name, race name, area, host name, host email and created time. | Store only venue id, host email and created time.            |
+|   4 | I can automatically count the host as `I'm in`.                                                                     | Database             | Convex stores the host RSVP linked to the party.                                             | Show host name locally on first load, then persist later.    |
+|   5 | I can land on `/f1/party/[partyId]` and see only that party: invite card, venue, race time, map and shareable link. | Frontend / Backend   | Opening the URL in a new tab loads the same party without the venue list.                    | Reuse the existing invite page layout.                       |
+|   6 | I can copy or share the party link from the party page.                                                             | Frontend             | Copy button copies the party URL and shows a success message.                                | Show the link in a readonly input.                           |
+|   7 | A friend can enter name and choose `I'm in`, `Maybe`, or `Out` on one screen.                                       | Frontend             | Empty name is blocked; one choice is required; emoji names do not break layout.              | Name + three buttons, no modal.                              |
+|   8 | A friend can submit once without duplicate rows from double-click.                                                  | Frontend / Database  | Submit button disables while saving; Convex stores one response per submit.                  | Disable the button while saving.                             |
+|   9 | I can refresh or reopen the party link and still see grouped stats.                                                 | Database             | In/Maybe/Out counts and names survive refresh.                                               | Show counts only if names grouping takes too long.           |
+|  10 | I can verify the proof in Convex and PostHog.                                                                       | Database / Analytics | Convex shows watch party and RSVP rows; PostHog shows party page visits.                     | Convex proof only; PostHog pageview already covers visitors. |
 
 Not this week: group chat, comments, multiple venue voting, payment/booking, host-only login, edit RSVP, WhatsApp API automation.
 
@@ -391,6 +403,7 @@ Not this week: group chat, comments, multiple venue voting, payment/booking, hos
 **Purpose:** milestone 06. No new features.
 
 Required:
+
 - core action works at the live URL, logged out, on a phone;
 - data survives closing and reopening;
 - repo is public and opens in a private window;
@@ -415,12 +428,12 @@ FindMyScreen Bangalore helps F1 fans pick one pub plan for the next race without
 
 ### the proof
 
-| Time | What happens | What the reviewer sees | Rubric row it supports |
-|---:|---|---|---|
-| 0-15s | who has this problem and what they do today | Tapesh's match-night problem and the old workaround | Reactions / pain proof if claimed as bonus |
-| 15-60s | the core action, live, on a fresh input | Enter "near HSR", see next F1 race, best pub invite and two backups | Signups or meaningful actions / artifact |
-| 60-90s | the numbers, reproduced live | Convex Share/Call count, analytics visitors, GrowthX post screenshot | Heaviest Virality rows |
-| 90-120s | what broke this week and what changed | One blocker from user tests and the deployed fix | Live product quality bonus if claimed |
+|    Time | What happens                                | What the reviewer sees                                               | Rubric row it supports                     |
+| ------: | ------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------ |
+|   0-15s | who has this problem and what they do today | Tapesh's match-night problem and the old workaround                  | Reactions / pain proof if claimed as bonus |
+|  15-60s | the core action, live, on a fresh input     | Enter "near HSR", see next F1 race, best pub invite and two backups  | Signups or meaningful actions / artifact   |
+|  60-90s | the numbers, reproduced live                | Convex Share/Call count, analytics visitors, GrowthX post screenshot | Heaviest Virality rows                     |
+| 90-120s | what broke this week and what changed       | One blocker from user tests and the deployed fix                     | Live product quality bonus if claimed      |
 
 ### live input
 
@@ -453,30 +466,30 @@ Share invite and Call pub clicks.
 
 ### golden cases
 
-| Case | Why representative | Expected final output | Status |
-|---|---|---|---|
-| 1 | Tapesh's real area | Bellandur returns one best F1 pub plus backups | Specified |
-| 2 | Vague nearby input | "near HSR" maps to HSR/Sarjapur/Koramangala options | Specified |
-| 3 | Central Bangalore input | "MG Road" returns central venues and invite text | Specified |
+| Case | Why representative      | Expected final output                               | Status    |
+| ---- | ----------------------- | --------------------------------------------------- | --------- |
+| 1    | Tapesh's real area      | Bellandur returns one best F1 pub plus backups      | Specified |
+| 2    | Vague nearby input      | "near HSR" maps to HSR/Sarjapur/Koramangala options | Specified |
+| 3    | Central Bangalore input | "MG Road" returns central venues and invite text    | Specified |
 
 ### failure cases
 
-| Failure | Expected behaviour | User recovery | Tested? |
-|---|---|---|---|
-| Ambiguous input | Ask for a clearer Bangalore area or show popular F1 zones | User edits area | No |
-| Unsupported input | Explain V1 is Bangalore F1 only | User enters Bangalore area | No |
-| API timeout or failure | No API should block V1; use stored venue data | User can still see results | No |
-| Empty result | Show top Bangalore F1 venues marked by evidence tag | User can call/check | No |
+| Failure                | Expected behaviour                                        | User recovery              | Tested? |
+| ---------------------- | --------------------------------------------------------- | -------------------------- | ------- |
+| Ambiguous input        | Ask for a clearer Bangalore area or show popular F1 zones | User edits area            | No      |
+| Unsupported input      | Explain V1 is Bangalore F1 only                           | User enters Bangalore area | No      |
+| API timeout or failure | No API should block V1; use stored venue data             | User can still see results | No      |
+| Empty result           | Show top Bangalore F1 venues marked by evidence tag       | User can call/check        | No      |
 
 ## 11. risk register
 
-| Risk | Probability | Damage | Earliest test | Mitigation | Fallback |
-|---|---|---|---|---|---|
-| Pub data is wrong | High | Users lose trust | Call/check 5 venues | Evidence tags, timestamp | Needs call instead of Verified |
-| Users browse but do not share/call | Medium | Weak Virality score | Test with first 3 users | One best invite, clear CTA | Make Call pub primary |
-| Convex setup takes too long | Medium | No reliable action counts | M0 setup | Keep code simple | Local code list + add Convex later |
-| Scope expands | High | No live product | Every session | Parking lot | One screen only |
-| GrowthX post gets low traffic | Medium | Low visitor count | Tuesday post | Direct WhatsApp invites | DM 20 people |
+| Risk                               | Probability | Damage                    | Earliest test           | Mitigation                 | Fallback                           |
+| ---------------------------------- | ----------- | ------------------------- | ----------------------- | -------------------------- | ---------------------------------- |
+| Pub data is wrong                  | High        | Users lose trust          | Call/check 5 venues     | Evidence tags, timestamp   | Needs call instead of Verified     |
+| Users browse but do not share/call | Medium      | Weak Virality score       | Test with first 3 users | One best invite, clear CTA | Make Call pub primary              |
+| Convex setup takes too long        | Medium      | No reliable action counts | M0 setup                | Keep code simple           | Local code list + add Convex later |
+| Scope expands                      | High        | No live product           | Every session           | Parking lot                | One screen only                    |
+| GrowthX post gets low traffic      | Medium      | Low visitor count         | Tuesday post            | Direct WhatsApp invites    | DM 20 people                       |
 
 ### pre-mortem
 
@@ -500,15 +513,15 @@ Any change to these requires a written scope decision in section 15.
 
 ## 13. parking lot
 
-| Idea | Potential value | Why not now | Revisit after |
-|---|---|---|---|
-| Restaurant partner portal | Makes screening data real-time | Too much build and sales work this week | After V1 usage proof |
-| Football/cricket support | Bigger audience | More match data and venue verification | After F1 flow works |
-| Shareable image card | Better virality | WhatsApp text is faster and closer to the job | After Share clicks happen |
-| Group midpoint venue | More magical | Needs location logic and more edge cases | After area matching works |
-| Pub claim flow | Improves data quality | Requires trust and moderation | After venue demand exists |
-| Auto-publish venue signals | Faster coverage | Too risky without human approval | After enough approved signals behave well |
-| Instagram scraping | Strong pub evidence | Scraping risk and rate limits | After official/public search path works |
+| Idea                       | Potential value                | Why not now                                   | Revisit after                             |
+| -------------------------- | ------------------------------ | --------------------------------------------- | ----------------------------------------- |
+| Restaurant partner portal  | Makes screening data real-time | Too much build and sales work this week       | After V1 usage proof                      |
+| Football/cricket support   | Bigger audience                | More match data and venue verification        | After F1 flow works                       |
+| Shareable image card       | Better virality                | WhatsApp text is faster and closer to the job | After Share clicks happen                 |
+| Group midpoint venue       | More magical                   | Needs location logic and more edge cases      | After area matching works                 |
+| Pub claim flow             | Improves data quality          | Requires trust and moderation                 | After venue demand exists                 |
+| Auto-publish venue signals | Faster coverage                | Too risky without human approval              | After enough approved signals behave well |
+| Instagram scraping         | Strong pub evidence            | Scraping risk and rate limits                 | After official/public search path works   |
 
 ## 14. current state
 
@@ -555,13 +568,13 @@ Build M4A.1: add `Create Watch Party` on venue cards, then M4A.2: host name/emai
 
 ## 15. decision log
 
-| Time | Decision | Evidence/reason | Scope impact |
-|---|---|---|---|
-| Tue 1 Sep 2026 | Picked FindMyScreen Bangalore F1 screening finder | User chose this idea after pausing Creator Fit Finder | New project scope |
-| Tue 1 Sep 2026 | Primary track is Virality | WhatsApp invite is the share artifact | Build for Share/Call actions and visitors |
-| Tue 1 Sep 2026 | V1 supports F1 main race only | Most venues support main race watch parties, not practice/qualifying | Cuts sports/calendar scope |
-| Tue 1 Sep 2026 | Input is free-text Bangalore area | Whole Bangalore coverage matters, but area helps ranking | No full one-sentence brief needed |
-| Tue 1 Sep 2026 | Share/Call requires email first | Captures meaningful action after user sees value | Adds Convex signup/action tracking |
-| Tue 1 Sep 2026 | Proof table moved to `/admin` | Customer-facing product should not show internal evidence tables | Keeps `/` clean and keeps demo proof separate |
-| Tue 1 Sep 2026 | Added hybrid Tavily data pipeline | User wanted smart online data discovery, filtering, approval, then customer display | Adds `/admin/venues`, Convex venue candidates, and approved signals in product ranking |
-| Wed 2 Sep 2026 | Added Watch Party RSVP plan | User test showed invite sharing still creates messy group debate | Adds host/friend flows, party page, RSVP stats and Convex persistence to the active plan |
+| Time           | Decision                                          | Evidence/reason                                                                     | Scope impact                                                                             |
+| -------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Tue 1 Sep 2026 | Picked FindMyScreen Bangalore F1 screening finder | User chose this idea after pausing Creator Fit Finder                               | New project scope                                                                        |
+| Tue 1 Sep 2026 | Primary track is Virality                         | WhatsApp invite is the share artifact                                               | Build for Share/Call actions and visitors                                                |
+| Tue 1 Sep 2026 | V1 supports F1 main race only                     | Most venues support main race watch parties, not practice/qualifying                | Cuts sports/calendar scope                                                               |
+| Tue 1 Sep 2026 | Input is free-text Bangalore area                 | Whole Bangalore coverage matters, but area helps ranking                            | No full one-sentence brief needed                                                        |
+| Tue 1 Sep 2026 | Share/Call requires email first                   | Captures meaningful action after user sees value                                    | Adds Convex signup/action tracking                                                       |
+| Tue 1 Sep 2026 | Proof table moved to `/admin`                     | Customer-facing product should not show internal evidence tables                    | Keeps `/` clean and keeps demo proof separate                                            |
+| Tue 1 Sep 2026 | Added hybrid Tavily data pipeline                 | User wanted smart online data discovery, filtering, approval, then customer display | Adds `/admin/venues`, Convex venue candidates, and approved signals in product ranking   |
+| Wed 2 Sep 2026 | Added Watch Party RSVP plan                       | User test showed invite sharing still creates messy group debate                    | Adds host/friend flows, party page, RSVP stats and Convex persistence to the active plan |

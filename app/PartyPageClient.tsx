@@ -37,6 +37,15 @@ export function PartyPageClient({
   const [showBookingInterest, setShowBookingInterest] = useState(false);
   const [bookingInterestStatus, setBookingInterestStatus] = useState("");
   const [isSavingBookingInterest, setIsSavingBookingInterest] = useState(false);
+  const [localLockedAt, setLocalLockedAt] = useState<number | null>(null);
+  const [localReservationHandoffAt, setLocalReservationHandoffAt] = useState<
+    number | null
+  >(null);
+  const [localReservationConfirmedAt, setLocalReservationConfirmedAt] =
+    useState<number | null>(null);
+  const [localCalendarAddedAt, setLocalCalendarAddedAt] = useState<
+    number | null
+  >(null);
   const partyById = useQuery(
     api.actions.watchPartyWithRsvps,
     partyId ? { partyId: partyId as Id<"watchParties"> } : "skip",
@@ -47,7 +56,12 @@ export function PartyPageClient({
   );
   const partyData = partyId ? partyById : partyByCode;
   const submitRsvp = useMutation(api.actions.submitWatchPartyRsvp);
-  const recordBookingInterest = useMutation(api.actions.recordBookingInterest);
+  const lockWatchPartyPlan = useMutation(api.actions.lockWatchPartyPlan);
+  const startReservationHandoff = useMutation(
+    api.actions.startReservationHandoff,
+  );
+  const confirmReservation = useMutation(api.actions.confirmReservation);
+  const recordCalendarAdd = useMutation(api.actions.recordCalendarAdd);
 
   const grouped = useMemo(() => {
     const empty: Record<Decision, Doc<"rsvps">[]> = {
@@ -119,6 +133,12 @@ export function PartyPageClient({
   }
 
   const { party } = partyData;
+  const lockedAt = party.lockedAt ?? localLockedAt;
+  const reservationHandoffAt =
+    party.reservationHandoffAt ?? localReservationHandoffAt;
+  const reservationConfirmedAt =
+    party.reservationConfirmedAt ?? localReservationConfirmedAt;
+  const calendarAddedAt = party.calendarAddedAt ?? localCalendarAddedAt;
   const partyUrl =
     typeof window === "undefined"
       ? ""
@@ -146,44 +166,123 @@ export function PartyPageClient({
     await copyPartyLink();
   }
 
-  async function answerBookingInterest(isInterested: boolean) {
-    if (isSavingBookingInterest) return;
+  async function lockPlan() {
+    if (!isHostDevice) return;
 
     setIsSavingBookingInterest(true);
     setBookingInterestStatus("");
 
     try {
-      await recordBookingInterest({
-        partyId: party._id,
-        inviteCode: party.inviteCode,
-        clientId,
-        interested: isInterested,
-        venueId: party.venueId,
-        venueName: party.venueName,
-        venueArea: party.venueArea,
-        raceName: party.raceName,
-      });
-
+      const nextLockedAt = await lockWatchPartyPlan({ partyId: party._id });
+      setLocalLockedAt(nextLockedAt);
       if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
-        posthog.capture("findmyscreen_booking_interest_recorded", {
+        posthog.capture("findmyscreen_plan_locked", {
           party_id: party._id,
           venue_id: party.venueId,
           venue_name: party.venueName,
-          interested: isInterested,
         });
       }
-
-      setShowBookingInterest(false);
       setBookingInterestStatus(
-        isInterested
-          ? "Interest registered. Booking will be live soon."
-          : "No problem. You can still use the map and share the race plan.",
+        "Plan locked. Your crew will see the final plan.",
       );
     } catch {
-      setBookingInterestStatus("Could not save this. Try once more.");
+      setBookingInterestStatus("Could not lock this plan. Try once more.");
     } finally {
       setIsSavingBookingInterest(false);
     }
+  }
+
+  async function reserveWithVenue() {
+    if (!isHostDevice) return;
+
+    setIsSavingBookingInterest(true);
+    setBookingInterestStatus("");
+
+    try {
+      const nextReservationHandoffAt = await startReservationHandoff({
+        partyId: party._id,
+      });
+      setLocalReservationHandoffAt(nextReservationHandoffAt);
+      if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
+        posthog.capture("findmyscreen_reservation_handoff_started", {
+          party_id: party._id,
+          venue_id: party.venueId,
+          venue_name: party.venueName,
+        });
+      }
+      setShowBookingInterest(true);
+      window.open(party.mapUrl, "_blank", "noopener,noreferrer");
+      setBookingInterestStatus(
+        "Reservation handoff started. Confirm with the venue, then mark it here.",
+      );
+    } catch {
+      setBookingInterestStatus(
+        "Could not record the reservation handoff. Try once more.",
+      );
+    } finally {
+      setIsSavingBookingInterest(false);
+    }
+  }
+
+  async function markReservationConfirmed() {
+    if (!isHostDevice) return;
+
+    setIsSavingBookingInterest(true);
+    setBookingInterestStatus("");
+
+    try {
+      const nextReservationConfirmedAt = await confirmReservation({
+        partyId: party._id,
+      });
+      setLocalReservationConfirmedAt(nextReservationConfirmedAt);
+      if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
+        posthog.capture("findmyscreen_reservation_confirmed", {
+          party_id: party._id,
+          venue_id: party.venueId,
+          venue_name: party.venueName,
+        });
+      }
+      setShowBookingInterest(false);
+      setBookingInterestStatus(
+        "Reservation confirmed. The outing plan is ready.",
+      );
+    } catch {
+      setBookingInterestStatus(
+        "Could not mark the reservation confirmed. Try once more.",
+      );
+    } finally {
+      setIsSavingBookingInterest(false);
+    }
+  }
+
+  async function addToCalendar() {
+    const nextCalendarAddedAt = await recordCalendarAdd({ partyId: party._id });
+    setLocalCalendarAddedAt(nextCalendarAddedAt);
+    if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
+      posthog.capture("findmyscreen_calendar_added", {
+        party_id: party._id,
+        venue_id: party.venueId,
+        venue_name: party.venueName,
+      });
+    }
+    const calendarFile = buildCalendarFile({
+      title: `${party.raceName} at ${party.venueName}`,
+      description: `FindMyScreen watch party at ${party.venueName}, ${party.venueArea}. RSVP link: ${partyUrl}`,
+      location: `${party.venueName}, ${party.venueArea}`,
+      url: partyUrl,
+    });
+    const blob = new Blob([calendarFile], {
+      type: "text/calendar;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "findmyscreen-watch-party.ics";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setStatus("Calendar file downloaded.");
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -242,7 +341,12 @@ export function PartyPageClient({
           <div className="race-plan-meta">
             <span>Race plan / 001</span>
             <strong>
-              <i /> {party.venueEvidenceTag} screening
+              <i />{" "}
+              {reservationConfirmedAt
+                ? "Reservation confirmed"
+                : lockedAt
+                  ? "Plan locked"
+                  : `${party.venueEvidenceTag} screening`}
             </strong>
           </div>
           <div className="race-plan-copy">
@@ -259,6 +363,11 @@ export function PartyPageClient({
             <button type="button" onClick={() => void sharePartyLink()}>
               Share race plan →
             </button>
+            {lockedAt ? (
+              <button type="button" onClick={() => void addToCalendar()}>
+                Add to calendar
+              </button>
+            ) : null}
             <a href={party.mapUrl} target="_blank" rel="noreferrer">
               Open map
             </a>
@@ -272,8 +381,18 @@ export function PartyPageClient({
           <aside className="race-plan-invite">
             <div className="race-plan-invite-copy">
               <span>Invite your crew</span>
-              <h2>Your race plan is locked.</h2>
-              <p>Send it to the group and let people RSVP on this page.</p>
+              <h2>
+                {lockedAt
+                  ? "Your race plan is locked."
+                  : "Build the race plan."}
+              </h2>
+              <p>
+                {reservationConfirmedAt
+                  ? "Reservation is confirmed. Share the final plan and add it to calendars."
+                  : lockedAt
+                    ? "Now reserve with the venue, then mark it confirmed here."
+                    : "Send it to the group, collect RSVPs, then lock the plan."}
+              </p>
             </div>
             <button type="button" onClick={() => void sharePartyLink()}>
               Share race plan →
@@ -302,6 +421,21 @@ export function PartyPageClient({
                 <span>
                   <i /> I'm in · Host
                 </span>
+                <div className="host-plan-actions">
+                  {!lockedAt ? (
+                    <button
+                      type="button"
+                      disabled={isSavingBookingInterest}
+                      onClick={() => void lockPlan()}
+                    >
+                      {isSavingBookingInterest ? "Locking..." : "Lock plan"}
+                    </button>
+                  ) : (
+                    <button type="button" onClick={() => void addToCalendar()}>
+                      Add to calendar
+                    </button>
+                  )}
+                </div>
               </div>
             ) : visibleDeviceRsvp ? (
               <div className="host-rsvp-status">
@@ -324,6 +458,23 @@ export function PartyPageClient({
           </aside>
         </div>
 
+        <section className="outing-status" aria-label="Outing plan status">
+          <span>Plan progress</span>
+          <div>
+            <strong data-active="true">RSVPs open</strong>
+            <strong data-active={Boolean(lockedAt)}>Plan locked</strong>
+            <strong data-active={Boolean(reservationHandoffAt)}>
+              Venue handoff
+            </strong>
+            <strong data-active={Boolean(reservationConfirmedAt)}>
+              Reservation confirmed
+            </strong>
+            <strong data-active={Boolean(calendarAddedAt)}>
+              Calendar ready
+            </strong>
+          </div>
+        </section>
+
         <section className="race-plan-venue" aria-label="Venue details">
           <div>
             <span>Venue</span>
@@ -338,37 +489,48 @@ export function PartyPageClient({
             <p>{party.venueVibe}</p>
           </div>
           <div className="race-plan-venue-actions">
-            <button
-              type="button"
-              onClick={() => {
-                setBookingInterestStatus("");
-                setShowBookingInterest(true);
-              }}
-            >
-              Book Now
-            </button>
+            {isHostDevice && lockedAt && !reservationConfirmedAt ? (
+              <button
+                type="button"
+                disabled={isSavingBookingInterest}
+                onClick={() => void reserveWithVenue()}
+              >
+                {reservationHandoffAt
+                  ? "Reservation handoff started"
+                  : "Reserve with venue"}
+              </button>
+            ) : null}
             <a href={party.mapUrl} target="_blank" rel="noreferrer">
               Open in maps →
             </a>
+            {lockedAt ? (
+              <button type="button" onClick={() => void addToCalendar()}>
+                Add to calendar
+              </button>
+            ) : null}
           </div>
-          {showBookingInterest ? (
+          {showBookingInterest && isHostDevice ? (
             <div className="booking-interest" role="dialog" aria-modal="false">
-              <strong>This feature will be live soon.</strong>
-              <p>Register your interest?</p>
+              <strong>Finish the reservation outside FindMyScreen.</strong>
+              <p>
+                Call or open maps, confirm with the venue, then come back and
+                mark the reservation confirmed.
+              </p>
               <div>
+                {party.venuePhone && party.venuePhone !== "Needs call" ? (
+                  <a href={`tel:${party.venuePhone}`}>Call venue</a>
+                ) : null}
+                <a href={party.mapUrl} target="_blank" rel="noreferrer">
+                  Open maps
+                </a>
                 <button
                   type="button"
                   disabled={isSavingBookingInterest}
-                  onClick={() => void answerBookingInterest(true)}
+                  onClick={() => void markReservationConfirmed()}
                 >
-                  {isSavingBookingInterest ? "Saving..." : "Yes"}
-                </button>
-                <button
-                  type="button"
-                  disabled={isSavingBookingInterest}
-                  onClick={() => void answerBookingInterest(false)}
-                >
-                  No
+                  {isSavingBookingInterest
+                    ? "Saving..."
+                    : "Reservation confirmed"}
                 </button>
               </div>
             </div>
@@ -487,6 +649,47 @@ function formatRaceDate(raceDate: string) {
 
 function formatRaceTime(raceTime: string) {
   return raceTime.replace(" PM", "").toUpperCase();
+}
+
+function buildCalendarFile({
+  description,
+  location,
+  title,
+  url,
+}: {
+  description: string;
+  location: string;
+  title: string;
+  url: string;
+}) {
+  const start = "20260906T183000";
+  const end = "20260906T203000";
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").split(".")[0];
+
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//FindMyScreen//Watch Party//EN",
+    "BEGIN:VEVENT",
+    `UID:${Date.now()}@findmyscreen`,
+    `DTSTAMP:${stamp}Z`,
+    `DTSTART;TZID=Asia/Kolkata:${start}`,
+    `DTEND;TZID=Asia/Kolkata:${end}`,
+    `SUMMARY:${escapeCalendarText(title)}`,
+    `DESCRIPTION:${escapeCalendarText(description)}`,
+    `LOCATION:${escapeCalendarText(location)}`,
+    `URL:${url}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+}
+
+function escapeCalendarText(text: string) {
+  return text
+    .replace(/\\/g, "\\\\")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;")
+    .replace(/\n/g, "\\n");
 }
 
 function getOrCreateClientId() {
