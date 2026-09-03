@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import type { CSSProperties } from "react";
 import { useMutation, useQuery } from "convex/react";
 import posthog from "posthog-js";
 import { api } from "../convex/_generated/api";
@@ -145,6 +146,15 @@ export function PartyPageClient({
       : party.inviteCode
         ? `${window.location.origin}/f1/join/${party.inviteCode}`
         : window.location.href;
+  const calendarPayload = {
+    title: `${party.raceName} at ${party.venueName}`,
+    description: `FindMyScreen watch party at ${party.venueName}, ${party.venueArea}. RSVP link: ${partyUrl}`,
+    location: `${party.venueName}, ${party.venueArea}`,
+    url: partyUrl,
+    raceDate: party.raceDate,
+    raceTime: party.raceTime,
+  };
+  const googleCalendarUrl = buildGoogleCalendarUrl(calendarPayload);
   const hostRsvp = partyData.rsvps.find((rsvp) => rsvp.isHost);
 
   async function copyPartyLink() {
@@ -255,7 +265,7 @@ export function PartyPageClient({
     }
   }
 
-  async function addToCalendar() {
+  async function recordCalendarClick() {
     const nextCalendarAddedAt = await recordCalendarAdd({ partyId: party._id });
     setLocalCalendarAddedAt(nextCalendarAddedAt);
     if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
@@ -265,12 +275,17 @@ export function PartyPageClient({
         venue_name: party.venueName,
       });
     }
-    const calendarFile = buildCalendarFile({
-      title: `${party.raceName} at ${party.venueName}`,
-      description: `FindMyScreen watch party at ${party.venueName}, ${party.venueArea}. RSVP link: ${partyUrl}`,
-      location: `${party.venueName}, ${party.venueArea}`,
-      url: partyUrl,
-    });
+  }
+
+  async function openGoogleCalendar() {
+    if (!googleCalendarUrl) return;
+    await recordCalendarClick();
+    window.open(googleCalendarUrl, "_blank", "noopener,noreferrer");
+    setStatus("Google Calendar opened.");
+  }
+
+  async function downloadCalendarFile() {
+    const calendarFile = buildCalendarFile(calendarPayload);
     const blob = new Blob([calendarFile], {
       type: "text/calendar;charset=utf-8",
     });
@@ -282,7 +297,7 @@ export function PartyPageClient({
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-    setStatus("Calendar file downloaded.");
+    setStatus("Calendar file downloaded for Apple or Outlook.");
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -336,6 +351,13 @@ export function PartyPageClient({
           <Link href="/f1">← Find another screening</Link>
         </header>
 
+        <PlanProgress
+          calendarAddedAt={calendarAddedAt}
+          lockedAt={lockedAt}
+          reservationConfirmedAt={reservationConfirmedAt}
+          reservationHandoffAt={reservationHandoffAt}
+        />
+
         <section className="race-plan-hero" aria-label="Selected watch party">
           <div className="race-plan-slash" aria-hidden="true" />
           <div className="race-plan-meta">
@@ -385,9 +407,18 @@ export function PartyPageClient({
                   : "Reservation pending with host"}
               </small>
             </div>
-            <button type="button" onClick={() => void addToCalendar()}>
-              Add to my calendar
-            </button>
+            <div className="calendar-actions">
+              <button type="button" onClick={() => void openGoogleCalendar()}>
+                Add to Google Calendar
+              </button>
+              <button
+                className="calendar-secondary"
+                type="button"
+                onClick={() => void downloadCalendarFile()}
+              >
+                Apple or Outlook
+              </button>
+            </div>
           </section>
         ) : null}
 
@@ -474,23 +505,6 @@ export function PartyPageClient({
           </aside>
         </div>
 
-        <section className="outing-status" aria-label="Outing plan status">
-          <span>Plan progress</span>
-          <div>
-            <strong data-active="true">RSVPs open</strong>
-            <strong data-active={Boolean(lockedAt)}>Plan locked</strong>
-            <strong data-active={Boolean(reservationHandoffAt)}>
-              Venue handoff
-            </strong>
-            <strong data-active={Boolean(reservationConfirmedAt)}>
-              Reservation confirmed
-            </strong>
-            <strong data-active={Boolean(calendarAddedAt)}>
-              Calendar ready
-            </strong>
-          </div>
-        </section>
-
         <section className="race-plan-venue" aria-label="Venue details">
           <div>
             <span>Venue</span>
@@ -552,6 +566,51 @@ export function PartyPageClient({
         </section>
       </section>
     </main>
+  );
+}
+
+function PlanProgress({
+  calendarAddedAt,
+  lockedAt,
+  reservationConfirmedAt,
+  reservationHandoffAt,
+}: {
+  calendarAddedAt: number | null;
+  lockedAt: number | null;
+  reservationConfirmedAt: number | null;
+  reservationHandoffAt: number | null;
+}) {
+  const steps = [
+    { label: "RSVPs open", active: true },
+    { label: "Plan locked", active: Boolean(lockedAt) },
+    { label: "Venue handoff", active: Boolean(reservationHandoffAt) },
+    { label: "Reservation confirmed", active: Boolean(reservationConfirmedAt) },
+    { label: "Calendar ready", active: Boolean(calendarAddedAt) },
+  ];
+  const activeIndex = steps.reduce(
+    (latest, step, index) => (step.active ? index : latest),
+    0,
+  );
+  const carProgress = steps.length > 1 ? activeIndex / (steps.length - 1) : 0;
+
+  return (
+    <section className="outing-status" aria-label="Outing plan status">
+      <span>Plan progress</span>
+      <div
+        className="outing-track"
+        style={{ "--car-progress": carProgress } as CSSProperties}
+      >
+        <span className="track-line" aria-hidden="true" />
+        <span className="track-car" aria-hidden="true">
+          <span />
+        </span>
+        {steps.map((step) => (
+          <strong data-active={step.active} key={step.label}>
+            {step.label}
+          </strong>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -665,16 +724,19 @@ function formatRaceTime(raceTime: string) {
 function buildCalendarFile({
   description,
   location,
+  raceDate,
+  raceTime,
   title,
   url,
 }: {
   description: string;
   location: string;
+  raceDate: string;
+  raceTime: string;
   title: string;
   url: string;
 }) {
-  const start = "20260906T183000";
-  const end = "20260906T203000";
+  const { endLocal, startLocal } = buildCalendarTimes(raceDate, raceTime);
   const stamp = new Date().toISOString().replace(/[-:]/g, "").split(".")[0];
 
   return [
@@ -684,8 +746,8 @@ function buildCalendarFile({
     "BEGIN:VEVENT",
     `UID:${Date.now()}@findmyscreen`,
     `DTSTAMP:${stamp}Z`,
-    `DTSTART;TZID=Asia/Kolkata:${start}`,
-    `DTEND;TZID=Asia/Kolkata:${end}`,
+    `DTSTART;TZID=Asia/Kolkata:${startLocal}`,
+    `DTEND;TZID=Asia/Kolkata:${endLocal}`,
     `SUMMARY:${escapeCalendarText(title)}`,
     `DESCRIPTION:${escapeCalendarText(description)}`,
     `LOCATION:${escapeCalendarText(location)}`,
@@ -693,6 +755,114 @@ function buildCalendarFile({
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
+}
+
+function buildGoogleCalendarUrl({
+  description,
+  location,
+  raceDate,
+  raceTime,
+  title,
+}: {
+  description: string;
+  location: string;
+  raceDate: string;
+  raceTime: string;
+  title: string;
+}) {
+  const { endUtc, startUtc } = buildCalendarTimes(raceDate, raceTime);
+  const params = [
+    ["action", "TEMPLATE"],
+    ["text", title],
+    ["dates", `${startUtc}/${endUtc}`],
+    ["details", description],
+    ["location", location],
+  ]
+    .map(([key, value]) => `${key}=${encodeCalendarParam(value)}`)
+    .join("&");
+
+  return `https://calendar.google.com/calendar/render?${params}`;
+}
+
+function encodeCalendarParam(value: string) {
+  return encodeURIComponent(value).replace(
+    /[!'()*]/g,
+    (character) => `%${character.charCodeAt(0).toString(16).toUpperCase()}`,
+  );
+}
+
+function buildCalendarTimes(raceDate: string, raceTime: string) {
+  const startDate = parseIstEventDate(raceDate, raceTime);
+  const endDate = new Date(startDate.getTime() + 3 * 60 * 60 * 1000);
+
+  return {
+    startUtc: formatUtcCalendarDate(startDate),
+    endUtc: formatUtcCalendarDate(endDate),
+    startLocal: formatLocalCalendarDate(startDate),
+    endLocal: formatLocalCalendarDate(endDate),
+  };
+}
+
+function parseIstEventDate(raceDate: string, raceTime: string) {
+  const dateMatch = raceDate.match(
+    /(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),\s+([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})/,
+  );
+  const timeMatch = raceTime.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+
+  if (!dateMatch || !timeMatch) {
+    return new Date("2026-09-06T18:30:00+05:30");
+  }
+
+  const monthIndex = [
+    "january",
+    "february",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december",
+  ].indexOf(dateMatch[1].toLowerCase());
+  if (monthIndex < 0) return new Date("2026-09-06T18:30:00+05:30");
+  const day = Number(dateMatch[2]);
+  const year = Number(dateMatch[3]);
+  let hour = Number(timeMatch[1]);
+  const minute = Number(timeMatch[2]);
+  const meridiem = timeMatch[3].toUpperCase();
+
+  if (meridiem === "PM" && hour !== 12) hour += 12;
+  if (meridiem === "AM" && hour === 12) hour = 0;
+
+  const utcMs = Date.UTC(year, monthIndex, day, hour - 5, minute - 30, 0);
+  return new Date(utcMs);
+}
+
+function formatUtcCalendarDate(date: Date) {
+  return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+}
+
+function formatLocalCalendarDate(date: Date) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  })
+    .formatToParts(date)
+    .reduce<Record<string, string>>((acc, part) => {
+      if (part.type !== "literal") acc[part.type] = part.value;
+      return acc;
+    }, {});
+
+  return `${parts.year}${parts.month}${parts.day}T${parts.hour}${parts.minute}${parts.second}`;
 }
 
 function escapeCalendarText(text: string) {

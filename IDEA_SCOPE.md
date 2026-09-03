@@ -119,7 +119,7 @@ Advice, a transcript, an extraction, search results or a chat response alone do 
 | Locked plan              | Host/friends/reviewer | Plan status on the watch-party page                                   | Convex timestamp and watch-party page |
 | Reservation handoff      | Host/reviewer         | Reserve with venue action opens real venue/map handoff                | Convex timestamp and admin count      |
 | Reservation confirmation | Host/friends/reviewer | Host-confirmed final outing state                                     | Convex timestamp and watch-party page |
-| Calendar add             | Host/friends/reviewer | Downloadable `.ics` calendar file                                     | Convex timestamp and browser download |
+| Calendar add             | Host/friends/reviewer | Primary Google Calendar link opens pre-filled event; smaller Apple/Outlook `.ics` download remains | Convex timestamp, generated Google Calendar URL, and browser-open proof |
 | Visitor analytics        | Builder/reviewer      | Unique visitor count                                                  | Read-only analytics view              |
 
 ### what the product must remember
