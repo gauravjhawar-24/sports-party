@@ -80,12 +80,19 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
           </form>
 
           <div className="landing-sport-chips" aria-label="Sports">
-            {sports.map((sport) => (
-              <span key={sport.label} data-live={sport.state === "live now"}>
-                <b>{sport.label}</b>
-                <small>{sport.state}</small>
-              </span>
-            ))}
+            {sports.map((sport) =>
+              sport.state === "live now" ? (
+                <Link key={sport.label} href="/f1" data-live="true">
+                  <b>{sport.label}</b>
+                  <small>{sport.state}</small>
+                </Link>
+              ) : (
+                <span key={sport.label} data-live="false" aria-disabled="true">
+                  <b>{sport.label}</b>
+                  <small>{sport.state}</small>
+                </span>
+              ),
+            )}
           </div>
 
           <form className="landing-join-code" action="/f1/join">
