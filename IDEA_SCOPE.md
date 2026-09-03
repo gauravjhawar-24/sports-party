@@ -110,17 +110,17 @@ Advice, a transcript, an extraction, search results or a chat response alone do 
 
 ### outputs and state changes
 
-| Output/state change      | Consumer              | Required format                                                       | Proof of completion                   |
-| ------------------------ | --------------------- | --------------------------------------------------------------------- | ------------------------------------- |
-| Watch party page         | Host and friends      | Race name/date, pub, area, invite card, map link, RSVP form and stats | Dedicated party URL opens             |
-| Two backups              | End user              | Pub cards with reason and action                                      | Visible on result screen              |
-| Meaningful action        | Builder/reviewer      | `share_plan_clicked` or `call_pub_clicked`                            | Convex count and screenshot           |
-| RSVP response            | Host/friends/reviewer | Name grouped under In, Maybe, or Out                                  | Convex count and watch-party page     |
-| Locked plan              | Host/friends/reviewer | Plan status on the watch-party page                                   | Convex timestamp and watch-party page |
-| Reservation handoff      | Host/reviewer         | Reserve with venue action opens real venue/map handoff                | Convex timestamp and admin count      |
-| Reservation confirmation | Host/friends/reviewer | Host-confirmed final outing state                                     | Convex timestamp and watch-party page |
-| Calendar add             | Host/friends/reviewer | Primary Google Calendar link opens pre-filled event; smaller Apple/Outlook `.ics` download remains | Convex timestamp, generated Google Calendar URL, and browser-open proof |
-| Visitor analytics        | Builder/reviewer      | Unique visitor count                                                  | Read-only analytics view              |
+| Output/state change      | Consumer              | Required format                                                                                                                                     | Proof of completion                                                     |
+| ------------------------ | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Watch party page         | Host and friends      | Race name/date, pub, area, invite card, map link, RSVP form and stats                                                                               | Dedicated party URL opens                                               |
+| Two backups              | End user              | Pub cards with reason and action                                                                                                                    | Visible on result screen                                                |
+| Meaningful action        | Builder/reviewer      | `share_plan_clicked` or `call_pub_clicked`                                                                                                          | Convex count and screenshot                                             |
+| RSVP response            | Host/friends/reviewer | Name grouped under In, Maybe, or Out                                                                                                                | Convex count and watch-party page                                       |
+| Locked plan              | Host/friends/reviewer | Plan status on the watch-party page                                                                                                                 | Convex timestamp and watch-party page                                   |
+| Reservation handoff      | Host/reviewer         | Reserve with venue action opens real venue/map handoff                                                                                              | Convex timestamp and admin count                                        |
+| Reservation confirmation | Host/friends/reviewer | Host-confirmed final outing state                                                                                                                   | Convex timestamp and watch-party page                                   |
+| Calendar add             | Host/friends/reviewer | After the host confirms the venue reservation, primary Google Calendar link opens a pre-filled event; smaller Apple/Outlook `.ics` download remains | Convex timestamp, generated Google Calendar URL, and browser-open proof |
+| Visitor analytics        | Builder/reviewer      | Unique visitor count                                                                                                                                | Read-only analytics view                                                |
 
 ### what the product must remember
 

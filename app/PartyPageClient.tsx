@@ -407,18 +407,20 @@ export function PartyPageClient({
                   : "Reservation pending with host"}
               </small>
             </div>
-            <div className="calendar-actions">
-              <button type="button" onClick={() => void openGoogleCalendar()}>
-                Add to Google Calendar
-              </button>
-              <button
-                className="calendar-secondary"
-                type="button"
-                onClick={() => void downloadCalendarFile()}
-              >
-                Apple or Outlook
-              </button>
-            </div>
+            {reservationConfirmedAt ? (
+              <div className="calendar-actions">
+                <button type="button" onClick={() => void openGoogleCalendar()}>
+                  Add to Google Calendar
+                </button>
+                <button
+                  className="calendar-secondary"
+                  type="button"
+                  onClick={() => void downloadCalendarFile()}
+                >
+                  Apple or Outlook
+                </button>
+              </div>
+            ) : null}
           </section>
         ) : null}
 
@@ -602,7 +604,9 @@ function PlanProgress({
       >
         <span className="track-line" aria-hidden="true" />
         <span className="track-car" aria-hidden="true">
-          <span />
+          <span className="car-rear-wing" />
+          <span className="car-body" />
+          <span className="car-front-wing" />
         </span>
         {steps.map((step) => (
           <strong data-active={step.active} key={step.label}>
