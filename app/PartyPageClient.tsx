@@ -535,6 +535,11 @@ export function PartyPageClient({
             <a href={party.mapUrl} target="_blank" rel="noreferrer">
               Open in maps →
             </a>
+            {party.bookMyShowUrl ? (
+              <a href={party.bookMyShowUrl} target="_blank" rel="noreferrer">
+                BookMyShow →
+              </a>
+            ) : null}
           </div>
           {showBookingInterest && isHostDevice ? (
             <div className="booking-interest" role="dialog" aria-modal="false">
@@ -550,6 +555,15 @@ export function PartyPageClient({
                 <a href={party.mapUrl} target="_blank" rel="noreferrer">
                   Open maps
                 </a>
+                {party.bookMyShowUrl ? (
+                  <a
+                    href={party.bookMyShowUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    BookMyShow
+                  </a>
+                ) : null}
                 <button
                   type="button"
                   disabled={isSavingBookingInterest}

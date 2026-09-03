@@ -10,6 +10,7 @@ export type Venue = {
   evidence: string;
   phone: string;
   mapUrl: string;
+  bookMyShowUrl?: string;
   vibe: string;
   price: string;
   sourceLabel: string;
@@ -50,6 +51,8 @@ export const venues: Venue[] = [
     phone: "Needs call",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=SkyDeck+By+Sherlocks+MG+Road+Bangalore",
+    bookMyShowUrl:
+      "https://in.bookmyshow.com/explore/c/venues/skydeck-by-sherlocks-bengaluru/sdsb",
     vibe: "Central, big-screen race night, easy for mixed groups.",
     price: "Entry listing seen around Rs 199",
     sourceLabel: "District listing",
@@ -67,6 +70,8 @@ export const venues: Venue[] = [
     phone: "Needs call",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Underdoggs+Hebbal+Bangalore",
+    bookMyShowUrl:
+      "https://in.bookmyshow.com/explore/c/venues/underdoggs-hebbal-bengaluru/udhb",
     vibe: "Sports-bar energy, better when the group wants a crowd.",
     price: "Entry listing seen around Rs 200",
     sourceLabel: "District listing",
@@ -101,6 +106,8 @@ export const venues: Venue[] = [
     phone: "Needs call",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Amoeba+Sports+Bar+Church+Street+Bangalore",
+    bookMyShowUrl:
+      "https://in.bookmyshow.com/explore/c/venues/amoeba-church-street-bangalore/abbr",
     vibe: "Compact central sports bar, good for a small F1 group.",
     price: "Mid",
     sourceLabel: "Watch Party Radar",
@@ -167,6 +174,8 @@ export const venues: Venue[] = [
     phone: "Needs call",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Big+Pitcher+Sarjapur+Bangalore",
+    bookMyShowUrl:
+      "https://in.bookmyshow.com/explore/c/venues/big-pitcher-sarjapur/bpsr",
     vibe: "Large brewpub energy, strong choice for Bellandur and Sarjapur groups.",
     price: "Mid to high",
     sourceLabel: "Venue page",
@@ -201,6 +210,8 @@ export const venues: Venue[] = [
     phone: "9152071971",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Church+Street+Social+Bangalore",
+    bookMyShowUrl:
+      "https://in.bookmyshow.com/explore/c/venues/church-street-social-bengaluru/cstu",
     vibe: "Loud central plan with food, drinks and a younger crowd.",
     price: "Mid to high",
     sourceLabel: "Needs fresh check",
@@ -226,6 +237,49 @@ export const venues: Venue[] = [
     ...confirmedSep2Evening,
   },
 ];
+
+export function bookMyShowUrlForVenue(name: string, area: string) {
+  const key = `${normalizeVenueKey(name)}|${normalizeVenueKey(area)}`;
+  const broadKey = normalizeVenueKey(name);
+  const links: Record<string, string> = {
+    "skydeck by sherlocks|mg road":
+      "https://in.bookmyshow.com/explore/c/venues/skydeck-by-sherlocks-bengaluru/sdsb",
+    "underdoggs hebbal|hebbal":
+      "https://in.bookmyshow.com/explore/c/venues/underdoggs-hebbal-bengaluru/udhb",
+    "amoeba sports bar|church street":
+      "https://in.bookmyshow.com/explore/c/venues/amoeba-church-street-bangalore/abbr",
+    "amoeba|church street":
+      "https://in.bookmyshow.com/explore/c/venues/amoeba-church-street-bangalore/abbr",
+    "big pitcher|sarjapur road":
+      "https://in.bookmyshow.com/explore/c/venues/big-pitcher-sarjapur/bpsr",
+    "church street social|church street":
+      "https://in.bookmyshow.com/explore/c/venues/church-street-social-bengaluru/cstu",
+    "jp nagar social|jp nagar":
+      "https://in.bookmyshow.com/explore/c/venues/jp-nagara-social-bengaluru/ihjj",
+    "jp nagara social|jp nagar":
+      "https://in.bookmyshow.com/explore/c/venues/jp-nagara-social-bengaluru/ihjj",
+    "bira 91 taproom|koramangala":
+      "https://in.bookmyshow.com/explore/c/venues/bira-91-taproom-koramangala-bengaluru/btrr",
+    "italian bira taproom koramangala|koramangala":
+      "https://in.bookmyshow.com/explore/c/venues/bira-91-taproom-koramangala-bengaluru/btrr",
+    "watsons|indiranagar":
+      "https://in.bookmyshow.com/explore/c/venues/watsons-indiranagar-bengaluru/gaia",
+    "italy 26 live watsons|indiranagar":
+      "https://in.bookmyshow.com/explore/c/venues/watsons-indiranagar-bengaluru/gaia",
+  };
+
+  return links[key] ?? links[broadKey];
+}
+
+function normalizeVenueKey(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
 
 const evidenceRank: Record<EvidenceTag, number> = {
   Verified: 0,

@@ -1,4 +1,9 @@
-import { nextRace, type EvidenceTag, type Venue } from "./venues";
+import {
+  bookMyShowUrlForVenue,
+  nextRace,
+  type EvidenceTag,
+  type Venue,
+} from "./venues";
 
 export type SignalStatus = "needs_review" | "approved" | "rejected";
 export type SignalType = EvidenceTag;
@@ -117,6 +122,9 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
     evidence: readableEvidence(signal),
     phone: "Needs call",
     mapUrl: `https://www.google.com/maps/search/?api=1&query=${query}`,
+    bookMyShowUrl: signal.sourceUrl.includes("bookmyshow.com")
+      ? signal.sourceUrl
+      : bookMyShowUrlForVenue(venueName, area),
     vibe: hasProof
       ? `Confirmed ${area} option for this race night.`
       : isManualVerified

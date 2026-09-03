@@ -86,6 +86,7 @@ export default defineSchema({
     venueEvidence: v.string(),
     venueVibe: v.string(),
     mapUrl: v.string(),
+    bookMyShowUrl: v.optional(v.string()),
     venuePhone: v.optional(v.string()),
     raceName: v.string(),
     raceDate: v.string(),

@@ -235,6 +235,7 @@ export function HomeClient({
         venueEvidence: venue.evidence,
         venueVibe: venue.vibe,
         mapUrl: venue.mapUrl,
+        bookMyShowUrl: venue.bookMyShowUrl,
         venuePhone: venue.phone,
         hostClientId,
         raceName: nextRace.name,
