@@ -94,7 +94,7 @@ Advice, a transcript, an extraction, search results or a chat response alone do 
 9. Friend opens the link, enters name, chooses "I'm in", "Maybe", or "Out", and sees live RSVP stats.
 10. Host locks the plan after enough RSVPs.
 11. Host clicks Reserve with venue, completes the booking outside FindMyScreen, and marks Reservation confirmed.
-12. Host and friends can add the locked outing to calendar.
+12. Host and friends both see a shared Final Plan section and can add the locked outing to calendar.
 
 ### inputs
 

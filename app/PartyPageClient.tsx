@@ -363,17 +363,33 @@ export function PartyPageClient({
             <button type="button" onClick={() => void sharePartyLink()}>
               Share race plan →
             </button>
-            {lockedAt ? (
-              <button type="button" onClick={() => void addToCalendar()}>
-                Add to calendar
-              </button>
-            ) : null}
             <a href={party.mapUrl} target="_blank" rel="noreferrer">
               Open map
             </a>
             <Link href="/f1">Change venue</Link>
           </div>
         </section>
+
+        {lockedAt ? (
+          <section className="final-plan-card" aria-label="Final outing plan">
+            <div>
+              <span>Final plan</span>
+              <h2>{party.venueName}</h2>
+              <p>
+                {party.raceName} · {formatRaceDate(party.raceDate)} ·{" "}
+                {formatRaceTime(party.raceTime)}
+              </p>
+              <small>
+                {reservationConfirmedAt
+                  ? "Reservation confirmed by host"
+                  : "Reservation pending with host"}
+              </small>
+            </div>
+            <button type="button" onClick={() => void addToCalendar()}>
+              Add to my calendar
+            </button>
+          </section>
+        ) : null}
 
         <div className="race-plan-lower">
           <RsvpStats grouped={grouped} />
@@ -431,9 +447,9 @@ export function PartyPageClient({
                       {isSavingBookingInterest ? "Locking..." : "Lock plan"}
                     </button>
                   ) : (
-                    <button type="button" onClick={() => void addToCalendar()}>
-                      Add to calendar
-                    </button>
+                    <span className="host-plan-note">
+                      Host controls are below venue details.
+                    </span>
                   )}
                 </div>
               </div>
@@ -503,11 +519,6 @@ export function PartyPageClient({
             <a href={party.mapUrl} target="_blank" rel="noreferrer">
               Open in maps →
             </a>
-            {lockedAt ? (
-              <button type="button" onClick={() => void addToCalendar()}>
-                Add to calendar
-              </button>
-            ) : null}
           </div>
           {showBookingInterest && isHostDevice ? (
             <div className="booking-interest" role="dialog" aria-modal="false">

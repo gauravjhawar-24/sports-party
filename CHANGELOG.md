@@ -79,3 +79,4 @@
 - Thu 3 Sep 2026: Venue cards now label neighbourhoods as Area, the F1 page has a real main heading, duplicate IST is removed, and phone tap targets are at least 44px.
 - Thu 3 Sep 2026: Buffalo Wild Wings is now treated as not yet confirmed instead of verified.
 - Fri 4 Sep 2026: Watch parties now support plan locking, real venue reservation handoff, host-confirmed reservations, calendar downloads, and admin proof counts.
+- Fri 4 Sep 2026: Locked watch parties now show a shared Final Plan section where both hosts and joiners can add the outing to their calendar.
