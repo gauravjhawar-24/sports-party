@@ -238,6 +238,7 @@ a {
   margin-top: 18px;
 }
 
+.landing-sport-chips a,
 .landing-sport-chips span {
   display: inline-flex;
   min-width: 44px;
@@ -252,7 +253,19 @@ a {
   text-transform: uppercase;
 }
 
-.landing-sport-chips span[data-live="true"] {
+.landing-sport-chips span {
+  cursor: default;
+}
+
+.landing-sport-chips a {
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.landing-sport-chips [data-live="true"] {
   border-color: rgba(0, 184, 117, 0.52);
   color: white;
 }
@@ -491,7 +504,7 @@ a {
     padding-left 160ms ease;
 }
 
-.event-row:hover,
+.event-row-live:hover,
 .tonight-board > a:hover {
   background: rgba(225, 6, 0, 0.08);
   padding-left: 14px;
@@ -530,6 +543,11 @@ a {
 
 .event-row-live strong {
   color: #00b875;
+}
+
+.event-row-muted,
+.tonight-board > div {
+  cursor: default;
 }
 
 .event-row-muted {
@@ -1078,10 +1096,14 @@ a {
   border-color: var(--landing-soft);
 }
 
-.findmyscreen-landing .landing-sport-chips span[data-live="true"] {
+.findmyscreen-landing .landing-sport-chips [data-live="true"] {
   border-color: rgba(200, 255, 61, 0.46);
   color: var(--landing-text);
   background: rgba(200, 255, 61, 0.07);
+}
+
+.findmyscreen-landing .landing-sport-chips a:hover {
+  background: rgba(200, 255, 61, 0.16);
 }
 
 .findmyscreen-landing .signal-map {
@@ -1121,7 +1143,7 @@ a {
   color: var(--landing-verified);
 }
 
-.findmyscreen-landing .event-row:hover,
+.findmyscreen-landing .event-row-live:hover,
 .findmyscreen-landing .tonight-board > a:hover {
   background: rgba(200, 255, 61, 0.07);
 }
