@@ -2,6 +2,8 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../convex/_generated/api";
 import { VenueAdminClient } from "./VenueAdminClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function VenueAdminPage() {
   const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
 
@@ -10,7 +12,10 @@ export default async function VenueAdminPage() {
   }
 
   const convex = new ConvexHttpClient(convexUrl);
-  const initialCandidates = await convex.query(api.actions.latestVenueCandidates, {});
+  const initialCandidates = await convex.query(
+    api.actions.latestVenueCandidates,
+    {},
+  );
 
   return <VenueAdminClient initialCandidates={initialCandidates} />;
 }
