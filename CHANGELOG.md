@@ -83,3 +83,4 @@
 - Fri 4 Sep 2026: Locked watch parties now open a pre-filled Google Calendar event as the primary calendar action, keep Apple/Outlook as a secondary download, and show plan progress above the race plan with a left-to-right race marker.
 - Fri 4 Sep 2026: Calendar actions now appear only after the host marks the venue reservation confirmed, and the plan-progress marker now looks more like an F1 car.
 - Fri 4 Sep 2026: Watch-party venue details now show a BookMyShow link when the venue has a confirmed BookMyShow result URL.
+- Fri 4 Sep 2026: Watch-party venue details now also show a Swiggy Dineout link when a confident same-outlet result is available.

@@ -11,6 +11,7 @@ export type Venue = {
   phone: string;
   mapUrl: string;
   bookMyShowUrl?: string;
+  swiggyDineoutUrl?: string;
   vibe: string;
   price: string;
   sourceLabel: string;
@@ -53,6 +54,8 @@ export const venues: Venue[] = [
       "https://www.google.com/maps/search/?api=1&query=SkyDeck+By+Sherlocks+MG+Road+Bangalore",
     bookMyShowUrl:
       "https://in.bookmyshow.com/explore/c/venues/skydeck-by-sherlocks-bengaluru/sdsb",
+    swiggyDineoutUrl:
+      "https://www.swiggy.com/restaurants/bangalore/mg-road/skydeck-by-sherlocks-87627/dineout",
     vibe: "Central, big-screen race night, easy for mixed groups.",
     price: "Entry listing seen around Rs 199",
     sourceLabel: "District listing",
@@ -108,6 +111,8 @@ export const venues: Venue[] = [
       "https://www.google.com/maps/search/?api=1&query=Amoeba+Sports+Bar+Church+Street+Bangalore",
     bookMyShowUrl:
       "https://in.bookmyshow.com/explore/c/venues/amoeba-church-street-bangalore/abbr",
+    swiggyDineoutUrl:
+      "https://www.swiggy.com/restaurants/bangalore/church-street/amoeba-sports-bar-1379343/dineout",
     vibe: "Compact central sports bar, good for a small F1 group.",
     price: "Mid",
     sourceLabel: "Watch Party Radar",
@@ -128,6 +133,8 @@ export const venues: Venue[] = [
     price: "High",
     sourceLabel: "Official venue page",
     sourceUrl: "https://royalchallengers.com/rcb-bar-cafe",
+    swiggyDineoutUrl:
+      "https://www.swiggy.com/restaurants/bangalore/ashok-nagar/rcb-bar-cafe-358622/dineout",
     ...confirmedSep1Evening,
   },
   {
@@ -144,6 +151,8 @@ export const venues: Venue[] = [
     price: "Mid to high",
     sourceLabel: "Venue website",
     sourceUrl: "https://pecospub.com/",
+    swiggyDineoutUrl:
+      "https://www.swiggy.com/restaurants/bangalore/brigade-road/pecos-classic-31012/dineout",
     ...confirmedSep2Evening,
   },
   {
@@ -176,6 +185,8 @@ export const venues: Venue[] = [
       "https://www.google.com/maps/search/?api=1&query=Big+Pitcher+Sarjapur+Bangalore",
     bookMyShowUrl:
       "https://in.bookmyshow.com/explore/c/venues/big-pitcher-sarjapur/bpsr",
+    swiggyDineoutUrl:
+      "https://www.swiggy.com/restaurants/bangalore/sarjapur-road/big-pitcher-262080/dineout",
     vibe: "Large brewpub energy, strong choice for Bellandur and Sarjapur groups.",
     price: "Mid to high",
     sourceLabel: "Venue page",
@@ -199,6 +210,7 @@ export const venues: Venue[] = [
     sourceLabel: "Public F1 guide",
     sourceUrl:
       "https://www.whatshot.in/bangalore/f1-fans-walk-into-these-pubs--bars-to-watch-the-main-sunday-race-live-on-the-big-screen-c-35096",
+    swiggyDineoutUrl: "https://www.swiggy.com/restaurants/270831/dineout",
   },
   {
     id: "church-street-social",
@@ -212,6 +224,8 @@ export const venues: Venue[] = [
       "https://www.google.com/maps/search/?api=1&query=Church+Street+Social+Bangalore",
     bookMyShowUrl:
       "https://in.bookmyshow.com/explore/c/venues/church-street-social-bengaluru/cstu",
+    swiggyDineoutUrl:
+      "https://www.swiggy.com/restaurants/bangalore/ashok-nagar/churchstreet-social-834224/dineout",
     vibe: "Loud central plan with food, drinks and a younger crowd.",
     price: "Mid to high",
     sourceLabel: "Needs fresh check",
@@ -234,6 +248,8 @@ export const venues: Venue[] = [
     sourceLabel: "Needs fresh check",
     sourceUrl:
       "https://www.whatshot.in/bangalore/f1-fans-walk-into-these-pubs--bars-to-watch-the-main-sunday-race-live-on-the-big-screen-c-35096",
+    swiggyDineoutUrl:
+      "https://www.swiggy.com/restaurants/bangalore/indiranagar/doff-pub-471044/dineout",
     ...confirmedSep2Evening,
   },
 ];
@@ -266,6 +282,54 @@ export function bookMyShowUrlForVenue(name: string, area: string) {
       "https://in.bookmyshow.com/explore/c/venues/watsons-indiranagar-bengaluru/gaia",
     "italy 26 live watsons|indiranagar":
       "https://in.bookmyshow.com/explore/c/venues/watsons-indiranagar-bengaluru/gaia",
+  };
+
+  return links[key] ?? links[broadKey];
+}
+
+export function swiggyDineoutUrlForVenue(name: string, area: string) {
+  const key = `${normalizeVenueKey(name)}|${normalizeVenueKey(area)}`;
+  const broadKey = normalizeVenueKey(name);
+  const links: Record<string, string> = {
+    "skydeck by sherlocks|mg road":
+      "https://www.swiggy.com/restaurants/bangalore/mg-road/skydeck-by-sherlocks-87627/dineout",
+    "underdoggs sports bar and grill|whitefield":
+      "https://www.swiggy.com/restaurants/bangalore/whitefield/underdoggs-whitefield-1276653/dineout",
+    "underdoggs|whitefield":
+      "https://www.swiggy.com/restaurants/bangalore/whitefield/underdoggs-whitefield-1276653/dineout",
+    "amoeba sports bar|church street":
+      "https://www.swiggy.com/restaurants/bangalore/church-street/amoeba-sports-bar-1379343/dineout",
+    "amoeba|church street":
+      "https://www.swiggy.com/restaurants/bangalore/church-street/amoeba-sports-bar-1379343/dineout",
+    "rcb bar and cafe|brigade road":
+      "https://www.swiggy.com/restaurants/bangalore/ashok-nagar/rcb-bar-cafe-358622/dineout",
+    "pecos|brigade road":
+      "https://www.swiggy.com/restaurants/bangalore/brigade-road/pecos-classic-31012/dineout",
+    "big pitcher|sarjapur road":
+      "https://www.swiggy.com/restaurants/bangalore/sarjapur-road/big-pitcher-262080/dineout",
+    "buffalo wild wings|indiranagar":
+      "https://www.swiggy.com/restaurants/270831/dineout",
+    "church street social|church street":
+      "https://www.swiggy.com/restaurants/bangalore/ashok-nagar/churchstreet-social-834224/dineout",
+    "doff pub and lounge|indiranagar":
+      "https://www.swiggy.com/restaurants/bangalore/indiranagar/doff-pub-471044/dineout",
+    "doff pub|indiranagar":
+      "https://www.swiggy.com/restaurants/bangalore/indiranagar/doff-pub-471044/dineout",
+    "red rhino|whitefield":
+      "https://www.swiggy.com/restaurants/bangalore/whitefield/red-rhino-98774/dineout",
+    "jp nagar social|jp nagar":
+      "https://www.swiggy.com/restaurants/bangalore/jp-nagar/jp-nagara-social-866336/dineout",
+    "jp nagara social|jp nagar":
+      "https://www.swiggy.com/restaurants/bangalore/jp-nagar/jp-nagara-social-866336/dineout",
+    "bira 91 taproom|koramangala":
+      "https://www.swiggy.com/restaurants/bangalore/koramangala/bira-91-taproom-906028/dineout",
+    "italian bira taproom koramangala|koramangala":
+      "https://www.swiggy.com/restaurants/bangalore/koramangala/bira-91-taproom-906028/dineout",
+    "watsons pub|indiranagar":
+      "https://www.swiggy.com/restaurants/1359451/dineout",
+    "watsons|indiranagar": "https://www.swiggy.com/restaurants/1359451/dineout",
+    "italy 26 live watsons|indiranagar":
+      "https://www.swiggy.com/restaurants/1359451/dineout",
   };
 
   return links[key] ?? links[broadKey];

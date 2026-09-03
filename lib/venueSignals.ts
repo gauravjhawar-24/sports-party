@@ -1,6 +1,7 @@
 import {
   bookMyShowUrlForVenue,
   nextRace,
+  swiggyDineoutUrlForVenue,
   type EvidenceTag,
   type Venue,
 } from "./venues";
@@ -125,6 +126,9 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
     bookMyShowUrl: signal.sourceUrl.includes("bookmyshow.com")
       ? signal.sourceUrl
       : bookMyShowUrlForVenue(venueName, area),
+    swiggyDineoutUrl: signal.sourceUrl.includes("swiggy.com")
+      ? signal.sourceUrl
+      : swiggyDineoutUrlForVenue(venueName, area),
     vibe: hasProof
       ? `Confirmed ${area} option for this race night.`
       : isManualVerified

@@ -540,6 +540,11 @@ export function PartyPageClient({
                 BookMyShow →
               </a>
             ) : null}
+            {party.swiggyDineoutUrl ? (
+              <a href={party.swiggyDineoutUrl} target="_blank" rel="noreferrer">
+                Swiggy Dineout →
+              </a>
+            ) : null}
           </div>
           {showBookingInterest && isHostDevice ? (
             <div className="booking-interest" role="dialog" aria-modal="false">
@@ -562,6 +567,15 @@ export function PartyPageClient({
                     rel="noreferrer"
                   >
                     BookMyShow
+                  </a>
+                ) : null}
+                {party.swiggyDineoutUrl ? (
+                  <a
+                    href={party.swiggyDineoutUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Swiggy Dineout
                   </a>
                 ) : null}
                 <button

@@ -87,6 +87,7 @@ export default defineSchema({
     venueVibe: v.string(),
     mapUrl: v.string(),
     bookMyShowUrl: v.optional(v.string()),
+    swiggyDineoutUrl: v.optional(v.string()),
     venuePhone: v.optional(v.string()),
     raceName: v.string(),
     raceDate: v.string(),
