@@ -2,6 +2,7 @@ import {
   bookMyShowUrlForVenue,
   nextRace,
   swiggyDineoutUrlForVenue,
+  venues,
   type EvidenceTag,
   type Venue,
 } from "./venues";
@@ -113,6 +114,11 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
     signal.verifiedBy && signal.verifiedMethod && signal.verifiedAt,
   );
   const isManualVerified = signal.sourceQuery === "Manual venue entry";
+  const staticVenue = venues.find(
+    (venue) =>
+      normalizeVenueName(venue.name) === normalizeVenueName(venueName) &&
+      normalizeVenueName(venue.area) === normalizeVenueName(area),
+  );
 
   return {
     id: `approved-${signal._id}`,
@@ -125,10 +131,15 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
     mapUrl: `https://www.google.com/maps/search/?api=1&query=${query}`,
     bookMyShowUrl: signal.sourceUrl.includes("bookmyshow.com")
       ? signal.sourceUrl
-      : bookMyShowUrlForVenue(venueName, area),
+      : (staticVenue?.bookMyShowUrl ?? bookMyShowUrlForVenue(venueName, area)),
     swiggyDineoutUrl: signal.sourceUrl.includes("swiggy.com")
       ? signal.sourceUrl
-      : swiggyDineoutUrlForVenue(venueName, area),
+      : staticVenue
+        ? staticVenue.swiggyDineoutUrl
+        : swiggyDineoutUrlForVenue(venueName, area),
+    districtUrl: staticVenue?.districtUrl,
+    eightClubUrl: staticVenue?.eightClubUrl,
+    highApeUrl: staticVenue?.highApeUrl,
     vibe: hasProof
       ? `Confirmed ${area} option for this race night.`
       : isManualVerified
@@ -141,6 +152,16 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
     verifiedMethod: signal.verifiedMethod,
     verifiedAt: signal.verifiedAt,
   };
+}
+
+function normalizeVenueName(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
 }
 
 function cleanVenueDisplayName(signal: ApprovedVenueSignal) {

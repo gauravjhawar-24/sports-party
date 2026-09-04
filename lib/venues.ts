@@ -12,6 +12,9 @@ export type Venue = {
   mapUrl: string;
   bookMyShowUrl?: string;
   swiggyDineoutUrl?: string;
+  districtUrl?: string;
+  eightClubUrl?: string;
+  highApeUrl?: string;
   vibe: string;
   price: string;
   sourceLabel: string;
@@ -53,9 +56,13 @@ export const venues: Venue[] = [
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=SkyDeck+By+Sherlocks+MG+Road+Bangalore",
     bookMyShowUrl:
-      "https://in.bookmyshow.com/explore/c/venues/skydeck-by-sherlocks-bengaluru/sdsb",
-    swiggyDineoutUrl:
-      "https://www.swiggy.com/restaurants/bangalore/mg-road/skydeck-by-sherlocks-87627/dineout",
+      "https://in.bookmyshow.com/events/f1-live-italian-grand-prix-screening/ET00514137",
+    eightClubUrl:
+      "https://invite.8club.co/hotspots/f1-italian-gp-screening-racing-e-sim-experience-17262",
+    highApeUrl:
+      "https://highape.com/bangalore/events/f1-live-italian-grand-prix-screening-9snyjzls3d",
+    districtUrl:
+      "https://www.district.in/events/f1-live-italian-grand-prix-screening-sep6-2026-buy-tickets?srsltid=AfmBOooRz2zp8ydwu7mzUweR4tCLyVMmNhhCFXzqhdt50Ov7UDnyxkf0",
     vibe: "Central, big-screen race night, easy for mixed groups.",
     price: "Entry listing seen around Rs 199",
     sourceLabel: "District listing",
@@ -259,7 +266,7 @@ export function bookMyShowUrlForVenue(name: string, area: string) {
   const broadKey = normalizeVenueKey(name);
   const links: Record<string, string> = {
     "skydeck by sherlocks|mg road":
-      "https://in.bookmyshow.com/explore/c/venues/skydeck-by-sherlocks-bengaluru/sdsb",
+      "https://in.bookmyshow.com/events/f1-live-italian-grand-prix-screening/ET00514137",
     "underdoggs hebbal|hebbal":
       "https://in.bookmyshow.com/explore/c/venues/underdoggs-hebbal-bengaluru/udhb",
     "amoeba sports bar|church street":

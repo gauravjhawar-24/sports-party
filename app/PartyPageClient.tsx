@@ -688,7 +688,31 @@ function BookingSection({ party }: { party: Doc<"watchParties"> }) {
           brand: "BMS",
           label: "BookMyShow",
           href: party.bookMyShowUrl,
-          note: "Open the venue booking page.",
+          note: "Open the race screening page.",
+        }
+      : null,
+    party.districtUrl
+      ? {
+          brand: "D",
+          label: "District",
+          href: party.districtUrl,
+          note: "Open the race screening page.",
+        }
+      : null,
+    party.eightClubUrl
+      ? {
+          brand: "8",
+          label: "8club",
+          href: party.eightClubUrl,
+          note: "Open the race screening page.",
+        }
+      : null,
+    party.highApeUrl
+      ? {
+          brand: "HA",
+          label: "HighApe",
+          href: party.highApeUrl,
+          note: "Open the race screening page.",
         }
       : null,
     party.swiggyDineoutUrl
