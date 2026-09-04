@@ -361,10 +361,6 @@ export function bookMyShowUrlForVenue(name: string, area: string) {
       "https://in.bookmyshow.com/explore/c/venues/jp-nagara-social-bengaluru/ihjj",
     "jp nagara social|jp nagar":
       "https://in.bookmyshow.com/explore/c/venues/jp-nagara-social-bengaluru/ihjj",
-    "bira 91 taproom|koramangala":
-      "https://in.bookmyshow.com/explore/c/venues/bira-91-taproom-koramangala-bengaluru/btrr",
-    "italian bira taproom koramangala|koramangala":
-      "https://in.bookmyshow.com/explore/c/venues/bira-91-taproom-koramangala-bengaluru/btrr",
     "watsons|indiranagar":
       "https://in.bookmyshow.com/explore/c/venues/watsons-indiranagar-bengaluru/gaia",
     "italy 26 live watsons|indiranagar":
@@ -408,10 +404,6 @@ export function swiggyDineoutUrlForVenue(name: string, area: string) {
       "https://www.swiggy.com/restaurants/bangalore/jp-nagar/jp-nagara-social-866336/dineout",
     "jp nagara social|jp nagar":
       "https://www.swiggy.com/restaurants/bangalore/jp-nagar/jp-nagara-social-866336/dineout",
-    "bira 91 taproom|koramangala":
-      "https://www.swiggy.com/restaurants/bangalore/koramangala/bira-91-taproom-906028/dineout",
-    "italian bira taproom koramangala|koramangala":
-      "https://www.swiggy.com/restaurants/bangalore/koramangala/bira-91-taproom-906028/dineout",
     "watsons pub|indiranagar":
       "https://www.swiggy.com/restaurants/1359451/dineout",
     "watsons|indiranagar": "https://www.swiggy.com/restaurants/1359451/dineout",
@@ -606,6 +598,7 @@ const areaAliases: Record<string, string[]> = {
 };
 
 const strictAreaResults = new Set(["ahmedabad"]);
+const hiddenVenueNames = new Set(["bira 91 taproom"]);
 
 export function rankVenues(areaInput: string) {
   return rankVenueList(areaInput, venues);
@@ -618,13 +611,17 @@ export function rankVenueList(areaInput: string, venueList: Venue[]) {
     ? (zoneNearness[normalizedArea] ?? [normalizedArea])
     : [];
 
-  const ranked = dedupeVenueList(venueList).sort((left, right) => {
-    const evidenceDiff =
-      evidenceRank[left.evidenceTag] - evidenceRank[right.evidenceTag];
-    if (evidenceDiff !== 0) return evidenceDiff;
+  const ranked = dedupeVenueList(venueList)
+    .filter((venue) => !hiddenVenueNames.has(canonicalVenueName(venue.name)))
+    .sort((left, right) => {
+      const evidenceDiff =
+        evidenceRank[left.evidenceTag] - evidenceRank[right.evidenceTag];
+      if (evidenceDiff !== 0) return evidenceDiff;
 
-    return nearnessScore(right, nearbyZones) - nearnessScore(left, nearbyZones);
-  });
+      return (
+        nearnessScore(right, nearbyZones) - nearnessScore(left, nearbyZones)
+      );
+    });
 
   const results =
     isSupportedArea && strictAreaResults.has(normalizedArea)
