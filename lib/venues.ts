@@ -16,6 +16,7 @@ export type Venue = {
   eightClubUrl?: string;
   highApeUrl?: string;
   sortMySceneUrl?: string;
+  highwayDeliteUrl?: string;
   vibe: string;
   price: string;
   sourceLabel: string;
@@ -200,6 +201,26 @@ export const venues: Venue[] = [
     sourceLabel: "District and SortMyScene listings",
     sourceUrl:
       "https://www.district.in/events/italian-grand-prix-formula-1-live-at-the-studs-bellandur-sep6-2026-buy-tickets",
+    ...confirmedSep2Evening,
+  },
+  {
+    id: "topspin-club-ahmedabad",
+    name: "TopSpin Club",
+    area: "Ahmedabad",
+    zones: ["ahmedabad", "sindhu bhavan road"],
+    evidenceTag: "Verified",
+    evidence:
+      "Highway Delite lists an Italian Grand Prix 2026 live screening at TopSpin Club.",
+    phone: "Needs call",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=TopSpin+Club+Ahmedabad",
+    highwayDeliteUrl:
+      "https://experiences.highwaydelite.com/s5/topspin-club/events-and-workshops/f1-italian-grand-prix-2026-live-screening-at-topspin-club",
+    vibe: "Ticketed live-screening club setup for an F1 race-night plan.",
+    price: "Ticketed listing seen online",
+    sourceLabel: "Highway Delite listing",
+    sourceUrl:
+      "https://experiences.highwaydelite.com/s5/topspin-club/events-and-workshops/f1-italian-grand-prix-2026-live-screening-at-topspin-club",
     ...confirmedSep2Evening,
   },
   {
@@ -474,6 +495,7 @@ const zoneNearness: Record<string, string[]> = {
     "bannerghatta road",
     "koramangala",
   ],
+  ahmedabad: ["ahmedabad", "sindhu bhavan road"],
 };
 
 const areaAliases: Record<string, string[]> = {
@@ -535,7 +557,10 @@ const areaAliases: Record<string, string[]> = {
     "jayanagar",
     "bannerghatta road",
   ],
+  ahmedabad: ["ahmedabad", "amdavad", "sindhu bhavan", "sindhu bhavan road"],
 };
+
+const strictAreaResults = new Set(["ahmedabad"]);
 
 export function rankVenues(areaInput: string) {
   return rankVenueList(areaInput, venues);
@@ -556,10 +581,15 @@ export function rankVenueList(areaInput: string, venueList: Venue[]) {
     return nearnessScore(right, nearbyZones) - nearnessScore(left, nearbyZones);
   });
 
+  const results =
+    isSupportedArea && strictAreaResults.has(normalizedArea)
+      ? ranked.filter((venue) => nearnessScore(venue, nearbyZones) > 0)
+      : ranked;
+
   return {
     normalizedArea,
     isSupportedArea,
-    results: isSupportedArea ? ranked.slice(0, 6) : [],
+    results: isSupportedArea ? results.slice(0, 6) : [],
     popularAreas: [
       "Bellandur",
       "HSR Layout",
@@ -569,6 +599,7 @@ export function rankVenueList(areaInput: string, venueList: Venue[]) {
       "MG Road",
       "Whitefield",
       "JP Nagar",
+      "Ahmedabad",
     ],
   };
 }

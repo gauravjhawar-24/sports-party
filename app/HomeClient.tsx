@@ -235,6 +235,7 @@ export function HomeClient({
         eightClubUrl: venue.eightClubUrl,
         highApeUrl: venue.highApeUrl,
         sortMySceneUrl: venue.sortMySceneUrl,
+        highwayDeliteUrl: venue.highwayDeliteUrl,
         venuePhone: venue.phone,
         hostClientId,
         raceName: nextRace.name,

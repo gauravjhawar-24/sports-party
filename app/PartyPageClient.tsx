@@ -725,6 +725,14 @@ function BookingSection({
           note: "Open the race screening page.",
         }
       : null,
+    party.highwayDeliteUrl
+      ? {
+          brand: "HD",
+          label: "Highway Delite",
+          href: party.highwayDeliteUrl,
+          note: "Open the race screening page.",
+        }
+      : null,
     party.swiggyDineoutUrl
       ? {
           brand: "S",

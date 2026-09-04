@@ -141,6 +141,7 @@ export function approvedSignalToVenue(signal: ApprovedVenueSignal): Venue {
     eightClubUrl: staticVenue?.eightClubUrl,
     highApeUrl: staticVenue?.highApeUrl,
     sortMySceneUrl: staticVenue?.sortMySceneUrl,
+    highwayDeliteUrl: staticVenue?.highwayDeliteUrl,
     vibe: hasProof
       ? `Confirmed ${area} option for this race night.`
       : isManualVerified
