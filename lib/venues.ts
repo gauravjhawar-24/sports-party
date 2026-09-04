@@ -368,7 +368,7 @@ export const venues: Venue[] = [
     zones: ["indiranagar", "domlur", "old airport road"],
     evidenceTag: "Verified",
     evidence: "Personally confirmed for the Italian GP main race.",
-    phone: "9036737098",
+    phone: "9113910316",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Doff+Pub+Lounge+Indiranagar+Bangalore",
     vibe: "Lower-key Indiranagar option when the group wants a calmer race night.",

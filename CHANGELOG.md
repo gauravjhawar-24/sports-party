@@ -104,3 +104,4 @@
 - Fri 4 Sep 2026: Pecos Stones Indiranagar now shows the venue phone number for booking instead of any online booking link.
 - Fri 4 Sep 2026: Watson's Pub Indiranagar is now a listed verified venue with Skillboxes and SortMyScene race-screening links carried into watch-party bookings.
 - Sat 5 Sep 2026: Socials Indiranagar is now a listed verified venue with an F1 Commune screening link carried into watch-party bookings.
+- Sat 5 Sep 2026: Doff Pub & Lounge Indiranagar now shows the updated venue phone number for booking.
