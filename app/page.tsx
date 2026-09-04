@@ -52,7 +52,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
         <div>
           <span>Bangalore ↓</span>
           <a href="#how-it-works">How it works</a>
-          <Link href="/discover">Find a screening →</Link>
+          <Link href="/f1">Find a screening →</Link>
         </div>
       </nav>
 
@@ -67,7 +67,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
             want to watch with your people.
           </p>
 
-          <form className="landing-search" action="/discover">
+          <form className="landing-search" action="/f1">
             <label htmlFor="landing-event">Search a match, race or event</label>
             <div>
               <input
@@ -325,7 +325,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
               02<small>Maybe</small>
             </b>
           </div>
-          <Link href="/discover">Share plan →</Link>
+          <Link href="/f1">Share plan →</Link>
         </aside>
       </section>
 
@@ -356,7 +356,7 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
 
       <section className="landing-final-cta" aria-label="Find your screen">
         <h2>The game is on. Where are you?</h2>
-        <Link href="/discover">Find a screening →</Link>
+        <Link href="/f1">Find a screening →</Link>
       </section>
 
       <footer className="landing-footer">
