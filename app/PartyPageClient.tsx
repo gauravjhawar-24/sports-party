@@ -159,20 +159,13 @@ export function PartyPageClient({
   async function copyPartyLink() {
     if (!partyUrl) return;
     await navigator.clipboard.writeText(partyUrl);
-    setStatus("Watch-party link copied.");
+    setStatus("Invite link copied.");
   }
 
-  async function sharePartyLink() {
-    if (!partyUrl) return;
-    if (navigator.share) {
-      await navigator.share({
-        title: `${party.raceName} watch party`,
-        text: `${party.raceName} at ${party.venueName}. RSVP here:`,
-        url: partyUrl,
-      });
-      return;
-    }
-    await copyPartyLink();
+  async function copyInviteCode() {
+    if (!party.inviteCode) return;
+    await navigator.clipboard.writeText(party.inviteCode);
+    setStatus("Invite code copied.");
   }
 
   async function lockPlan() {
@@ -381,9 +374,6 @@ export function PartyPageClient({
             <strong>{formatRaceTime(party.raceTime)}</strong>
           </div>
           <div className="race-plan-actions">
-            <button type="button" onClick={() => void sharePartyLink()}>
-              Invite people →
-            </button>
             <a href={party.mapUrl} target="_blank" rel="noreferrer">
               Open map
             </a>
@@ -436,31 +426,25 @@ export function PartyPageClient({
               </h2>
               <p>
                 {reservationConfirmedAt
-                  ? "Reservation is confirmed. Share the final plan and add it to calendars."
+                  ? "Reservation is confirmed. Copy the invite link or code for your group."
                   : lockedAt
                     ? "Now reserve with the venue, then mark it confirmed here."
-                    : "Send it to the group, collect RSVPs, then lock the plan."}
+                    : "Copy the invite link or code, collect RSVPs, then lock the plan."}
               </p>
-            </div>
-            <button type="button" onClick={() => void sharePartyLink()}>
-              Invite people →
-            </button>
-            <div className="race-plan-copy-link">
-              <input
-                id="party-link"
-                value={partyUrl}
-                readOnly
-                aria-label="Watch party invite link"
-              />
-              <button type="button" onClick={() => void copyPartyLink()}>
-                Copy
-              </button>
             </div>
             {party.inviteCode ? (
               <p className="invite-code-note">
                 Invite code: <strong>{party.inviteCode}</strong>
               </p>
             ) : null}
+            <div className="race-plan-copy-link">
+              <button type="button" onClick={() => void copyPartyLink()}>
+                Copy invite link
+              </button>
+              <button type="button" onClick={() => void copyInviteCode()}>
+                Copy invite code
+              </button>
+            </div>
             {status ? <p className="action-status">{status}</p> : null}
 
             {isHostDevice ? (

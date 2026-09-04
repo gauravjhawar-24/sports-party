@@ -3626,10 +3626,15 @@ h2 {
 
 .race-plan-copy-link {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 16px;
+}
+
+.race-plan-copy-link button:first-child {
+  border-color: var(--red);
+  background: var(--red);
 }
 
 .race-plan-copy-link input,

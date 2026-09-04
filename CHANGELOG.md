@@ -106,3 +106,4 @@
 - Sat 5 Sep 2026: Socials Indiranagar is now a listed verified venue with an F1 Commune screening link carried into watch-party bookings.
 - Sat 5 Sep 2026: Doff Pub & Lounge Indiranagar now shows the updated venue phone number for booking.
 - Sat 5 Sep 2026: Watch-party plan progress no longer shows the moving green status dot.
+- Sat 5 Sep 2026: Watch-party pages now remove the Invite people share action and show only Copy invite link plus Copy invite code, with the code visible and the full URL hidden.
