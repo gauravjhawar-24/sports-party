@@ -525,7 +525,7 @@ export function rankVenueList(areaInput: string, venueList: Venue[]) {
     ? (zoneNearness[normalizedArea] ?? [normalizedArea])
     : [];
 
-  const ranked = [...venueList].sort((left, right) => {
+  const ranked = dedupeVenueList(venueList).sort((left, right) => {
     const evidenceDiff =
       evidenceRank[left.evidenceTag] - evidenceRank[right.evidenceTag];
     if (evidenceDiff !== 0) return evidenceDiff;
@@ -548,6 +548,21 @@ export function rankVenueList(areaInput: string, venueList: Venue[]) {
       "JP Nagar",
     ],
   };
+}
+
+function dedupeVenueList(venueList: Venue[]) {
+  const seen = new Set<string>();
+  const deduped: Venue[] = [];
+
+  for (const venue of venueList) {
+    const key = `${normalizeVenueKey(venue.name)}|${normalizeVenueKey(venue.area)}`;
+    if (seen.has(key)) continue;
+
+    seen.add(key);
+    deduped.push(venue);
+  }
+
+  return deduped;
 }
 
 export function buildInviteText(venue: Venue) {

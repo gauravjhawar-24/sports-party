@@ -93,3 +93,4 @@
 - Fri 4 Sep 2026: The plan-progress marker now uses a clearer F1-style car shape with four tires, wings, cockpit and nose instead of the previous abstract marker.
 - Fri 4 Sep 2026: The plan-progress marker is now a simple green status circle instead of a car graphic.
 - Fri 4 Sep 2026: SkyDeck by Sherlock's now uses the exact Italian GP event links for BookMyShow, District, 8club and HighApe instead of generic table-booking links.
+- Fri 4 Sep 2026: Venue ranking now removes duplicate venue/outlet entries before showing the top six results.
