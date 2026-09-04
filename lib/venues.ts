@@ -15,6 +15,7 @@ export type Venue = {
   districtUrl?: string;
   eightClubUrl?: string;
   highApeUrl?: string;
+  sortMySceneUrl?: string;
   vibe: string;
   price: string;
   sourceLabel: string;
@@ -177,6 +178,28 @@ export const venues: Venue[] = [
     sourceLabel: "Zomato listing",
     sourceUrl:
       "https://www.zomato.com/bangalore/pecos-stones-indiranagar-bangalore",
+    ...confirmedSep2Evening,
+  },
+  {
+    id: "studz-sports-bar-bellandur",
+    name: "Studz Sports Bar",
+    area: "Bellandur",
+    zones: ["bellandur", "sarjapur", "sarjapur road", "hsr", "hsr layout"],
+    evidenceTag: "Verified",
+    evidence:
+      "District lists an Italian Grand Prix Formula 1 live screening at Studz Bellandur.",
+    phone: "Needs call",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Studz+Sports+Bar+Bellandur+Bangalore",
+    districtUrl:
+      "https://www.district.in/events/italian-grand-prix-formula-1-live-at-the-studs-bellandur-sep6-2026-buy-tickets",
+    sortMySceneUrl:
+      "https://sortmyscene.com/event/italian-grand-prix-formula-1-live-at-the-studs-bellandur-sep-06-2026",
+    vibe: "Bellandur sports-bar plan with a listed Italian GP screening.",
+    price: "Ticketed listing seen online",
+    sourceLabel: "District and SortMyScene listings",
+    sourceUrl:
+      "https://www.district.in/events/italian-grand-prix-formula-1-live-at-the-studs-bellandur-sep6-2026-buy-tickets",
     ...confirmedSep2Evening,
   },
   {

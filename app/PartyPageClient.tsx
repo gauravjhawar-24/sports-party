@@ -717,6 +717,14 @@ function BookingSection({
           note: "Open the race screening page.",
         }
       : null,
+    party.sortMySceneUrl
+      ? {
+          brand: "SMS",
+          label: "SortMyScene",
+          href: party.sortMySceneUrl,
+          note: "Open the race screening page.",
+        }
+      : null,
     party.swiggyDineoutUrl
       ? {
           brand: "S",

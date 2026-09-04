@@ -96,3 +96,4 @@
 - Fri 4 Sep 2026: Venue ranking now removes duplicate venue/outlet entries before showing the top six results.
 - Fri 4 Sep 2026: Venue ranking now treats Amoeba and Amoeba Sports Bar in the same area as the same venue, so Church Street does not show duplicate Amoeba rows.
 - Fri 4 Sep 2026: Watch-party pages now end at the Reserve your screen section, with host reservation controls moved into that section instead of a repeated Venue section below it.
+- Fri 4 Sep 2026: Studz Sports Bar in Bellandur is now a listed verified venue with District and SortMyScene race-screening links carried into watch-party bookings.

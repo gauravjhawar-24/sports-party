@@ -91,6 +91,7 @@ export default defineSchema({
     districtUrl: v.optional(v.string()),
     eightClubUrl: v.optional(v.string()),
     highApeUrl: v.optional(v.string()),
+    sortMySceneUrl: v.optional(v.string()),
     venuePhone: v.optional(v.string()),
     raceName: v.string(),
     raceDate: v.string(),
