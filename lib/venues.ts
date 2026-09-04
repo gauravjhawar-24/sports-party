@@ -707,6 +707,11 @@ function canonicalVenueName(name: string) {
   const aliases: Record<string, string> = {
     amoeba: "amoeba sports bar",
     "amoeba sports bar": "amoeba sports bar",
+    underdogs: "underdoggs sports bar and grill",
+    underdoggs: "underdoggs sports bar and grill",
+    "underdogs sports bar": "underdoggs sports bar and grill",
+    "underdoggs sports bar": "underdoggs sports bar and grill",
+    "underdoggs sports bar and grill": "underdoggs sports bar and grill",
   };
 
   return aliases[normalized] ?? normalized;

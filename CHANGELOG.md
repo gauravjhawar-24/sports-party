@@ -107,3 +107,4 @@
 - Sat 5 Sep 2026: Doff Pub & Lounge Indiranagar now shows the updated venue phone number for booking.
 - Sat 5 Sep 2026: Watch-party plan progress no longer shows the moving green status dot.
 - Sat 5 Sep 2026: Watch-party pages now remove the Invite people share action and show only Copy invite link plus Copy invite code, with the code visible and the full URL hidden.
+- Sat 5 Sep 2026: Whitefield results now treat Underdogs, Underdoggs, and Underdoggs Sports Bar & Grill as the same venue so duplicate outlet rows collapse.
