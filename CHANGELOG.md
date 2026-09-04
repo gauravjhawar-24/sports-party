@@ -95,3 +95,4 @@
 - Fri 4 Sep 2026: SkyDeck by Sherlock's now uses the exact Italian GP event links for BookMyShow, District, 8club and HighApe instead of generic table-booking links.
 - Fri 4 Sep 2026: Venue ranking now removes duplicate venue/outlet entries before showing the top six results.
 - Fri 4 Sep 2026: Venue ranking now treats Amoeba and Amoeba Sports Bar in the same area as the same venue, so Church Street does not show duplicate Amoeba rows.
+- Fri 4 Sep 2026: Watch-party pages now end at the Reserve your screen section, with host reservation controls moved into that section instead of a repeated Venue section below it.

@@ -505,38 +505,18 @@ export function PartyPageClient({
           </aside>
         </div>
 
-        <BookingSection party={party} />
-
-        <section className="race-plan-venue" aria-label="Venue details">
-          <div>
-            <span>Venue</span>
-            <h2>{party.venueName}</h2>
-            <p>{party.venueArea}</p>
-          </div>
-          <div className="race-plan-venue-details">
-            <p>
-              <strong>{party.venueEvidenceTag} screening</strong>
-            </p>
-            <p>{party.venueEvidence}</p>
-            <p>{party.venueVibe}</p>
-          </div>
-          <div className="race-plan-venue-actions">
-            {isHostDevice && lockedAt && !reservationConfirmedAt ? (
-              <button
-                type="button"
-                disabled={isSavingBookingInterest}
-                onClick={() => void reserveWithVenue()}
-              >
-                {reservationHandoffAt
-                  ? "Reservation handoff started"
-                  : "Reserve with venue"}
-              </button>
-            ) : null}
-            <a href={party.mapUrl} target="_blank" rel="noreferrer">
-              Open in maps →
-            </a>
-          </div>
-        </section>
+        <BookingSection
+          bookingInterestStatus={bookingInterestStatus}
+          isHostDevice={isHostDevice}
+          isSavingBookingInterest={isSavingBookingInterest}
+          lockedAt={lockedAt}
+          onConfirmReservation={markReservationConfirmed}
+          onReserveWithVenue={reserveWithVenue}
+          party={party}
+          reservationConfirmedAt={reservationConfirmedAt}
+          reservationHandoffAt={reservationHandoffAt}
+          showBookingInterest={showBookingInterest}
+        />
       </section>
     </main>
   );
@@ -681,7 +661,29 @@ function RsvpStats({ grouped }: { grouped: Record<Decision, Doc<"rsvps">[]> }) {
   );
 }
 
-function BookingSection({ party }: { party: Doc<"watchParties"> }) {
+function BookingSection({
+  bookingInterestStatus,
+  isHostDevice,
+  isSavingBookingInterest,
+  lockedAt,
+  onConfirmReservation,
+  onReserveWithVenue,
+  party,
+  reservationConfirmedAt,
+  reservationHandoffAt,
+  showBookingInterest,
+}: {
+  bookingInterestStatus: string;
+  isHostDevice: boolean;
+  isSavingBookingInterest: boolean;
+  lockedAt?: number | null;
+  onConfirmReservation: () => void;
+  onReserveWithVenue: () => void;
+  party: Doc<"watchParties">;
+  reservationConfirmedAt?: number | null;
+  reservationHandoffAt?: number | null;
+  showBookingInterest: boolean;
+}) {
   const bookingLinks = [
     party.bookMyShowUrl
       ? {
@@ -775,6 +777,50 @@ function BookingSection({ party }: { party: Doc<"watchParties"> }) {
           </a>
         ))}
       </div>
+
+      {isHostDevice && lockedAt && !reservationConfirmedAt ? (
+        <div className="booking-host-panel">
+          <div>
+            <span>Host handoff</span>
+            <strong>
+              {reservationHandoffAt
+                ? "Confirm your reservation."
+                : "Book outside, confirm here."}
+            </strong>
+            <p>
+              Use a booking link or call the venue, then mark the reservation
+              confirmed once the venue accepts it.
+            </p>
+            {bookingInterestStatus ? (
+              <p className="action-status">{bookingInterestStatus}</p>
+            ) : null}
+          </div>
+          <div>
+            <button
+              type="button"
+              disabled={isSavingBookingInterest}
+              onClick={() => void onReserveWithVenue()}
+            >
+              {reservationHandoffAt
+                ? "Reservation handoff started"
+                : "Reserve with venue"}
+            </button>
+            {reservationHandoffAt || showBookingInterest ? (
+              <button
+                type="button"
+                disabled={isSavingBookingInterest}
+                onClick={() => void onConfirmReservation()}
+              >
+                Reservation confirmed
+              </button>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
+      {isHostDevice && reservationConfirmedAt && bookingInterestStatus ? (
+        <p className="action-status">{bookingInterestStatus}</p>
+      ) : null}
     </section>
   );
 }
