@@ -2933,7 +2933,7 @@ h2 {
 
 .my-plans-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 390px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(460px, 0.58fr);
   gap: 40px;
   overflow: hidden;
   min-height: 430px;
@@ -3000,23 +3000,25 @@ h2 {
 
 .my-plans-form div {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: 1fr;
+  gap: 10px;
 }
 
 .my-plans-form input {
   min-width: 0;
   width: 100%;
-  height: 52px;
+  height: 60px;
   border: 1px solid rgba(255, 255, 255, 0.16);
-  border-right: 0;
   border-radius: 0;
   background: rgba(0, 0, 0, 0.38);
   color: white;
-  padding: 0 14px;
+  padding: 0 18px;
+  font-size: 16px;
 }
 
 .my-plans-form button {
-  min-height: 52px;
+  width: 100%;
+  min-height: 60px;
   border: 0;
   border-radius: 0;
   background: var(--red);
@@ -5238,10 +5240,6 @@ h3 {
 
   .my-plans-form div {
     grid-template-columns: 1fr;
-  }
-
-  .my-plans-form input {
-    border-right: 1px solid rgba(255, 255, 255, 0.16);
   }
 
   .my-plans-results {

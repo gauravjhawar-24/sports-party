@@ -89,3 +89,4 @@
 - Fri 4 Sep 2026: The F1 start screen now keeps only the invite-code join box and removes the duplicate email-based "Already made a plan" lookup box.
 - Fri 4 Sep 2026: Watch-party invite buttons now say "Invite people", and the booking section no longer shows the extra host-control/status blocks underneath the booking links.
 - Fri 4 Sep 2026: The My Plans page now shows long host emails fully on mobile instead of clipping them in the results header.
+- Fri 4 Sep 2026: The My Plans host email text box is now wider and taller, with the Find Plans button stacked underneath so long emails are easier to enter.
