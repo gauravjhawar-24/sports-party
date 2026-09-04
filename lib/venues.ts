@@ -282,6 +282,24 @@ export const venues: Venue[] = [
     ...confirmedSep2Evening,
   },
   {
+    id: "the-burrow-racecourse-road",
+    name: "The Burrow",
+    area: "Racecourse Road",
+    zones: ["racecourse road", "mg road", "central bangalore", "church street"],
+    evidenceTag: "Verified",
+    evidence:
+      "F1 Commune lists Italian Grand Prix screening tickets for The Burrow.",
+    phone: "Needs call",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=The+Burrow+Racecourse+Road+Bangalore",
+    sortMySceneUrl: "https://f1commune.com/",
+    vibe: "Central race-night option with a dedicated F1 Commune ticket flow.",
+    price: "Check event page",
+    sourceLabel: "F1 Commune listing",
+    sourceUrl: "https://f1commune.com/",
+    ...confirmedSep2Evening,
+  },
+  {
     id: "church-street-social",
     name: "Church Street Social",
     area: "Church Street",
@@ -495,9 +513,17 @@ const zoneNearness: Record<string, string[]> = {
     "mg road",
     "church street",
     "brigade road",
+    "racecourse road",
     "central bangalore",
     "indiranagar",
     "koramangala",
+  ],
+  "racecourse road": [
+    "racecourse road",
+    "mg road",
+    "church street",
+    "brigade road",
+    "central bangalore",
   ],
   whitefield: [
     "whitefield",
@@ -561,6 +587,7 @@ const areaAliases: Record<string, string[]> = {
     "church street",
     "central bangalore",
   ],
+  "racecourse road": ["racecourse road", "race course road"],
   whitefield: [
     "whitefield",
     "white field",
