@@ -507,6 +507,19 @@ export function PartyPageClient({
           </aside>
         </div>
 
+        <BookingSection
+          bookingInterestStatus={bookingInterestStatus}
+          isHostDevice={isHostDevice}
+          isSavingBookingInterest={isSavingBookingInterest}
+          lockedAt={lockedAt}
+          onConfirmReservation={markReservationConfirmed}
+          onReserveWithVenue={reserveWithVenue}
+          party={party}
+          reservationConfirmedAt={reservationConfirmedAt}
+          reservationHandoffAt={reservationHandoffAt}
+          showBookingInterest={showBookingInterest}
+        />
+
         <section className="race-plan-venue" aria-label="Venue details">
           <div>
             <span>Venue</span>
@@ -535,64 +548,7 @@ export function PartyPageClient({
             <a href={party.mapUrl} target="_blank" rel="noreferrer">
               Open in maps →
             </a>
-            {party.bookMyShowUrl ? (
-              <a href={party.bookMyShowUrl} target="_blank" rel="noreferrer">
-                BookMyShow →
-              </a>
-            ) : null}
-            {party.swiggyDineoutUrl ? (
-              <a href={party.swiggyDineoutUrl} target="_blank" rel="noreferrer">
-                Swiggy Dineout →
-              </a>
-            ) : null}
           </div>
-          {showBookingInterest && isHostDevice ? (
-            <div className="booking-interest" role="dialog" aria-modal="false">
-              <strong>Finish the reservation outside FindMyScreen.</strong>
-              <p>
-                Call or open maps, confirm with the venue, then come back and
-                mark the reservation confirmed.
-              </p>
-              <div>
-                {party.venuePhone && party.venuePhone !== "Needs call" ? (
-                  <a href={`tel:${party.venuePhone}`}>Call venue</a>
-                ) : null}
-                <a href={party.mapUrl} target="_blank" rel="noreferrer">
-                  Open maps
-                </a>
-                {party.bookMyShowUrl ? (
-                  <a
-                    href={party.bookMyShowUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    BookMyShow
-                  </a>
-                ) : null}
-                {party.swiggyDineoutUrl ? (
-                  <a
-                    href={party.swiggyDineoutUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Swiggy Dineout
-                  </a>
-                ) : null}
-                <button
-                  type="button"
-                  disabled={isSavingBookingInterest}
-                  onClick={() => void markReservationConfirmed()}
-                >
-                  {isSavingBookingInterest
-                    ? "Saving..."
-                    : "Reservation confirmed"}
-                </button>
-              </div>
-            </div>
-          ) : null}
-          {bookingInterestStatus ? (
-            <p className="action-status">{bookingInterestStatus}</p>
-          ) : null}
         </section>
       </section>
     </main>
@@ -738,6 +694,150 @@ function RsvpStats({ grouped }: { grouped: Record<Decision, Doc<"rsvps">[]> }) {
           </div>
         ))}
       </div>
+    </section>
+  );
+}
+
+function BookingSection({
+  bookingInterestStatus,
+  isHostDevice,
+  isSavingBookingInterest,
+  lockedAt,
+  onConfirmReservation,
+  onReserveWithVenue,
+  party,
+  reservationConfirmedAt,
+  reservationHandoffAt,
+  showBookingInterest,
+}: {
+  bookingInterestStatus: string;
+  isHostDevice: boolean;
+  isSavingBookingInterest: boolean;
+  lockedAt: number | null;
+  onConfirmReservation: () => Promise<void>;
+  onReserveWithVenue: () => Promise<void>;
+  party: Doc<"watchParties">;
+  reservationConfirmedAt: number | null;
+  reservationHandoffAt: number | null;
+  showBookingInterest: boolean;
+}) {
+  const bookingLinks = [
+    party.bookMyShowUrl
+      ? {
+          brand: "BMS",
+          label: "BookMyShow",
+          href: party.bookMyShowUrl,
+          note: "Open the venue booking page.",
+        }
+      : null,
+    party.swiggyDineoutUrl
+      ? {
+          brand: "S",
+          label: "Swiggy Dineout",
+          href: party.swiggyDineoutUrl,
+          note: "Reserve a table through Dineout.",
+        }
+      : null,
+    {
+      brand: "MAP",
+      label: "Google Maps",
+      href: party.mapUrl,
+      note: "Check route, address and latest venue details.",
+    },
+    party.venuePhone && party.venuePhone !== "Needs call"
+      ? {
+          brand: "CALL",
+          label: "Call venue",
+          href: `tel:${party.venuePhone}`,
+          note: "Speak to the venue before leaving.",
+        }
+      : null,
+  ].filter(
+    (
+      link,
+    ): link is {
+      brand: string;
+      label: string;
+      href: string;
+      note: string;
+    } => Boolean(link),
+  );
+
+  return (
+    <section className="race-plan-bookings" aria-label="Booking links">
+      <div className="booking-section-head">
+        <span>Bookings</span>
+        <h2>Reserve your screen.</h2>
+        <p>
+          Use one of these booking links, then the host can mark the reservation
+          confirmed.
+        </p>
+      </div>
+
+      <div className="booking-link-grid">
+        {bookingLinks.map((link) => (
+          <a
+            className="booking-link-card"
+            href={link.href}
+            key={link.label}
+            rel="noreferrer"
+            target={link.href.startsWith("tel:") ? undefined : "_blank"}
+          >
+            <span className="booking-logo">{link.brand}</span>
+            <strong>{link.label}</strong>
+            <small>{link.note}</small>
+            <em>Open →</em>
+          </a>
+        ))}
+      </div>
+
+      {isHostDevice ? (
+        <div className="booking-host-panel">
+          <div>
+            <span>Host control</span>
+            <strong>
+              {reservationConfirmedAt
+                ? "Reservation confirmed"
+                : reservationHandoffAt || showBookingInterest
+                  ? "Finish the booking"
+                  : lockedAt
+                    ? "Start reservation"
+                    : "Lock the plan first"}
+            </strong>
+            <p>
+              {lockedAt
+                ? "After booking outside FindMyScreen, come back and confirm it here."
+                : "Lock the plan after enough friends respond, then reserve with the venue."}
+            </p>
+          </div>
+          {lockedAt && !reservationConfirmedAt ? (
+            <div>
+              <button
+                type="button"
+                disabled={isSavingBookingInterest}
+                onClick={() => void onReserveWithVenue()}
+              >
+                {reservationHandoffAt
+                  ? "Reservation handoff started"
+                  : "Reserve with venue"}
+              </button>
+              <button
+                type="button"
+                disabled={isSavingBookingInterest}
+                onClick={() => void onConfirmReservation()}
+              >
+                {isSavingBookingInterest
+                  ? "Saving..."
+                  : "Reservation confirmed"}
+              </button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {bookingInterestStatus ? (
+        <p className="action-status">{bookingInterestStatus}</p>
+      ) : null}
     </section>
   );
 }

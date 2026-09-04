@@ -3775,6 +3775,195 @@ h2 {
   color: rgba(247, 247, 242, 0.45);
 }
 
+.race-plan-bookings {
+  display: grid;
+  gap: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 28px 0 0;
+}
+
+.booking-section-head {
+  display: grid;
+  max-width: 720px;
+  gap: 8px;
+}
+
+.booking-section-head span,
+.booking-host-panel span {
+  color: var(--red);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.booking-section-head h2 {
+  margin: 0;
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: clamp(46px, 7vw, 92px);
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.booking-section-head p,
+.booking-host-panel p {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.62);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.booking-link-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.booking-link-card {
+  display: grid;
+  min-height: 168px;
+  align-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(135deg, rgba(225, 6, 0, 0.1), transparent 42%),
+    rgba(12, 12, 12, 0.88);
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    background 160ms ease;
+}
+
+.booking-link-card:hover {
+  border-color: rgba(225, 6, 0, 0.64);
+  background:
+    linear-gradient(135deg, rgba(225, 6, 0, 0.16), transparent 46%),
+    rgba(15, 15, 15, 0.96);
+  transform: translateY(-2px);
+}
+
+.booking-logo {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--red);
+  color: white;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.booking-link-card:nth-child(2) .booking-logo {
+  background: #fc8019;
+}
+
+.booking-link-card:nth-child(3) .booking-logo,
+.booking-link-card:nth-child(4) .booking-logo {
+  background: transparent;
+}
+
+.booking-link-card strong {
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.booking-link-card small {
+  min-height: 42px;
+  color: rgba(247, 247, 242, 0.58);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.booking-link-card em {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--amber);
+  padding-top: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.booking-host-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: end;
+  border-left: 5px solid var(--red);
+  background: rgba(225, 6, 0, 0.08);
+  padding: 18px;
+}
+
+.booking-host-panel > div:first-child {
+  display: grid;
+  gap: 6px;
+}
+
+.booking-host-panel strong {
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.booking-host-panel > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.booking-host-panel button {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--red);
+  border-radius: 0;
+  background: var(--red);
+  color: white;
+  cursor: pointer;
+  padding: 0 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.booking-host-panel button:last-child {
+  border-color: rgba(0, 184, 117, 0.72);
+  background: rgba(0, 184, 117, 0.18);
+}
+
+.booking-host-panel button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
 .rsvp-form {
   border: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -5297,6 +5486,29 @@ h3 {
 
   .race-plan-lower {
     gap: 28px;
+  }
+
+  .booking-link-grid,
+  .booking-host-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-link-card {
+    min-height: 148px;
+  }
+
+  .booking-host-panel {
+    align-items: stretch;
+  }
+
+  .booking-host-panel > div:last-child {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+
+  .booking-host-panel button {
+    width: 100%;
   }
 
   .rsvp-scoreboard {

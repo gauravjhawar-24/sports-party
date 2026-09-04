@@ -85,3 +85,4 @@
 - Fri 4 Sep 2026: Watch-party venue details now show a BookMyShow link when the venue has a confirmed BookMyShow result URL.
 - Fri 4 Sep 2026: Watch-party venue details now also show a Swiggy Dineout link when a confident same-outlet result is available.
 - Fri 4 Sep 2026: The `/discover` page is hidden behind a redirect to the live F1 discovery flow, and landing-page CTAs now point directly to `/f1`.
+- Fri 4 Sep 2026: Watch-party pages now show a dedicated booking section after RSVPs, with booking-site boxes for BookMyShow, Swiggy Dineout, Maps and call actions when available.
