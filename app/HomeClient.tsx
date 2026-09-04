@@ -88,8 +88,6 @@ export function HomeClient({
   );
   const [hostName, setHostName] = useState("");
   const [hostEmail, setHostEmail] = useState("");
-  const [lookupEmail, setLookupEmail] = useState("");
-  const [submittedLookupEmail, setSubmittedLookupEmail] = useState("");
   const [inviteCode, setInviteCode] = useState("");
   const [inviteCodeError, setInviteCodeError] = useState("");
   const [hostError, setHostError] = useState("");
@@ -109,10 +107,6 @@ export function HomeClient({
   const recordAction = useMutation(api.actions.recordAction);
   const createWatchParty = useMutation(api.actions.createWatchParty);
   const approvedSignals = useQuery(api.actions.approvedVenueCandidates);
-  const hostParties = useQuery(
-    api.actions.watchPartiesByHostEmail,
-    submittedLookupEmail ? { hostEmail: submittedLookupEmail } : "skip",
-  );
   const approvedSignalRows = approvedSignals ?? initialApprovedSignals;
 
   useEffect(() => {
@@ -260,19 +254,6 @@ export function HomeClient({
     }
   }
 
-  function submitPartyLookup(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const nextEmail = lookupEmail.trim().toLowerCase();
-
-    if (!/^\S+@\S+\.\S+$/.test(nextEmail)) {
-      setActionStatus("Enter the email you used to create your watch party.");
-      return;
-    }
-
-    setActionStatus("");
-    setSubmittedLookupEmail(nextEmail);
-  }
-
   function submitInviteCode(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const code = cleanInviteCode(inviteCode);
@@ -406,13 +387,6 @@ export function HomeClient({
                 inviteCode={inviteCode}
                 onInviteCodeChange={setInviteCode}
                 onSubmit={submitInviteCode}
-              />
-              <MyWatchParties
-                hostParties={hostParties}
-                lookupEmail={lookupEmail}
-                onLookupEmailChange={setLookupEmail}
-                onSubmit={submitPartyLookup}
-                submittedLookupEmail={submittedLookupEmail}
               />
             </div>
 
@@ -848,63 +822,6 @@ function JoinWatchParty({
         <button type="submit">Join</button>
       </form>
       {error ? <p className="area-error">{error}</p> : null}
-    </section>
-  );
-}
-
-function MyWatchParties({
-  hostParties,
-  lookupEmail,
-  onLookupEmailChange,
-  onSubmit,
-  submittedLookupEmail,
-}: {
-  hostParties: Doc<"watchParties">[] | undefined;
-  lookupEmail: string;
-  onLookupEmailChange: (value: string) => void;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  submittedLookupEmail: string;
-}) {
-  return (
-    <section className="my-parties-box" aria-label="Find your watch parties">
-      <div className="my-parties-header">
-        <span>Already made a plan?</span>
-        <strong>Find your watch parties</strong>
-      </div>
-      <form onSubmit={onSubmit}>
-        <label htmlFor="watch-party-email">Host email</label>
-        <input
-          id="watch-party-email"
-          value={lookupEmail}
-          onChange={(event) => onLookupEmailChange(event.target.value)}
-          placeholder="Email used by host"
-        />
-        <button type="submit">Find</button>
-      </form>
-      {submittedLookupEmail ? (
-        <div className="my-party-results">
-          {hostParties === undefined ? <p>Checking...</p> : null}
-          {hostParties?.length === 0 ? (
-            <p>No watch parties found for this email.</p>
-          ) : null}
-          {hostParties?.map((party) => (
-            <a
-              href={
-                party.inviteCode
-                  ? `/f1/join/${party.inviteCode}`
-                  : `/f1/party/${party._id}`
-              }
-              key={party._id}
-            >
-              <span>{party.raceName}</span>
-              <strong>{party.venueName}</strong>
-              <small>
-                {party.raceDate} · {party.raceTime}
-              </small>
-            </a>
-          ))}
-        </div>
-      ) : null}
     </section>
   );
 }
