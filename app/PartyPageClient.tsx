@@ -575,9 +575,53 @@ function PlanProgress({
       >
         <span className="track-line" aria-hidden="true" />
         <span className="track-car" aria-hidden="true">
-          <span className="car-rear-wing" />
-          <span className="car-body" />
-          <span className="car-front-wing" />
+          <svg viewBox="0 0 112 44" focusable="false">
+            <path
+              className="f1-shadow"
+              d="M13 36h86c3 0 5 2 5 4H8c0-2 2-4 5-4Z"
+            />
+            <path className="f1-wing-red" d="M4 8h24v8H4zM4 28h24v8H4z" />
+            <path className="f1-front-wing" d="M82 4h25v8H82zM82 32h25v8H82z" />
+            <path
+              className="f1-body"
+              d="M22 18 36 10h35l31 12-31 12H36L22 26Z"
+            />
+            <path className="f1-nose" d="M58 18h41l9 4-9 4H58Z" />
+            <path className="f1-cockpit" d="M42 14h18l8 8-8 8H42l-7-8Z" />
+            <path className="f1-stripe" d="M62 20h34v4H62z" />
+            <rect
+              className="f1-tyre"
+              x="24"
+              y="1"
+              width="15"
+              height="13"
+              rx="3"
+            />
+            <rect
+              className="f1-tyre"
+              x="24"
+              y="30"
+              width="15"
+              height="13"
+              rx="3"
+            />
+            <rect
+              className="f1-tyre"
+              x="72"
+              y="1"
+              width="16"
+              height="13"
+              rx="3"
+            />
+            <rect
+              className="f1-tyre"
+              x="72"
+              y="30"
+              width="16"
+              height="13"
+              rx="3"
+            />
+          </svg>
         </span>
         {steps.map((step) => (
           <strong data-active={step.active} key={step.label}>
