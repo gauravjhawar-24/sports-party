@@ -323,6 +323,24 @@ export const venues: Venue[] = [
     ...confirmedSep2Evening,
   },
   {
+    id: "socials-indiranagar",
+    name: "Socials",
+    area: "Indiranagar",
+    zones: ["indiranagar", "domlur", "old airport road", "koramangala"],
+    evidenceTag: "Verified",
+    evidence:
+      "F1 Commune lists Italian Grand Prix screening tickets for Socials Indiranagar.",
+    phone: "Needs call",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Socials+Indiranagar+Bangalore",
+    sortMySceneUrl: "https://f1commune.com/",
+    vibe: "Indiranagar Social-style race-night plan with a dedicated F1 Commune ticket flow.",
+    price: "Check event page",
+    sourceLabel: "F1 Commune listing",
+    sourceUrl: "https://f1commune.com/",
+    ...confirmedSep2Evening,
+  },
+  {
     id: "church-street-social",
     name: "Church Street Social",
     area: "Church Street",
