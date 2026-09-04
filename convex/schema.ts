@@ -101,6 +101,8 @@ export default defineSchema({
     lockedAt: v.optional(v.number()),
     reservationHandoffAt: v.optional(v.number()),
     reservationConfirmedAt: v.optional(v.number()),
+    reservationConfirmedBy: v.optional(v.string()),
+    reservationReference: v.optional(v.string()),
     calendarAddedAt: v.optional(v.number()),
     createdAt: v.number(),
   })

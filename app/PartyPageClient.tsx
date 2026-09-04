@@ -37,12 +37,23 @@ export function PartyPageClient({
   const [showBookingInterest, setShowBookingInterest] = useState(false);
   const [bookingInterestStatus, setBookingInterestStatus] = useState("");
   const [isSavingBookingInterest, setIsSavingBookingInterest] = useState(false);
+  const [confirmationStep, setConfirmationStep] = useState<
+    "closed" | "form" | "summary"
+  >("closed");
+  const [confirmedByInput, setConfirmedByInput] = useState("");
+  const [reservationReferenceInput, setReservationReferenceInput] =
+    useState("");
+  const [confirmationError, setConfirmationError] = useState("");
   const [localLockedAt, setLocalLockedAt] = useState<number | null>(null);
   const [localReservationHandoffAt, setLocalReservationHandoffAt] = useState<
     number | null
   >(null);
   const [localReservationConfirmedAt, setLocalReservationConfirmedAt] =
     useState<number | null>(null);
+  const [localReservationConfirmedBy, setLocalReservationConfirmedBy] =
+    useState("");
+  const [localReservationReference, setLocalReservationReference] =
+    useState("");
   const [localCalendarAddedAt, setLocalCalendarAddedAt] = useState<
     number | null
   >(null);
@@ -138,6 +149,10 @@ export function PartyPageClient({
     party.reservationHandoffAt ?? localReservationHandoffAt;
   const reservationConfirmedAt =
     party.reservationConfirmedAt ?? localReservationConfirmedAt;
+  const reservationConfirmedBy =
+    party.reservationConfirmedBy ?? localReservationConfirmedBy;
+  const reservationReference =
+    party.reservationReference ?? localReservationReference;
   const calendarAddedAt = party.calendarAddedAt ?? localCalendarAddedAt;
   const partyUrl =
     typeof window === "undefined"
@@ -213,9 +228,13 @@ export function PartyPageClient({
         });
       }
       setShowBookingInterest(true);
-      window.open(party.mapUrl, "_blank", "noopener,noreferrer");
+      const contactUrl =
+        party.venuePhone && party.venuePhone !== "Needs call"
+          ? `tel:${party.venuePhone}`
+          : party.mapUrl;
+      window.open(contactUrl, "_blank", "noopener,noreferrer");
       setBookingInterestStatus(
-        "Reservation handoff started. Confirm with the venue, then mark it here.",
+        "Venue contact started. Confirm with the venue, then mark it here.",
       );
     } catch {
       setBookingInterestStatus(
@@ -226,8 +245,37 @@ export function PartyPageClient({
     }
   }
 
+  function showReservationConfirmationForm() {
+    if (!isHostDevice) return;
+    setConfirmationError("");
+    setConfirmedByInput((current) => current || party.hostName);
+    setReservationReferenceInput("");
+    setConfirmationStep("form");
+  }
+
+  function editReservationConfirmation() {
+    if (!isHostDevice) return;
+    setConfirmationError("");
+    setConfirmationStep("form");
+  }
+
+  function reviewReservationConfirmation(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!confirmedByInput.trim()) {
+      setConfirmationError("Please enter who confirmed it.");
+      return;
+    }
+    setConfirmationError("");
+    setConfirmationStep("summary");
+  }
+
   async function markReservationConfirmed() {
     if (!isHostDevice) return;
+    if (!confirmedByInput.trim()) {
+      setConfirmationError("Please enter who confirmed it.");
+      setConfirmationStep("form");
+      return;
+    }
 
     setIsSavingBookingInterest(true);
     setBookingInterestStatus("");
@@ -235,8 +283,12 @@ export function PartyPageClient({
     try {
       const nextReservationConfirmedAt = await confirmReservation({
         partyId: party._id,
+        confirmedBy: confirmedByInput,
+        reservationReference: reservationReferenceInput || undefined,
       });
       setLocalReservationConfirmedAt(nextReservationConfirmedAt);
+      setLocalReservationConfirmedBy(confirmedByInput.trim());
+      setLocalReservationReference(reservationReferenceInput.trim());
       if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
         posthog.capture("findmyscreen_reservation_confirmed", {
           party_id: party._id,
@@ -245,6 +297,7 @@ export function PartyPageClient({
         });
       }
       setShowBookingInterest(false);
+      setConfirmationStep("closed");
       setBookingInterestStatus(
         "Reservation confirmed. The outing plan is ready.",
       );
@@ -339,9 +392,11 @@ export function PartyPageClient({
   return (
     <main className="race-shell">
       <section className="party-page race-plan-page">
-        <header className="race-plan-nav">
-          <Link href="/f1">← Find another screening</Link>
-        </header>
+        {isHostDevice ? (
+          <header className="race-plan-nav">
+            <Link href="/f1">← Find another screening</Link>
+          </header>
+        ) : null}
 
         <PlanProgress
           calendarAddedAt={calendarAddedAt}
@@ -377,7 +432,7 @@ export function PartyPageClient({
             <a href={party.mapUrl} target="_blank" rel="noreferrer">
               Open map
             </a>
-            <Link href="/f1">Change venue</Link>
+            {isHostDevice ? <Link href="/f1">Change venue</Link> : null}
           </div>
         </section>
 
@@ -392,9 +447,21 @@ export function PartyPageClient({
               </p>
               <small>
                 {reservationConfirmedAt
-                  ? "Reservation confirmed by host"
+                  ? `Reservation confirmed${reservationConfirmedBy ? ` by ${reservationConfirmedBy}` : ""}`
                   : "Reservation pending with host"}
               </small>
+              {reservationConfirmedAt ? (
+                <small>
+                  {reservationReference
+                    ? `Booking reference: ${reservationReference}`
+                    : "No booking reference added"}
+                </small>
+              ) : null}
+              {reservationConfirmedAt ? (
+                <small>
+                  Confirmed at {formatTimestamp(reservationConfirmedAt)}
+                </small>
+              ) : null}
             </div>
             {reservationConfirmedAt ? (
               <div className="calendar-actions">
@@ -417,34 +484,56 @@ export function PartyPageClient({
           <RsvpStats grouped={grouped} />
 
           <aside className="race-plan-invite">
-            <div className="race-plan-invite-copy">
-              <span>Invite your crew</span>
-              <h2>
-                {lockedAt
-                  ? "Your race plan is locked."
-                  : "Build the race plan."}
-              </h2>
-              <p>
-                {reservationConfirmedAt
-                  ? "Reservation is confirmed. Copy the invite link or code for your group."
-                  : lockedAt
-                    ? "Now reserve with the venue, then mark it confirmed here."
-                    : "Copy the invite link or code, collect RSVPs, then lock the plan."}
-              </p>
-            </div>
-            {party.inviteCode ? (
-              <p className="invite-code-note">
-                Invite code: <strong>{party.inviteCode}</strong>
-              </p>
-            ) : null}
-            <div className="race-plan-copy-link">
-              <button type="button" onClick={() => void copyPartyLink()}>
-                Copy invite link
-              </button>
-              <button type="button" onClick={() => void copyInviteCode()}>
-                Copy invite code
-              </button>
-            </div>
+            {isHostDevice ? (
+              <>
+                <div className="race-plan-invite-copy">
+                  <span>Invite your crew</span>
+                  <h2>
+                    {lockedAt
+                      ? "Your race plan is locked."
+                      : "Build the race plan."}
+                  </h2>
+                  <p>
+                    {reservationConfirmedAt
+                      ? "Reservation is confirmed. Copy the invite link or code for your group."
+                      : lockedAt
+                        ? "Contact the venue, then mark it confirmed here."
+                        : "Copy the invite link or code, collect RSVPs, then lock the plan."}
+                  </p>
+                </div>
+                {party.inviteCode ? (
+                  <p className="invite-code-note">
+                    Invite code: <strong>{party.inviteCode}</strong>
+                  </p>
+                ) : null}
+                <div className="race-plan-copy-link">
+                  <button type="button" onClick={() => void copyPartyLink()}>
+                    Copy invite link
+                  </button>
+                  <button type="button" onClick={() => void copyInviteCode()}>
+                    Copy invite code
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="race-plan-invite-copy">
+                <span>Booking status</span>
+                <h2>
+                  {reservationConfirmedAt
+                    ? "The plan is confirmed."
+                    : lockedAt
+                      ? "The host is confirming the booking."
+                      : "RSVP to the plan."}
+                </h2>
+                <p>
+                  {reservationConfirmedAt
+                    ? "The final status is shown here."
+                    : lockedAt
+                      ? "The host is confirming the booking. We'll show the final status here."
+                      : "Add your name and tell the host if you are in, maybe, or out."}
+                </p>
+              </div>
+            )}
             {status ? <p className="action-status">{status}</p> : null}
 
             {isHostDevice ? (
@@ -467,7 +556,8 @@ export function PartyPageClient({
                   )}
                 </div>
               </div>
-            ) : visibleDeviceRsvp ? (
+            ) : lockedAt &&
+              !reservationConfirmedAt ? null : visibleDeviceRsvp ? (
               <div className="host-rsvp-status">
                 <strong>{visibleDeviceRsvp.name}</strong>
                 <span>
@@ -494,10 +584,19 @@ export function PartyPageClient({
           isSavingBookingInterest={isSavingBookingInterest}
           lockedAt={lockedAt}
           onConfirmReservation={markReservationConfirmed}
+          onEditConfirmation={editReservationConfirmation}
+          onOpenConfirmationForm={showReservationConfirmationForm}
           onReserveWithVenue={reserveWithVenue}
           party={party}
+          confirmationError={confirmationError}
+          confirmationStep={confirmationStep}
+          confirmedByInput={confirmedByInput}
+          onConfirmedByChange={setConfirmedByInput}
+          onReferenceChange={setReservationReferenceInput}
+          onReviewConfirmation={reviewReservationConfirmation}
           reservationConfirmedAt={reservationConfirmedAt}
           reservationHandoffAt={reservationHandoffAt}
+          reservationReferenceInput={reservationReferenceInput}
           showBookingInterest={showBookingInterest}
         />
       </section>
@@ -636,25 +735,43 @@ function RsvpStats({ grouped }: { grouped: Record<Decision, Doc<"rsvps">[]> }) {
 
 function BookingSection({
   bookingInterestStatus,
+  confirmationError,
+  confirmationStep,
+  confirmedByInput,
   isHostDevice,
   isSavingBookingInterest,
   lockedAt,
   onConfirmReservation,
+  onConfirmedByChange,
+  onEditConfirmation,
+  onOpenConfirmationForm,
+  onReferenceChange,
   onReserveWithVenue,
+  onReviewConfirmation,
   party,
   reservationConfirmedAt,
   reservationHandoffAt,
+  reservationReferenceInput,
   showBookingInterest,
 }: {
   bookingInterestStatus: string;
+  confirmationError: string;
+  confirmationStep: "closed" | "form" | "summary";
+  confirmedByInput: string;
   isHostDevice: boolean;
   isSavingBookingInterest: boolean;
   lockedAt?: number | null;
   onConfirmReservation: () => void;
+  onConfirmedByChange: (value: string) => void;
+  onEditConfirmation: () => void;
+  onOpenConfirmationForm: () => void;
+  onReferenceChange: (value: string) => void;
   onReserveWithVenue: () => void;
+  onReviewConfirmation: (event: FormEvent<HTMLFormElement>) => void;
   party: Doc<"watchParties">;
   reservationConfirmedAt?: number | null;
   reservationHandoffAt?: number | null;
+  reservationReferenceInput: string;
   showBookingInterest: boolean;
 }) {
   const bookingLinks = [
@@ -735,7 +852,7 @@ function BookingSection({
           brand: "CALL",
           label: "Call venue",
           href: `tel:${party.venuePhone}`,
-          note: "Speak to the venue before leaving.",
+          note: `Phone: ${party.venuePhone}`,
         }
       : null,
   ].filter(
@@ -753,10 +870,9 @@ function BookingSection({
     <section className="race-plan-bookings" aria-label="Booking links">
       <div className="booking-section-head">
         <span>Bookings</span>
-        <h2>Reserve your screen.</h2>
+        <h2>Other F1 screenings in Bangalore.</h2>
         <p>
-          Use one of these booking links, then the host can mark the reservation
-          confirmed.
+          These are separate listed events, not a booking for your chosen venue.
         </p>
       </div>
 
@@ -784,12 +900,18 @@ function BookingSection({
             <strong>
               {reservationHandoffAt
                 ? "Confirm your reservation."
-                : "Book outside, confirm here."}
+                : "Contact the venue, confirm here."}
             </strong>
             <p>
               Use a booking link or call the venue, then mark the reservation
               confirmed once the venue accepts it.
             </p>
+            {party.venuePhone && party.venuePhone !== "Needs call" ? (
+              <p className="venue-phone-line">
+                Phone: <strong>{party.venuePhone}</strong>{" "}
+                <a href={`tel:${party.venuePhone}`}>Tap to call</a>
+              </p>
+            ) : null}
             {bookingInterestStatus ? (
               <p className="action-status">{bookingInterestStatus}</p>
             ) : null}
@@ -802,13 +924,13 @@ function BookingSection({
             >
               {reservationHandoffAt
                 ? "Reservation handoff started"
-                : "Reserve with venue"}
+                : "Contact venue"}
             </button>
             {reservationHandoffAt || showBookingInterest ? (
               <button
                 type="button"
                 disabled={isSavingBookingInterest}
-                onClick={() => void onConfirmReservation()}
+                onClick={() => void onOpenConfirmationForm()}
               >
                 Reservation confirmed
               </button>
@@ -817,10 +939,132 @@ function BookingSection({
         </div>
       ) : null}
 
+      {isHostDevice && lockedAt && !reservationConfirmedAt ? (
+        <ReservationConfirmation
+          confirmedBy={confirmedByInput}
+          error={confirmationError}
+          isSaving={isSavingBookingInterest}
+          onBack={onEditConfirmation}
+          onConfirm={onConfirmReservation}
+          onConfirmedByChange={onConfirmedByChange}
+          onReferenceChange={onReferenceChange}
+          onReview={onReviewConfirmation}
+          party={party}
+          reference={reservationReferenceInput}
+          step={confirmationStep}
+        />
+      ) : null}
+
       {isHostDevice && reservationConfirmedAt && bookingInterestStatus ? (
         <p className="action-status">{bookingInterestStatus}</p>
       ) : null}
     </section>
+  );
+}
+
+function ReservationConfirmation({
+  confirmedBy,
+  error,
+  isSaving,
+  onBack,
+  onConfirm,
+  onConfirmedByChange,
+  onReferenceChange,
+  onReview,
+  party,
+  reference,
+  step,
+}: {
+  confirmedBy: string;
+  error: string;
+  isSaving: boolean;
+  onBack: () => void;
+  onConfirm: () => void;
+  onConfirmedByChange: (value: string) => void;
+  onReferenceChange: (value: string) => void;
+  onReview: (event: FormEvent<HTMLFormElement>) => void;
+  party: Doc<"watchParties">;
+  reference: string;
+  step: "closed" | "form" | "summary";
+}) {
+  if (step === "closed") return null;
+
+  if (step === "summary") {
+    return (
+      <section
+        className="reservation-confirmation-panel"
+        aria-label="Reservation confirmation summary"
+      >
+        <div>
+          <span>Confirm reservation</span>
+          <strong>Review before final confirm.</strong>
+          <dl>
+            <div>
+              <dt>Venue</dt>
+              <dd>
+                {party.venueName}, {party.venueArea}
+              </dd>
+            </div>
+            <div>
+              <dt>Date</dt>
+              <dd>{formatRaceDate(party.raceDate)}</dd>
+            </div>
+            <div>
+              <dt>Time</dt>
+              <dd>{formatRaceTime(party.raceTime)}</dd>
+            </div>
+            <div>
+              <dt>Confirmed by</dt>
+              <dd>{confirmedBy}</dd>
+            </div>
+            <div>
+              <dt>Reference</dt>
+              <dd>{reference || "Not added"}</dd>
+            </div>
+          </dl>
+        </div>
+        <div className="reservation-confirmation-actions">
+          <button type="button" onClick={onBack}>
+            Edit
+          </button>
+          <button type="button" disabled={isSaving} onClick={onConfirm}>
+            {isSaving ? "Confirming..." : "Final confirm"}
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <form
+      className="reservation-confirmation-panel"
+      aria-label="Reservation confirmation form"
+      onSubmit={onReview}
+    >
+      <div>
+        <span>Confirm reservation</span>
+        <strong>Add booking proof.</strong>
+        <label>
+          Who confirmed it?
+          <input
+            required
+            value={confirmedBy}
+            onChange={(event) => onConfirmedByChange(event.target.value)}
+          />
+        </label>
+        <label>
+          Booking reference or contact name
+          <input
+            value={reference}
+            onChange={(event) => onReferenceChange(event.target.value)}
+          />
+        </label>
+        {error ? <p className="action-status">{error}</p> : null}
+      </div>
+      <div className="reservation-confirmation-actions">
+        <button type="submit">Review confirmation</button>
+      </div>
+    </form>
   );
 }
 
@@ -833,6 +1077,15 @@ function formatRaceDate(raceDate: string) {
 
 function formatRaceTime(raceTime: string) {
   return raceTime.replace(" PM", "").toUpperCase();
+}
+
+function formatTimestamp(timestamp: number) {
+  return new Intl.DateTimeFormat("en-IN", {
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(timestamp));
 }
 
 function buildCalendarFile({

@@ -324,13 +324,19 @@ export const startReservationHandoff = mutation({
 export const confirmReservation = mutation({
   args: {
     partyId: v.id("watchParties"),
+    confirmedBy: v.string(),
+    reservationReference: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const party = await ctx.db.get(args.partyId);
     if (!party) throw new Error("Watch party not found");
 
     const reservationConfirmedAt = party.reservationConfirmedAt ?? Date.now();
-    await ctx.db.patch(args.partyId, { reservationConfirmedAt });
+    await ctx.db.patch(args.partyId, {
+      reservationConfirmedAt,
+      reservationConfirmedBy: args.confirmedBy.trim(),
+      reservationReference: args.reservationReference?.trim() || undefined,
+    });
 
     if (!party.reservationConfirmedAt) {
       await recordPartyAction(ctx, party, "reservation_confirmed_by_host");
