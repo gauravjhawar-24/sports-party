@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import type { CSSProperties } from "react";
 import { useMutation, useQuery } from "convex/react";
 import posthog from "posthog-js";
 import { api } from "../convex/_generated/api";
@@ -540,21 +539,11 @@ function PlanProgress({
     { label: "Reservation confirmed", active: Boolean(reservationConfirmedAt) },
     { label: "Calendar ready", active: Boolean(calendarAddedAt) },
   ];
-  const activeIndex = steps.reduce(
-    (latest, step, index) => (step.active ? index : latest),
-    0,
-  );
-  const planProgress = steps.length > 1 ? activeIndex / (steps.length - 1) : 0;
-
   return (
     <section className="outing-status" aria-label="Outing plan status">
       <span>Plan progress</span>
-      <div
-        className="outing-track"
-        style={{ "--plan-progress": planProgress } as CSSProperties}
-      >
+      <div className="outing-track">
         <span className="track-line" aria-hidden="true" />
-        <span className="track-status-marker" aria-hidden="true" />
         {steps.map((step) => (
           <strong data-active={step.active} key={step.label}>
             {step.label}
