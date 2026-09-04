@@ -236,6 +236,7 @@ export function HomeClient({
         highApeUrl: venue.highApeUrl,
         sortMySceneUrl: venue.sortMySceneUrl,
         highwayDeliteUrl: venue.highwayDeliteUrl,
+        skillboxesUrl: venue.skillboxesUrl,
         venuePhone: venue.phone,
         hostClientId,
         raceName: nextRace.name,

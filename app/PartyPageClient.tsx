@@ -717,6 +717,14 @@ function BookingSection({
           note: "Open the race screening page.",
         }
       : null,
+    party.skillboxesUrl
+      ? {
+          brand: "SB",
+          label: "Skillboxes",
+          href: party.skillboxesUrl,
+          note: "Open the race screening page.",
+        }
+      : null,
     party.sortMySceneUrl
       ? {
           brand: party.sortMySceneUrl.includes("f1commune.com") ? "F1" : "SMS",

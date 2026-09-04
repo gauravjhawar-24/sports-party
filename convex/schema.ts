@@ -93,6 +93,7 @@ export default defineSchema({
     highApeUrl: v.optional(v.string()),
     sortMySceneUrl: v.optional(v.string()),
     highwayDeliteUrl: v.optional(v.string()),
+    skillboxesUrl: v.optional(v.string()),
     venuePhone: v.optional(v.string()),
     raceName: v.string(),
     raceDate: v.string(),

@@ -17,6 +17,7 @@ export type Venue = {
   highApeUrl?: string;
   sortMySceneUrl?: string;
   highwayDeliteUrl?: string;
+  skillboxesUrl?: string;
   vibe: string;
   price: string;
   sourceLabel: string;
@@ -297,6 +298,28 @@ export const venues: Venue[] = [
     price: "Check event page",
     sourceLabel: "F1 Commune listing",
     sourceUrl: "https://f1commune.com/",
+    ...confirmedSep2Evening,
+  },
+  {
+    id: "watsons-pub-indiranagar",
+    name: "Watson's Pub",
+    area: "Indiranagar",
+    zones: ["indiranagar", "domlur", "old airport road", "koramangala"],
+    evidenceTag: "Verified",
+    evidence:
+      "Skillboxes and SortMyScene list an Italy Grand Prix live screening at Watson's Indiranagar.",
+    phone: "Needs call",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Watson's+Pub+Indiranagar+Bangalore",
+    skillboxesUrl:
+      "https://www.skillboxes.com/events/f1-italy-grand-prix-live-screening-watson-s-indiranagar-bangalore-sbrlncvg",
+    sortMySceneUrl:
+      "https://api.sortmyscene.com/event/formula-1-italy-grand-prix-26-live-screening-watsons-pub-indiranagar-bangalore-sep-06-2026",
+    vibe: "Indiranagar pub plan with dedicated race-screening ticket pages.",
+    price: "Check event page",
+    sourceLabel: "Skillboxes and SortMyScene listings",
+    sourceUrl:
+      "https://www.skillboxes.com/events/f1-italy-grand-prix-live-screening-watson-s-indiranagar-bangalore-sbrlncvg",
     ...confirmedSep2Evening,
   },
   {
