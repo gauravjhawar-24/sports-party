@@ -171,7 +171,7 @@ export const venues: Venue[] = [
     zones: ["indiranagar", "domlur", "old airport road"],
     evidenceTag: "Verified",
     evidence: "Manually confirmed by builder for the Italian GP main race.",
-    phone: "8971664068",
+    phone: "9986524411",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Pecos+Stones+Indiranagar+Bangalore",
     vibe: "Old-school rock pub on 100 Feet Road, confirmed for an Indiranagar race-night plan.",

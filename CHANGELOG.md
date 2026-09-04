@@ -101,3 +101,4 @@
 - Fri 4 Sep 2026: The Beer Cafe in Koramangala is now a listed verified venue with an F1 Commune screening link carried into watch-party bookings.
 - Fri 4 Sep 2026: The Burrow on Racecourse Road is now a listed verified venue with an F1 Commune screening link, and Racecourse Road searches rank it first.
 - Fri 4 Sep 2026: Bira 91 Taproom Koramangala is now hidden from venue results and no longer receives booking-link mappings.
+- Fri 4 Sep 2026: Pecos Stones Indiranagar now shows the venue phone number for booking instead of any online booking link.
