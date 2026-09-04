@@ -264,6 +264,24 @@ export const venues: Venue[] = [
     swiggyDineoutUrl: "https://www.swiggy.com/restaurants/270831/dineout",
   },
   {
+    id: "the-beer-cafe-koramangala",
+    name: "The Beer Cafe",
+    area: "Koramangala",
+    zones: ["koramangala", "hsr", "hsr layout", "bellandur", "indiranagar"],
+    evidenceTag: "Verified",
+    evidence:
+      "F1 Commune lists an Italian Grand Prix live screening at The Beer Cafe.",
+    phone: "Needs call",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=The+Beer+Cafe+Koramangala+Bangalore",
+    sortMySceneUrl: "https://f1commune.com/",
+    vibe: "Koramangala beer-cafe plan with a dedicated F1 screening link.",
+    price: "Check event page",
+    sourceLabel: "F1 Commune listing",
+    sourceUrl: "https://f1commune.com/",
+    ...confirmedSep2Evening,
+  },
+  {
     id: "church-street-social",
     name: "Church Street Social",
     area: "Church Street",

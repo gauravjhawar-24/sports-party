@@ -98,3 +98,4 @@
 - Fri 4 Sep 2026: Watch-party pages now end at the Reserve your screen section, with host reservation controls moved into that section instead of a repeated Venue section below it.
 - Fri 4 Sep 2026: Studz Sports Bar in Bellandur is now a listed verified venue with District and SortMyScene race-screening links carried into watch-party bookings.
 - Fri 4 Sep 2026: TopSpin Club in Ahmedabad is now a listed verified venue with a Highway Delite race-screening link, and Ahmedabad searches no longer show Bangalore fallback venues.
+- Fri 4 Sep 2026: The Beer Cafe in Koramangala is now a listed verified venue with an F1 Commune screening link carried into watch-party bookings.

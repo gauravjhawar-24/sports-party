@@ -719,8 +719,10 @@ function BookingSection({
       : null,
     party.sortMySceneUrl
       ? {
-          brand: "SMS",
-          label: "SortMyScene",
+          brand: party.sortMySceneUrl.includes("f1commune.com") ? "F1" : "SMS",
+          label: party.sortMySceneUrl.includes("f1commune.com")
+            ? "F1 Commune"
+            : "SortMyScene",
           href: party.sortMySceneUrl,
           note: "Open the race screening page.",
         }
