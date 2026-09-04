@@ -555,7 +555,7 @@ function dedupeVenueList(venueList: Venue[]) {
   const deduped: Venue[] = [];
 
   for (const venue of venueList) {
-    const key = `${normalizeVenueKey(venue.name)}|${normalizeVenueKey(venue.area)}`;
+    const key = `${canonicalVenueName(venue.name)}|${normalizeVenueKey(venue.area)}`;
     if (seen.has(key)) continue;
 
     seen.add(key);
@@ -563,6 +563,16 @@ function dedupeVenueList(venueList: Venue[]) {
   }
 
   return deduped;
+}
+
+function canonicalVenueName(name: string) {
+  const normalized = normalizeVenueKey(name);
+  const aliases: Record<string, string> = {
+    amoeba: "amoeba sports bar",
+    "amoeba sports bar": "amoeba sports bar",
+  };
+
+  return aliases[normalized] ?? normalized;
 }
 
 export function buildInviteText(venue: Venue) {
