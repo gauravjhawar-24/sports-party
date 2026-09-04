@@ -91,3 +91,4 @@
 - Fri 4 Sep 2026: The My Plans page now shows long host emails fully on mobile instead of clipping them in the results header.
 - Fri 4 Sep 2026: The My Plans host email text box is now wider and taller, with the Find Plans button stacked underneath so long emails are easier to enter.
 - Fri 4 Sep 2026: The plan-progress marker now uses a clearer F1-style car shape with four tires, wings, cockpit and nose instead of the previous abstract marker.
+- Fri 4 Sep 2026: The plan-progress marker is now a simple green status circle instead of a car graphic.
