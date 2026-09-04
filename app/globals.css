@@ -3005,6 +3005,7 @@ h2 {
 
 .my-plans-form input {
   min-width: 0;
+  width: 100%;
   height: 52px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-right: 0;
@@ -3041,12 +3042,16 @@ h2 {
 }
 
 .my-plans-results-header strong {
+  min-width: 0;
+  max-width: 100%;
   color: rgba(247, 247, 242, 0.62);
   font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
+  text-transform: none;
 }
 
 .my-plans-empty {
@@ -5246,6 +5251,10 @@ h3 {
   .my-plans-results-header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .my-plans-results-header strong {
+    text-align: left;
   }
 
   .my-plan-card {

@@ -88,3 +88,4 @@
 - Fri 4 Sep 2026: Watch-party pages now show a dedicated booking section after RSVPs, with booking-site boxes for BookMyShow, Swiggy Dineout, Maps and call actions when available.
 - Fri 4 Sep 2026: The F1 start screen now keeps only the invite-code join box and removes the duplicate email-based "Already made a plan" lookup box.
 - Fri 4 Sep 2026: Watch-party invite buttons now say "Invite people", and the booking section no longer shows the extra host-control/status blocks underneath the booking links.
+- Fri 4 Sep 2026: The My Plans page now shows long host emails fully on mobile instead of clipping them in the results header.
