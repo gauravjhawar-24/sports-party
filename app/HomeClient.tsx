@@ -578,12 +578,6 @@ export function HomeClient({
                     <p className="venue-area">{bestVenue.area}</p>
                     <ConfirmationProof venue={bestVenue} />
                     <VenueStats venue={bestVenue} position={1} />
-                    <ScreeningInventory
-                      screening={screeningForVenue(
-                        bestVenue,
-                        screeningByVenueId,
-                      )}
-                    />
 
                     <div className="invite-lines">
                       <div>
@@ -652,10 +646,6 @@ export function HomeClient({
                         <ConfirmationProof venue={venue} />
                       </div>
                       <VenueStats venue={venue} position={index + 2} />
-                      <ScreeningInventory
-                        screening={screeningForVenue(venue, screeningByVenueId)}
-                        compact
-                      />
                       <p className="pick-note">
                         {hasVenueVerificationProof(venue)
                           ? "Confirmed backup for race night."
@@ -704,13 +694,6 @@ export function HomeClient({
                             <ConfirmationProof venue={venue} />
                           </div>
                           <VenueStats venue={venue} position={index + 4} />
-                          <ScreeningInventory
-                            screening={screeningForVenue(
-                              venue,
-                              screeningByVenueId,
-                            )}
-                            compact
-                          />
                           <p className="pick-note">
                             {hasVenueVerificationProof(venue)
                               ? "Confirmed backup for race night."
@@ -947,53 +930,6 @@ function normalizeInventoryKey(value: string) {
     .replace(/[^a-z0-9]+/g, " ")
     .trim()
     .replace(/\s+/g, " ");
-}
-
-function ScreeningInventory({
-  compact = false,
-  screening,
-}: {
-  compact?: boolean;
-  screening?: Doc<"screenings">;
-}) {
-  if (!screening) return null;
-
-  const seatsLeft = Math.max(
-    0,
-    screening.totalSeats - screening.confirmedBookedSeats,
-  );
-
-  return (
-    <section
-      className={`screening-inventory ${compact ? "compact" : ""}`}
-      aria-label={`${screening.venueName} screening inventory`}
-    >
-      <div>
-        <span>Screening inventory</span>
-        <strong>
-          {screening.confirmedBookedSeats} booked · {seatsLeft} seats left
-        </strong>
-      </div>
-      <dl>
-        <div>
-          <dt>Total seats</dt>
-          <dd>{screening.totalSeats}</dd>
-        </div>
-        <div>
-          <dt>Price</dt>
-          <dd>{screening.priceLabel}</dd>
-        </div>
-        <div>
-          <dt>Closes</dt>
-          <dd>{screening.bookingClosesAt}</dd>
-        </div>
-        <div>
-          <dt>Rules</dt>
-          <dd>{screening.bookingRules}</dd>
-        </div>
-      </dl>
-    </section>
-  );
 }
 
 async function copyTextAgain(text: string) {

@@ -4829,13 +4829,19 @@ h3 {
 
 .screening-inventory {
   display: grid;
-  gap: 12px;
-  margin: 0 0 22px;
-  border-left: 4px solid rgba(0, 184, 117, 0.7);
-  background:
-    linear-gradient(90deg, rgba(0, 184, 117, 0.12), transparent 56%),
-    rgba(0, 0, 0, 0.2);
-  padding: 14px 16px;
+  gap: 16px;
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  padding: 20px 0;
+}
+
+.screening-inventory > div {
+  display: grid;
+  gap: 8px;
+  border-left: 4px solid rgba(0, 184, 117, 0.9);
+  padding-left: 14px;
 }
 
 .screening-inventory span,
@@ -4849,11 +4855,11 @@ h3 {
 }
 
 .screening-inventory strong {
-  color: white;
+  color: var(--paper);
   font-family: "Barlow Condensed", Arial, sans-serif;
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: clamp(26px, 3vw, 38px);
   font-weight: 900;
-  line-height: 0.95;
+  line-height: 1;
   text-transform: uppercase;
 }
 
@@ -4862,40 +4868,36 @@ h3 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0;
   margin: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0;
 }
 
 .screening-inventory dl div {
   display: grid;
   gap: 5px;
   min-width: 0;
-  padding: 10px 12px 0 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 16px 0 0;
+}
+
+.screening-inventory dl div + div {
+  padding-left: 16px;
+}
+
+.screening-inventory dl div:last-child {
+  border-right: 0;
+  padding-right: 0;
 }
 
 .screening-inventory dd {
   margin: 0;
   color: rgba(247, 247, 242, 0.78);
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
-  line-height: 1.35;
-}
-
-.screening-inventory.compact {
-  gap: 10px;
-  margin: 0;
-  padding: 12px;
-}
-
-.screening-inventory.compact strong {
-  font-size: 24px;
-}
-
-.screening-inventory.compact dl {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  line-height: 1.45;
 }
 
 .party-screening-inventory {
   margin: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .pole-card .invite-lines {
@@ -5757,13 +5759,23 @@ h3 {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  .screening-inventory dl,
-  .screening-inventory.compact dl {
+  .screening-inventory dl {
     grid-template-columns: 1fr;
   }
 
   .screening-inventory dl div {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     padding-right: 0;
+  }
+
+  .screening-inventory dl div + div {
+    padding-left: 0;
+    padding-top: 12px;
+  }
+
+  .screening-inventory dl div:last-child {
+    border-bottom: 0;
   }
 
   .grid-venue-card h3 {

@@ -1,5 +1,6 @@
 # CHANGELOG
 
+- Tue 8 Sep 2026: Screening inventory was removed from venue listings and restyled on watch-party pages as a compact booking strip.
 - Tue 1 Sep 2026: Users can enter a Bangalore area and get one F1 race-night pub pick plus two backups from real venue data with evidence tags.
 - Tue 1 Sep 2026: Convex is connected and the app can save searches plus email-gated Share invite / Call pub actions.
 - Tue 1 Sep 2026: Call pub now opens the email gate for both the best pick and backup venues before saving the action.
