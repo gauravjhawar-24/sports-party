@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Tue 8 Sep 2026: V2A M3 now lets ops approve or reject seat requests from `/admin`, and approved seats count as booked on the watch-party page.
+- Tue 8 Sep 2026: V2A M2 now lets users request seats from a watch-party page and saves pending seat bookings in Convex.
 - Tue 8 Sep 2026: Watch-party pages now show a screening inventory section even when exact seat inventory has not been added yet.
 - Tue 8 Sep 2026: Watch-party pages now fall back to the live screening inventory row when an older party was created before inventory details were saved.
 - Tue 8 Sep 2026: Screening inventory was removed from venue listings and restyled on watch-party pages as a compact booking strip.

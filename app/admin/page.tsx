@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 
 export default function AdminPage() {
   const latestActions = useQuery(api.actions.latestActions);
   const latestSearches = useQuery(api.actions.latestSearches);
+  const latestSeatBookings = useQuery(api.actions.latestSeatBookings);
   const stats = useQuery(api.actions.proofStats);
+  const reviewSeatBooking = useMutation(api.actions.reviewSeatBooking);
 
   return (
     <main className="race-shell admin-shell">
@@ -56,6 +59,89 @@ export default function AdminPage() {
           <span>Calendar adds</span>
           <strong>{stats?.calendarAdds ?? 0}</strong>
         </article>
+        <article>
+          <span>Seat requests</span>
+          <strong>{stats?.seatBookingRequests ?? 0}</strong>
+        </article>
+        <article>
+          <span>Seats approved</span>
+          <strong>{stats?.confirmedSeatBookings ?? 0}</strong>
+        </article>
+      </section>
+
+      <section className="proof-table" aria-label="Saved action proof table">
+        <div className="section-heading">
+          <span>Seat bookings</span>
+          <strong>Approve or reject pending seat requests</strong>
+        </div>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Seats</th>
+                <th>Status</th>
+                <th>Venue</th>
+                <th>Saved</th>
+                <th>Review</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(latestSeatBookings ?? []).length ? (
+                latestSeatBookings?.map((booking) => (
+                  <tr key={booking._id}>
+                    <td>{booking.name}</td>
+                    <td>{booking.email}</td>
+                    <td>{booking.seats}</td>
+                    <td>{booking.status}</td>
+                    <td>
+                      {booking.venueName}, {booking.venueArea}
+                    </td>
+                    <td>
+                      {new Date(booking.createdAt).toLocaleString("en-IN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </td>
+                    <td>
+                      <div className="admin-row-actions">
+                        <button
+                          type="button"
+                          disabled={booking.status === "confirmed"}
+                          onClick={() =>
+                            void reviewSeatBooking({
+                              bookingId: booking._id as Id<"seatBookings">,
+                              status: "confirmed",
+                            })
+                          }
+                        >
+                          Approve
+                        </button>
+                        <button
+                          type="button"
+                          disabled={booking.status === "cancelled"}
+                          onClick={() =>
+                            void reviewSeatBooking({
+                              bookingId: booking._id as Id<"seatBookings">,
+                              status: "cancelled",
+                            })
+                          }
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7}>No seat requests saved yet.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="proof-table" aria-label="Saved action proof table">
@@ -154,6 +240,7 @@ function actionLabel(actionType: string) {
     reservation_handoff_started: "Reservation handoff started",
     reservation_confirmed_by_host: "Reservation confirmed by host",
     calendar_add_clicked: "Calendar add clicked",
+    seat_booking_requested: "Seat booking requested",
   };
 
   return labels[actionType] ?? actionType;

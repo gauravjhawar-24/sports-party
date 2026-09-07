@@ -527,7 +527,7 @@ Any change to these requires a written scope decision in section 15.
 
 ### active milestone
 
-M1 — one ugly complete flow.
+V2A M3 — ops can approve or reject pending seat booking requests.
 
 ### implemented
 
@@ -537,6 +537,9 @@ M1 — one ugly complete flow.
 - Convex is connected for searches and email-gated Share/Call actions.
 - `/admin` shows saved searches and Share/Call actions for demo proof.
 - `/admin/venues` can search public web signals through Tavily, save drafts, and approve/reject venue candidates before customer display.
+- V2A M1 has event-level screening inventory for bookable venue capacity.
+- V2A M2 lets users request seats inside a watch-party page, with each request saved in Convex as pending.
+- V2A M3 adds admin approval for seat booking requests, with approved seats counted separately from pending requests.
 
 ### working locally
 
@@ -564,7 +567,7 @@ User feedback found a missing post-share flow: the invite image still leaves fri
 
 ### next single action
 
-Build M4A.1: add `Create Watch Party` on venue cards, then M4A.2: host name/email form.
+Test V2A M3 by requesting seats on a Studz Sports Bar watch-party link, approving the request in `/admin`, and refreshing the watch-party page.
 
 ## 15. decision log
 
@@ -578,3 +581,4 @@ Build M4A.1: add `Create Watch Party` on venue cards, then M4A.2: host name/emai
 | Tue 1 Sep 2026 | Proof table moved to `/admin`                     | Customer-facing product should not show internal evidence tables                    | Keeps `/` clean and keeps demo proof separate                                            |
 | Tue 1 Sep 2026 | Added hybrid Tavily data pipeline                 | User wanted smart online data discovery, filtering, approval, then customer display | Adds `/admin/venues`, Convex venue candidates, and approved signals in product ranking   |
 | Wed 2 Sep 2026 | Added Watch Party RSVP plan                       | User test showed invite sharing still creates messy group debate                    | Adds host/friend flows, party page, RSVP stats and Convex persistence to the active plan |
+| Tue 8 Sep 2026 | Started V2A in-product booking                    | RSVP does not prove seats are secured                                               | Adds screening inventory and pending seat booking requests before confirmation/payment   |

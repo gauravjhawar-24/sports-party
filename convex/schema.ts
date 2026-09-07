@@ -20,6 +20,7 @@ export default defineSchema({
       v.literal("reservation_handoff_started"),
       v.literal("reservation_confirmed_by_host"),
       v.literal("calendar_add_clicked"),
+      v.literal("seat_booking_requested"),
     ),
     areaInput: v.string(),
     normalizedArea: v.string(),
@@ -154,5 +155,30 @@ export default defineSchema({
     createdAt: v.number(),
   })
     .index("by_party_and_created_at", ["partyId", "createdAt"])
+    .index("by_created_at", ["createdAt"]),
+
+  seatBookings: defineTable({
+    partyId: v.id("watchParties"),
+    inviteCode: v.optional(v.string()),
+    screeningId: v.optional(v.id("screenings")),
+    clientId: v.optional(v.string()),
+    name: v.string(),
+    email: v.string(),
+    seats: v.number(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("confirmed"),
+      v.literal("cancelled"),
+    ),
+    eventKey: v.string(),
+    raceName: v.string(),
+    venueId: v.string(),
+    venueName: v.string(),
+    venueArea: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_party_and_created_at", ["partyId", "createdAt"])
+    .index("by_party_and_email", ["partyId", "email"])
     .index("by_created_at", ["createdAt"]),
 });

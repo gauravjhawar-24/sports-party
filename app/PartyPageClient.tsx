@@ -38,6 +38,11 @@ export function PartyPageClient({
   const [showBookingInterest, setShowBookingInterest] = useState(false);
   const [bookingInterestStatus, setBookingInterestStatus] = useState("");
   const [isSavingBookingInterest, setIsSavingBookingInterest] = useState(false);
+  const [bookingName, setBookingName] = useState("");
+  const [bookingEmail, setBookingEmail] = useState("");
+  const [bookingSeats, setBookingSeats] = useState("1");
+  const [seatBookingStatus, setSeatBookingStatus] = useState("");
+  const [isSavingSeatBooking, setIsSavingSeatBooking] = useState(false);
   const [confirmationStep, setConfirmationStep] = useState<
     "closed" | "form" | "summary"
   >("closed");
@@ -77,6 +82,11 @@ export function PartyPageClient({
   );
   const confirmReservation = useMutation(api.actions.confirmReservation);
   const recordCalendarAdd = useMutation(api.actions.recordCalendarAdd);
+  const requestSeatBooking = useMutation(api.actions.requestSeatBooking);
+  const seatBookings = useQuery(
+    api.actions.seatBookingsForParty,
+    partyData?.party ? { partyId: partyData.party._id } : "skip",
+  );
 
   const grouped = useMemo(() => {
     const empty: Record<Decision, Doc<"rsvps">[]> = {
@@ -131,6 +141,26 @@ export function PartyPageClient({
     setName(currentDeviceRsvp.name);
     setDecision(currentDeviceRsvp.decision);
   }, [currentDeviceRsvp, name]);
+
+  useEffect(() => {
+    const party = partyData?.party;
+    if (!party) return;
+
+    if (!bookingName) {
+      setBookingName(
+        visibleDeviceRsvp?.name ?? (isHostDevice ? party.hostName : ""),
+      );
+    }
+    if (!bookingEmail && isHostDevice) {
+      setBookingEmail(party.hostEmail);
+    }
+  }, [
+    bookingEmail,
+    bookingName,
+    isHostDevice,
+    partyData?.party,
+    visibleDeviceRsvp?.name,
+  ]);
 
   if (partyData === undefined) {
     return (
@@ -196,6 +226,59 @@ export function PartyPageClient({
     if (!party.inviteCode) return;
     await navigator.clipboard.writeText(party.inviteCode);
     setStatus("Invite code copied.");
+  }
+
+  async function submitSeatBooking(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const cleanName = bookingName.trim();
+    const cleanEmail = bookingEmail.trim().toLowerCase();
+    const seats = Number(bookingSeats);
+
+    if (!cleanName) {
+      setSeatBookingStatus("Enter your name to request seats.");
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(cleanEmail)) {
+      setSeatBookingStatus("Enter your email to request seats.");
+      return;
+    }
+
+    if (!Number.isFinite(seats) || seats < 1 || seats > 10) {
+      setSeatBookingStatus("Choose between 1 and 10 seats.");
+      return;
+    }
+
+    setIsSavingSeatBooking(true);
+    setSeatBookingStatus("");
+
+    try {
+      await requestSeatBooking({
+        partyId: party._id,
+        clientId: clientId || undefined,
+        name: cleanName,
+        email: cleanEmail,
+        seats,
+      });
+      if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
+        posthog.capture("findmyscreen_seat_booking_requested", {
+          party_id: party._id,
+          venue_id: party.venueId,
+          venue_name: party.venueName,
+          seats,
+        });
+      }
+      setSeatBookingStatus(
+        "Seat request saved. We will treat this as pending until ops confirms it.",
+      );
+    } catch {
+      setSeatBookingStatus(
+        "Could not save this seat request. Check if inventory is available.",
+      );
+    } finally {
+      setIsSavingSeatBooking(false);
+    }
   }
 
   async function lockPlan() {
@@ -497,6 +580,21 @@ export function PartyPageClient({
 
         <PartyScreeningInventory party={party} screening={fallbackScreening} />
 
+        <SeatBookingSection
+          bookings={seatBookings ?? []}
+          email={bookingEmail}
+          isSaving={isSavingSeatBooking}
+          name={bookingName}
+          onEmailChange={setBookingEmail}
+          onNameChange={setBookingName}
+          onSeatsChange={setBookingSeats}
+          onSubmit={submitSeatBooking}
+          party={party}
+          screening={fallbackScreening}
+          seats={bookingSeats}
+          status={seatBookingStatus}
+        />
+
         <div className="race-plan-lower">
           <RsvpStats grouped={grouped} />
 
@@ -739,6 +837,145 @@ function PartyScreeningInventory({
           <dd>{bookingRules}</dd>
         </div>
       </dl>
+    </section>
+  );
+}
+
+function SeatBookingSection({
+  bookings,
+  email,
+  isSaving,
+  name,
+  onEmailChange,
+  onNameChange,
+  onSeatsChange,
+  onSubmit,
+  party,
+  screening,
+  seats,
+  status,
+}: {
+  bookings: Doc<"seatBookings">[];
+  email: string;
+  isSaving: boolean;
+  name: string;
+  onEmailChange: (value: string) => void;
+  onNameChange: (value: string) => void;
+  onSeatsChange: (value: string) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  party: Doc<"watchParties">;
+  screening?: Doc<"screenings">;
+  seats: string;
+  status: string;
+}) {
+  const totalSeats = party.screeningTotalSeats ?? screening?.totalSeats;
+  const confirmedBookedSeats =
+    party.screeningConfirmedBookedSeats ?? screening?.confirmedBookedSeats;
+  const hasInventory =
+    typeof totalSeats === "number" && typeof confirmedBookedSeats === "number";
+  const pendingSeats = bookings
+    .filter((booking) => booking.status === "pending")
+    .reduce((sum, booking) => sum + booking.seats, 0);
+  const confirmedSeats = bookings
+    .filter((booking) => booking.status === "confirmed")
+    .reduce((sum, booking) => sum + booking.seats, 0);
+  const bookedSeats = hasInventory ? confirmedBookedSeats + confirmedSeats : 0;
+  const seatsLeft = hasInventory
+    ? Math.max(0, totalSeats - bookedSeats - pendingSeats)
+    : 0;
+
+  return (
+    <section className="seat-booking-section" aria-label="Seat booking">
+      <div className="seat-booking-head">
+        <span>Seat booking</span>
+        <h2>Reserve your spot.</h2>
+        <p>
+          Request seats inside FindMyScreen. Ops can confirm these requests in
+          the next milestone.
+        </p>
+      </div>
+
+      {hasInventory ? (
+        <div className="seat-booking-grid">
+          <form className="seat-booking-form" onSubmit={onSubmit}>
+            <label>
+              Name
+              <input
+                value={name}
+                onChange={(event) => onNameChange(event.target.value)}
+                placeholder="Your name"
+                maxLength={60}
+              />
+            </label>
+            <label>
+              Email
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => onEmailChange(event.target.value)}
+                placeholder="you@example.com"
+                maxLength={120}
+              />
+            </label>
+            <label>
+              Seats
+              <input
+                type="number"
+                min="1"
+                max="10"
+                value={seats}
+                onChange={(event) => onSeatsChange(event.target.value)}
+              />
+            </label>
+            <button type="submit" disabled={isSaving || seatsLeft < 1}>
+              {isSaving ? "Saving..." : "Request seats"}
+            </button>
+            {status ? <p className="action-status">{status}</p> : null}
+          </form>
+
+          <div className="seat-booking-summary">
+            <div className="seat-booking-metrics">
+              <div>
+                <strong>{bookedSeats}</strong>
+                <span>Booked</span>
+              </div>
+              <div>
+                <strong>{pendingSeats}</strong>
+                <span>Pending</span>
+              </div>
+              <div>
+                <strong>{seatsLeft}</strong>
+                <span>Seats left</span>
+              </div>
+            </div>
+            <div className="seat-booking-list">
+              <span>Requests</span>
+              {bookings.length ? (
+                <ul>
+                  {bookings.map((booking) => (
+                    <li key={booking._id}>
+                      <strong>{booking.name}</strong>
+                      <span>
+                        {booking.seats} seat{booking.seats === 1 ? "" : "s"} ·{" "}
+                        {booking.status}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No seat requests yet.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="seat-booking-empty">
+          <strong>Bookings are not open for this venue yet.</strong>
+          <p>
+            Add seat inventory for {party.venueName} before taking requests.
+          </p>
+        </div>
+      )}
     </section>
   );
 }

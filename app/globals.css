@@ -4580,6 +4580,43 @@ h2 {
   line-height: 1;
 }
 
+.admin-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-row-actions button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--paper);
+  cursor: pointer;
+  padding: 0 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.admin-row-actions button:first-child {
+  border-color: rgba(0, 184, 117, 0.64);
+  background: rgba(0, 184, 117, 0.16);
+}
+
+.admin-row-actions button:last-child {
+  border-color: rgba(225, 6, 0, 0.64);
+  background: rgba(225, 6, 0, 0.14);
+}
+
+.admin-row-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
 .table-wrap {
   overflow-x: auto;
   border: 1px solid var(--line);
@@ -4898,6 +4935,192 @@ h3 {
 
 .party-screening-inventory {
   margin: 0;
+}
+
+.seat-booking-section {
+  display: grid;
+  gap: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 28px 0;
+}
+
+.seat-booking-head {
+  display: grid;
+  max-width: 720px;
+  gap: 8px;
+}
+
+.seat-booking-head span,
+.seat-booking-list > span,
+.seat-booking-form label {
+  color: var(--green);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.seat-booking-head h2 {
+  margin: 0;
+  color: var(--paper);
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: clamp(42px, 6vw, 76px);
+  font-weight: 900;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.seat-booking-head p,
+.seat-booking-empty p,
+.seat-booking-list p {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.62);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.seat-booking-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.seat-booking-form {
+  display: grid;
+  gap: 12px;
+  border-left: 5px solid var(--green);
+  background: rgba(0, 184, 117, 0.08);
+  padding: 18px;
+}
+
+.seat-booking-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.seat-booking-form input {
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--paper);
+  padding: 0 12px;
+  font: inherit;
+}
+
+.seat-booking-form button {
+  min-height: 48px;
+  border: 1px solid var(--green);
+  border-radius: 0;
+  background: var(--green);
+  color: #04110b;
+  cursor: pointer;
+  padding: 0 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.seat-booking-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.seat-booking-summary {
+  display: grid;
+  gap: 18px;
+}
+
+.seat-booking-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.seat-booking-metrics div {
+  display: grid;
+  gap: 4px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 12px;
+}
+
+.seat-booking-metrics div:last-child {
+  border-right: 0;
+}
+
+.seat-booking-metrics strong {
+  color: var(--paper);
+  font-family: "JetBrains Mono", monospace;
+  font-size: clamp(28px, 4vw, 46px);
+  line-height: 1;
+}
+
+.seat-booking-metrics span {
+  color: rgba(247, 247, 242, 0.5);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.seat-booking-list {
+  display: grid;
+  gap: 12px;
+}
+
+.seat-booking-list ul {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.seat-booking-list li {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(247, 247, 242, 0.72);
+}
+
+.seat-booking-list li strong {
+  color: var(--paper);
+}
+
+.seat-booking-list li span {
+  color: var(--amber);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.seat-booking-empty {
+  display: grid;
+  gap: 6px;
+  border-left: 5px solid rgba(255, 184, 0, 0.8);
+  background: rgba(255, 184, 0, 0.08);
+  padding: 18px;
+}
+
+.seat-booking-empty strong {
+  color: var(--paper);
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
 }
 
 .pole-card .invite-lines {
@@ -5601,7 +5824,8 @@ h3 {
   }
 
   .booking-link-grid,
-  .booking-host-panel {
+  .booking-host-panel,
+  .seat-booking-grid {
     grid-template-columns: 1fr;
   }
 
@@ -5621,6 +5845,26 @@ h3 {
 
   .booking-host-panel button {
     width: 100%;
+  }
+
+  .seat-booking-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .seat-booking-metrics div {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .seat-booking-metrics div:last-child {
+    border-bottom: 0;
+  }
+
+  .seat-booking-list li {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px 0;
   }
 
   .rsvp-scoreboard {
