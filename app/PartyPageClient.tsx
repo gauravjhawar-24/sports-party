@@ -669,14 +669,43 @@ function PartyScreeningInventory({
   const bookingClosesAt =
     party.screeningBookingClosesAt ?? screening?.bookingClosesAt;
 
-  if (
-    typeof totalSeats !== "number" ||
-    typeof confirmedBookedSeats !== "number" ||
-    !priceLabel ||
-    !bookingRules ||
-    !bookingClosesAt
-  ) {
-    return null;
+  const hasInventory =
+    typeof totalSeats === "number" &&
+    typeof confirmedBookedSeats === "number" &&
+    priceLabel &&
+    bookingRules &&
+    bookingClosesAt;
+
+  if (!hasInventory) {
+    return (
+      <section
+        className="screening-inventory party-screening-inventory"
+        aria-label="Screening inventory"
+      >
+        <div>
+          <span>Screening inventory</span>
+          <strong>Inventory not added yet</strong>
+        </div>
+        <dl>
+          <div>
+            <dt>Venue</dt>
+            <dd>{party.venueName}</dd>
+          </div>
+          <div>
+            <dt>Price</dt>
+            <dd>Not set</dd>
+          </div>
+          <div>
+            <dt>Closes</dt>
+            <dd>Not set</dd>
+          </div>
+          <div>
+            <dt>Rules</dt>
+            <dd>Add venue allocation before taking bookings.</dd>
+          </div>
+        </dl>
+      </section>
+    );
   }
 
   const seatsLeft = Math.max(0, totalSeats - confirmedBookedSeats);
