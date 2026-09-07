@@ -1,5 +1,6 @@
 # CHANGELOG
 
+- Tue 8 Sep 2026: Watch-party pages now fall back to the live screening inventory row when an older party was created before inventory details were saved.
 - Tue 8 Sep 2026: Screening inventory was removed from venue listings and restyled on watch-party pages as a compact booking strip.
 - Tue 1 Sep 2026: Users can enter a Bangalore area and get one F1 race-night pub pick plus two backups from real venue data with evidence tags.
 - Tue 1 Sep 2026: Convex is connected and the app can save searches plus email-gated Share invite / Call pub actions.

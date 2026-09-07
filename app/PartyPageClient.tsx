@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "convex/react";
 import posthog from "posthog-js";
 import { api } from "../convex/_generated/api";
 import type { Doc, Id } from "../convex/_generated/dataModel";
+import { nextRace } from "../lib/venues";
 
 type Decision = "in" | "maybe" | "out";
 
@@ -65,6 +66,9 @@ export function PartyPageClient({
     api.actions.watchPartyWithRsvpsByInviteCode,
     inviteCode ? { inviteCode } : "skip",
   );
+  const screeningRows = useQuery(api.actions.screeningsForEvent, {
+    eventKey: nextRace.eventKey,
+  });
   const partyData = partyId ? partyById : partyByCode;
   const submitRsvp = useMutation(api.actions.submitWatchPartyRsvp);
   const lockWatchPartyPlan = useMutation(api.actions.lockWatchPartyPlan);
@@ -90,6 +94,17 @@ export function PartyPageClient({
     return partyData?.rsvps.find((rsvp) => rsvp.clientId === clientId) ?? null;
   }, [clientId, partyData?.rsvps]);
   const visibleDeviceRsvp = currentDeviceRsvp ?? localSavedRsvp;
+  const fallbackScreening = useMemo(() => {
+    const party = partyData?.party;
+    if (!party || !screeningRows) return undefined;
+
+    return screeningRows.find(
+      (screening) =>
+        screening.venueId === party.venueId ||
+        screeningKey(screening.venueName, screening.venueArea) ===
+          screeningKey(party.venueName, party.venueArea),
+    );
+  }, [partyData?.party, screeningRows]);
 
   useEffect(() => {
     const nextClientId = getOrCreateClientId();
@@ -480,7 +495,7 @@ export function PartyPageClient({
           </section>
         ) : null}
 
-        <PartyScreeningInventory party={party} />
+        <PartyScreeningInventory party={party} screening={fallbackScreening} />
 
         <div className="race-plan-lower">
           <RsvpStats grouped={grouped} />
@@ -639,21 +654,32 @@ function PlanProgress({
   );
 }
 
-function PartyScreeningInventory({ party }: { party: Doc<"watchParties"> }) {
+function PartyScreeningInventory({
+  party,
+  screening,
+}: {
+  party: Doc<"watchParties">;
+  screening?: Doc<"screenings">;
+}) {
+  const totalSeats = party.screeningTotalSeats ?? screening?.totalSeats;
+  const confirmedBookedSeats =
+    party.screeningConfirmedBookedSeats ?? screening?.confirmedBookedSeats;
+  const priceLabel = party.screeningPriceLabel ?? screening?.priceLabel;
+  const bookingRules = party.screeningBookingRules ?? screening?.bookingRules;
+  const bookingClosesAt =
+    party.screeningBookingClosesAt ?? screening?.bookingClosesAt;
+
   if (
-    typeof party.screeningTotalSeats !== "number" ||
-    typeof party.screeningConfirmedBookedSeats !== "number" ||
-    !party.screeningPriceLabel ||
-    !party.screeningBookingRules ||
-    !party.screeningBookingClosesAt
+    typeof totalSeats !== "number" ||
+    typeof confirmedBookedSeats !== "number" ||
+    !priceLabel ||
+    !bookingRules ||
+    !bookingClosesAt
   ) {
     return null;
   }
 
-  const seatsLeft = Math.max(
-    0,
-    party.screeningTotalSeats - party.screeningConfirmedBookedSeats,
-  );
+  const seatsLeft = Math.max(0, totalSeats - confirmedBookedSeats);
 
   return (
     <section
@@ -663,29 +689,43 @@ function PartyScreeningInventory({ party }: { party: Doc<"watchParties"> }) {
       <div>
         <span>Screening inventory</span>
         <strong>
-          {party.screeningConfirmedBookedSeats} booked · {seatsLeft} seats left
+          {confirmedBookedSeats} booked · {seatsLeft} seats left
         </strong>
       </div>
       <dl>
         <div>
           <dt>Total seats</dt>
-          <dd>{party.screeningTotalSeats}</dd>
+          <dd>{totalSeats}</dd>
         </div>
         <div>
           <dt>Price</dt>
-          <dd>{party.screeningPriceLabel}</dd>
+          <dd>{priceLabel}</dd>
         </div>
         <div>
           <dt>Closes</dt>
-          <dd>{party.screeningBookingClosesAt}</dd>
+          <dd>{bookingClosesAt}</dd>
         </div>
         <div>
           <dt>Rules</dt>
-          <dd>{party.screeningBookingRules}</dd>
+          <dd>{bookingRules}</dd>
         </div>
       </dl>
     </section>
   );
+}
+
+function screeningKey(name: string, area: string) {
+  return `${normalizeInventoryKey(name)}|${normalizeInventoryKey(area)}`;
+}
+
+function normalizeInventoryKey(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
 }
 
 function RsvpForm({
