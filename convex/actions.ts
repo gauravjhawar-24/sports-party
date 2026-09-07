@@ -146,6 +146,86 @@ export const proofStats = query({
   },
 });
 
+const v2SeedEvent = {
+  eventKey: "f1-italian-grand-prix-2026",
+  sport: "Formula 1",
+  name: "Italian Grand Prix",
+  startsAt: "2026-09-06T18:30:00+05:30",
+  displayDate: "Sunday, 6 Sep 2026",
+  displayTime: "6:30 PM IST",
+};
+
+const v2SeedScreening = {
+  eventKey: v2SeedEvent.eventKey,
+  venueId: "studz-sports-bar-bellandur",
+  venueName: "Studz Sports Bar",
+  venueArea: "Bellandur",
+  totalSeats: 30,
+  confirmedBookedSeats: 14,
+  priceLabel: "Rs 499 deposit",
+  bookingRules: "Entry is confirmed only after venue confirmation.",
+  bookingClosesAt: "Sunday, 6 Sep 2026, 5:00 PM IST",
+};
+
+export const seedV2ScreeningInventory = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    const existingEvent = await ctx.db
+      .query("events")
+      .withIndex("by_eventKey", (q) => q.eq("eventKey", v2SeedEvent.eventKey))
+      .first();
+
+    if (existingEvent) {
+      await ctx.db.patch(existingEvent._id, {
+        ...v2SeedEvent,
+        updatedAt: now,
+      });
+    } else {
+      await ctx.db.insert("events", {
+        ...v2SeedEvent,
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+
+    const existingScreening = await ctx.db
+      .query("screenings")
+      .withIndex("by_eventKey_and_venueId", (q) =>
+        q
+          .eq("eventKey", v2SeedScreening.eventKey)
+          .eq("venueId", v2SeedScreening.venueId),
+      )
+      .first();
+
+    if (existingScreening) {
+      await ctx.db.patch(existingScreening._id, {
+        ...v2SeedScreening,
+        updatedAt: now,
+      });
+      return existingScreening._id;
+    }
+
+    return await ctx.db.insert("screenings", {
+      ...v2SeedScreening,
+      createdAt: now,
+      updatedAt: now,
+    });
+  },
+});
+
+export const screeningsForEvent = query({
+  args: {
+    eventKey: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("screenings")
+      .withIndex("by_eventKey", (q) => q.eq("eventKey", args.eventKey))
+      .collect();
+  },
+});
+
 export const recordBookingInterest = mutation({
   args: {
     partyId: v.id("watchParties"),
@@ -178,6 +258,12 @@ export const createWatchParty = mutation({
     venueEvidence: v.string(),
     venueVibe: v.string(),
     mapUrl: v.string(),
+    screeningId: v.optional(v.id("screenings")),
+    screeningTotalSeats: v.optional(v.number()),
+    screeningConfirmedBookedSeats: v.optional(v.number()),
+    screeningPriceLabel: v.optional(v.string()),
+    screeningBookingRules: v.optional(v.string()),
+    screeningBookingClosesAt: v.optional(v.string()),
     bookMyShowUrl: v.optional(v.string()),
     swiggyDineoutUrl: v.optional(v.string()),
     districtUrl: v.optional(v.string()),
@@ -219,6 +305,12 @@ export const createWatchParty = mutation({
       venueEvidence: args.venueEvidence,
       venueVibe: args.venueVibe,
       mapUrl: args.mapUrl,
+      screeningId: args.screeningId,
+      screeningTotalSeats: args.screeningTotalSeats,
+      screeningConfirmedBookedSeats: args.screeningConfirmedBookedSeats,
+      screeningPriceLabel: args.screeningPriceLabel,
+      screeningBookingRules: args.screeningBookingRules,
+      screeningBookingClosesAt: args.screeningBookingClosesAt,
       bookMyShowUrl: args.bookMyShowUrl,
       swiggyDineoutUrl: args.swiggyDineoutUrl,
       districtUrl: args.districtUrl,

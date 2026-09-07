@@ -59,11 +59,13 @@ function getRaceCountdown(): RaceCountdown {
 export function HomeClient({
   initialArea = "",
   initialApprovedSignals,
+  initialScreenings,
   initialInvite = false,
   basePath = "",
 }: {
   initialArea?: string;
   initialApprovedSignals: Doc<"venueCandidates">[];
+  initialScreenings: Doc<"screenings">[];
   initialInvite?: boolean;
   basePath?: string;
 }) {
@@ -107,7 +109,11 @@ export function HomeClient({
   const recordAction = useMutation(api.actions.recordAction);
   const createWatchParty = useMutation(api.actions.createWatchParty);
   const approvedSignals = useQuery(api.actions.approvedVenueCandidates);
+  const screenings = useQuery(api.actions.screeningsForEvent, {
+    eventKey: nextRace.eventKey,
+  });
   const approvedSignalRows = approvedSignals ?? initialApprovedSignals;
+  const screeningRows = screenings ?? initialScreenings;
 
   useEffect(() => {
     const updateCountdown = () => setRaceCountdown(getRaceCountdown());
@@ -125,6 +131,17 @@ export function HomeClient({
     () => rankVenueList(submittedArea, venueList),
     [submittedArea, venueList],
   );
+  const screeningByVenueId = useMemo(() => {
+    const rows = new Map<string, Doc<"screenings">>();
+    for (const screening of screeningRows) {
+      rows.set(screening.venueId, screening);
+      rows.set(
+        screeningKey(screening.venueName, screening.venueArea),
+        screening,
+      );
+    }
+    return rows;
+  }, [screeningRows]);
   const bestVenue = run.results[0];
   const backupVenues = run.results.slice(1, 3);
   const moreVenues = run.results.slice(3, 6);
@@ -216,6 +233,9 @@ export function HomeClient({
 
     try {
       const venue = pendingParty.venue;
+      const screening =
+        screeningByVenueId.get(venue.id) ??
+        screeningByVenueId.get(screeningKey(venue.name, venue.area));
       const hostClientId = getOrCreateClientId();
       const party = await createWatchParty({
         hostName: trimmedName,
@@ -229,6 +249,12 @@ export function HomeClient({
         venueEvidence: venue.evidence,
         venueVibe: venue.vibe,
         mapUrl: venue.mapUrl,
+        screeningId: screening?._id,
+        screeningTotalSeats: screening?.totalSeats,
+        screeningConfirmedBookedSeats: screening?.confirmedBookedSeats,
+        screeningPriceLabel: screening?.priceLabel,
+        screeningBookingRules: screening?.bookingRules,
+        screeningBookingClosesAt: screening?.bookingClosesAt,
         bookMyShowUrl: venue.bookMyShowUrl,
         swiggyDineoutUrl: venue.swiggyDineoutUrl,
         districtUrl: venue.districtUrl,
@@ -552,6 +578,12 @@ export function HomeClient({
                     <p className="venue-area">{bestVenue.area}</p>
                     <ConfirmationProof venue={bestVenue} />
                     <VenueStats venue={bestVenue} position={1} />
+                    <ScreeningInventory
+                      screening={screeningForVenue(
+                        bestVenue,
+                        screeningByVenueId,
+                      )}
+                    />
 
                     <div className="invite-lines">
                       <div>
@@ -620,6 +652,10 @@ export function HomeClient({
                         <ConfirmationProof venue={venue} />
                       </div>
                       <VenueStats venue={venue} position={index + 2} />
+                      <ScreeningInventory
+                        screening={screeningForVenue(venue, screeningByVenueId)}
+                        compact
+                      />
                       <p className="pick-note">
                         {hasVenueVerificationProof(venue)
                           ? "Confirmed backup for race night."
@@ -668,6 +704,13 @@ export function HomeClient({
                             <ConfirmationProof venue={venue} />
                           </div>
                           <VenueStats venue={venue} position={index + 4} />
+                          <ScreeningInventory
+                            screening={screeningForVenue(
+                              venue,
+                              screeningByVenueId,
+                            )}
+                            compact
+                          />
                           <p className="pick-note">
                             {hasVenueVerificationProof(venue)
                               ? "Confirmed backup for race night."
@@ -879,6 +922,77 @@ function VenueStats({ venue, position }: { venue: Venue; position: number }) {
         {booking}
       </span>
     </div>
+  );
+}
+
+function screeningForVenue(
+  venue: Venue,
+  screeningByVenueId: Map<string, Doc<"screenings">>,
+) {
+  return (
+    screeningByVenueId.get(venue.id) ??
+    screeningByVenueId.get(screeningKey(venue.name, venue.area))
+  );
+}
+
+function screeningKey(name: string, area: string) {
+  return `${normalizeInventoryKey(name)}|${normalizeInventoryKey(area)}`;
+}
+
+function normalizeInventoryKey(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function ScreeningInventory({
+  compact = false,
+  screening,
+}: {
+  compact?: boolean;
+  screening?: Doc<"screenings">;
+}) {
+  if (!screening) return null;
+
+  const seatsLeft = Math.max(
+    0,
+    screening.totalSeats - screening.confirmedBookedSeats,
+  );
+
+  return (
+    <section
+      className={`screening-inventory ${compact ? "compact" : ""}`}
+      aria-label={`${screening.venueName} screening inventory`}
+    >
+      <div>
+        <span>Screening inventory</span>
+        <strong>
+          {screening.confirmedBookedSeats} booked · {seatsLeft} seats left
+        </strong>
+      </div>
+      <dl>
+        <div>
+          <dt>Total seats</dt>
+          <dd>{screening.totalSeats}</dd>
+        </div>
+        <div>
+          <dt>Price</dt>
+          <dd>{screening.priceLabel}</dd>
+        </div>
+        <div>
+          <dt>Closes</dt>
+          <dd>{screening.bookingClosesAt}</dd>
+        </div>
+        <div>
+          <dt>Rules</dt>
+          <dd>{screening.bookingRules}</dd>
+        </div>
+      </dl>
+    </section>
   );
 }
 

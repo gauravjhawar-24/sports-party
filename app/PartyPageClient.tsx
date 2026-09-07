@@ -480,6 +480,8 @@ export function PartyPageClient({
           </section>
         ) : null}
 
+        <PartyScreeningInventory party={party} />
+
         <div className="race-plan-lower">
           <RsvpStats grouped={grouped} />
 
@@ -633,6 +635,55 @@ function PlanProgress({
           </strong>
         ))}
       </div>
+    </section>
+  );
+}
+
+function PartyScreeningInventory({ party }: { party: Doc<"watchParties"> }) {
+  if (
+    typeof party.screeningTotalSeats !== "number" ||
+    typeof party.screeningConfirmedBookedSeats !== "number" ||
+    !party.screeningPriceLabel ||
+    !party.screeningBookingRules ||
+    !party.screeningBookingClosesAt
+  ) {
+    return null;
+  }
+
+  const seatsLeft = Math.max(
+    0,
+    party.screeningTotalSeats - party.screeningConfirmedBookedSeats,
+  );
+
+  return (
+    <section
+      className="screening-inventory party-screening-inventory"
+      aria-label="Screening inventory"
+    >
+      <div>
+        <span>Screening inventory</span>
+        <strong>
+          {party.screeningConfirmedBookedSeats} booked · {seatsLeft} seats left
+        </strong>
+      </div>
+      <dl>
+        <div>
+          <dt>Total seats</dt>
+          <dd>{party.screeningTotalSeats}</dd>
+        </div>
+        <div>
+          <dt>Price</dt>
+          <dd>{party.screeningPriceLabel}</dd>
+        </div>
+        <div>
+          <dt>Closes</dt>
+          <dd>{party.screeningBookingClosesAt}</dd>
+        </div>
+        <div>
+          <dt>Rules</dt>
+          <dd>{party.screeningBookingRules}</dd>
+        </div>
+      </dl>
     </section>
   );
 }

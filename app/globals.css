@@ -4827,6 +4827,77 @@ h3 {
   text-transform: uppercase;
 }
 
+.screening-inventory {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 22px;
+  border-left: 4px solid rgba(0, 184, 117, 0.7);
+  background:
+    linear-gradient(90deg, rgba(0, 184, 117, 0.12), transparent 56%),
+    rgba(0, 0, 0, 0.2);
+  padding: 14px 16px;
+}
+
+.screening-inventory span,
+.screening-inventory dt {
+  color: var(--green);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.screening-inventory strong {
+  color: white;
+  font-family: "Barlow Condensed", Arial, sans-serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.screening-inventory dl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.screening-inventory dl div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px 12px 0 0;
+}
+
+.screening-inventory dd {
+  margin: 0;
+  color: rgba(247, 247, 242, 0.78);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.screening-inventory.compact {
+  gap: 10px;
+  margin: 0;
+  padding: 12px;
+}
+
+.screening-inventory.compact strong {
+  font-size: 24px;
+}
+
+.screening-inventory.compact dl {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.party-screening-inventory {
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .pole-card .invite-lines {
   border-color: rgba(255, 255, 255, 0.1);
 }
@@ -5684,6 +5755,15 @@ h3 {
   .venue-stats span:nth-child(1),
   .venue-stats span:nth-child(2) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .screening-inventory dl,
+  .screening-inventory.compact dl {
+    grid-template-columns: 1fr;
+  }
+
+  .screening-inventory dl div {
+    padding-right: 0;
   }
 
   .grid-venue-card h3 {

@@ -109,3 +109,4 @@
 - Sat 5 Sep 2026: Watch-party pages now remove the Invite people share action and show only Copy invite link plus Copy invite code, with the code visible and the full URL hidden.
 - Sat 5 Sep 2026: Whitefield results now treat Underdogs, Underdoggs, and Underdoggs Sports Bar & Grill as the same venue so duplicate outlet rows collapse.
 - Sat 5 Sep 2026: Watch-party pages now keep host-only controls away from joinees, require reservation proof before confirmation, and label shared event links as other F1 screenings.
+- Mon 7 Sep 2026: V2A now has one bookable screening inventory record for Studz Sports Bar, with read-only seats, price, rules, and close time shown on discovery and copied into new watch parties.

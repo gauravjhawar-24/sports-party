@@ -73,6 +73,35 @@ export default defineSchema({
     .index("by_status_and_created_at", ["status", "createdAt"])
     .index("by_created_at", ["createdAt"]),
 
+  events: defineTable({
+    eventKey: v.string(),
+    sport: v.string(),
+    name: v.string(),
+    startsAt: v.string(),
+    displayDate: v.string(),
+    displayTime: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_eventKey", ["eventKey"])
+    .index("by_startsAt", ["startsAt"]),
+
+  screenings: defineTable({
+    eventKey: v.string(),
+    venueId: v.string(),
+    venueName: v.string(),
+    venueArea: v.string(),
+    totalSeats: v.number(),
+    confirmedBookedSeats: v.number(),
+    priceLabel: v.string(),
+    bookingRules: v.string(),
+    bookingClosesAt: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_eventKey", ["eventKey"])
+    .index("by_eventKey_and_venueId", ["eventKey", "venueId"]),
+
   watchParties: defineTable({
     hostName: v.string(),
     hostEmail: v.string(),
@@ -86,6 +115,12 @@ export default defineSchema({
     venueEvidence: v.string(),
     venueVibe: v.string(),
     mapUrl: v.string(),
+    screeningId: v.optional(v.id("screenings")),
+    screeningTotalSeats: v.optional(v.number()),
+    screeningConfirmedBookedSeats: v.optional(v.number()),
+    screeningPriceLabel: v.optional(v.string()),
+    screeningBookingRules: v.optional(v.string()),
+    screeningBookingClosesAt: v.optional(v.string()),
     bookMyShowUrl: v.optional(v.string()),
     swiggyDineoutUrl: v.optional(v.string()),
     districtUrl: v.optional(v.string()),

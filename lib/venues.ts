@@ -28,6 +28,7 @@ export type Venue = {
 };
 
 export const nextRace = {
+  eventKey: "f1-italian-grand-prix-2026",
   name: "Italian Grand Prix",
   circuit: "Monza",
   raceDate: "Sunday, 6 Sep 2026",
