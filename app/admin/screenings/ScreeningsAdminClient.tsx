@@ -83,8 +83,23 @@ export function ScreeningsAdminClient({
     setStatus("");
     setError("");
 
+    const requiredFields = [
+      form.eventKey,
+      form.venueId,
+      form.venueName,
+      form.venueArea,
+      form.priceLabel,
+      form.bookingRules,
+      form.bookingClosesAt,
+    ];
     const totalSeats = Number(form.totalSeats);
     const confirmedBookedSeats = Number(form.confirmedBookedSeats);
+
+    if (requiredFields.some((field) => !field.trim())) {
+      setError("Fill all fields before saving inventory.");
+      setIsSaving(false);
+      return;
+    }
 
     if (
       !Number.isFinite(totalSeats) ||
@@ -109,7 +124,6 @@ export function ScreeningsAdminClient({
         bookingClosesAt: form.bookingClosesAt,
       });
       setStatus(`${form.venueName || "Screening"} inventory saved.`);
-      setForm(emptyForm);
     } catch {
       setError("Could not save this inventory row. Check all fields.");
     } finally {
@@ -248,17 +262,17 @@ export function ScreeningsAdminClient({
             <button
               type="button"
               onClick={() => {
-                setForm(emptyForm);
-                setStatus("");
+                setForm({ ...emptyForm });
+                setStatus("Ready for a new inventory row.");
                 setError("");
               }}
             >
               New row
             </button>
+            {status ? <p className="action-status">{status}</p> : null}
+            {error ? <p className="email-error">{error}</p> : null}
           </div>
         </form>
-        {status ? <p className="action-status">{status}</p> : null}
-        {error ? <p className="email-error">{error}</p> : null}
       </section>
 
       <section className="proof-table" aria-label="Current screening inventory">
