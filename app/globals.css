@@ -4409,6 +4409,13 @@ h2 {
   padding: 16px;
 }
 
+.admin-link-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 .admin-link-panel span,
 .signal-card span {
   display: block;
@@ -4443,6 +4450,81 @@ h2 {
   padding: 0 12px;
   font-weight: 900;
   text-decoration: none;
+}
+
+.screening-editor {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(16, 17, 22, 0.9);
+  padding: 16px;
+}
+
+.screening-editor-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.screening-editor-form label {
+  display: grid;
+  gap: 7px;
+  color: rgba(247, 247, 242, 0.58);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.screening-editor-form input,
+.screening-editor-form textarea {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: rgba(9, 9, 9, 0.82);
+  color: var(--paper);
+  padding: 0 12px;
+  font: inherit;
+}
+
+.screening-editor-form textarea {
+  min-height: 92px;
+  padding: 12px;
+  resize: vertical;
+}
+
+.screening-editor-wide {
+  grid-column: span 4;
+}
+
+.screening-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: span 4;
+  gap: 10px;
+}
+
+.screening-editor-actions button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--red);
+  color: white;
+  cursor: pointer;
+  padding: 0 14px;
+  font-weight: 900;
+}
+
+.screening-editor-actions button:last-child {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.screening-editor-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .signal-console {
@@ -6297,6 +6379,24 @@ h3 {
     align-items: stretch;
     grid-template-columns: 1fr;
     flex-direction: column;
+  }
+
+  .admin-link-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-link-actions a {
+    width: 100%;
+  }
+
+  .screening-editor-form {
+    grid-template-columns: 1fr;
+  }
+
+  .screening-editor-wide,
+  .screening-editor-actions {
+    grid-column: auto;
   }
 
   .signal-drafts {

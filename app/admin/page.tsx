@@ -27,7 +27,10 @@ export default function AdminPage() {
           <span>Data pipeline</span>
           <strong>Find public venue signals before customers see them.</strong>
         </div>
-        <Link href="/admin/venues">Open venue signals</Link>
+        <div className="admin-link-actions">
+          <Link href="/admin/screenings">Open screening inventory</Link>
+          <Link href="/admin/venues">Open venue signals</Link>
+        </div>
       </section>
 
       <section className="admin-stats" aria-label="Proof summary">

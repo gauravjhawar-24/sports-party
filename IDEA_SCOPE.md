@@ -527,7 +527,7 @@ Any change to these requires a written scope decision in section 15.
 
 ### active milestone
 
-V2A M3 — ops can approve or reject pending seat booking requests.
+V2A M4 — ops can create and edit screening inventory from admin.
 
 ### implemented
 
@@ -540,6 +540,7 @@ V2A M3 — ops can approve or reject pending seat booking requests.
 - V2A M1 has event-level screening inventory for bookable venue capacity.
 - V2A M2 lets users request seats inside a watch-party page, with each request saved in Convex as pending.
 - V2A M3 adds admin approval for seat booking requests, with approved seats counted separately from pending requests.
+- V2A M4 adds `/admin/screenings` so ops can create and edit total seats, booked seats, price, rules and booking close time.
 
 ### working locally
 
@@ -567,7 +568,7 @@ User feedback found a missing post-share flow: the invite image still leaves fri
 
 ### next single action
 
-Test V2A M3 by requesting seats on a Studz Sports Bar watch-party link, approving the request in `/admin`, and refreshing the watch-party page.
+Test V2A M4 by editing a screening row in `/admin/screenings`, then creating/opening a watch party for that venue and checking the inventory values.
 
 ## 15. decision log
 

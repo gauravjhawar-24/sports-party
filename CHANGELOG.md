@@ -1,5 +1,6 @@
 # CHANGELOG
 
+- Tue 8 Sep 2026: V2A M4 now has `/admin/screenings` for creating and editing screening seat inventory without code changes.
 - Tue 8 Sep 2026: V2A M3 now lets ops approve or reject seat requests from `/admin`, and approved seats count as booked on the watch-party page.
 - Tue 8 Sep 2026: V2A M2 now lets users request seats from a watch-party page and saves pending seat bookings in Convex.
 - Tue 8 Sep 2026: Watch-party pages now show a screening inventory section even when exact seat inventory has not been added yet.

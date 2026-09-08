@@ -245,6 +245,94 @@ export const screeningsForEvent = query({
   },
 });
 
+export const latestScreenings = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("screenings")
+      .withIndex("by_eventKey")
+      .order("desc")
+      .take(50);
+  },
+});
+
+export const upsertScreeningInventory = mutation({
+  args: {
+    screeningId: v.optional(v.id("screenings")),
+    eventKey: v.string(),
+    venueId: v.string(),
+    venueName: v.string(),
+    venueArea: v.string(),
+    totalSeats: v.number(),
+    confirmedBookedSeats: v.number(),
+    priceLabel: v.string(),
+    bookingRules: v.string(),
+    bookingClosesAt: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const eventKey = args.eventKey.trim();
+    const venueId = args.venueId.trim();
+    const venueName = args.venueName.trim();
+    const venueArea = args.venueArea.trim();
+    const priceLabel = args.priceLabel.trim();
+    const bookingRules = args.bookingRules.trim();
+    const bookingClosesAt = args.bookingClosesAt.trim();
+    const totalSeats = Math.floor(args.totalSeats);
+    const confirmedBookedSeats = Math.floor(args.confirmedBookedSeats);
+
+    if (!eventKey) throw new Error("Event key is required");
+    if (!venueId) throw new Error("Venue ID is required");
+    if (!venueName) throw new Error("Venue name is required");
+    if (!venueArea) throw new Error("Venue area is required");
+    if (!priceLabel) throw new Error("Price is required");
+    if (!bookingRules) throw new Error("Booking rules are required");
+    if (!bookingClosesAt) throw new Error("Booking close time is required");
+    if (totalSeats < 1) throw new Error("Total seats must be at least 1");
+    if (confirmedBookedSeats < 0) {
+      throw new Error("Already booked seats cannot be negative");
+    }
+    if (confirmedBookedSeats > totalSeats) {
+      throw new Error("Already booked seats cannot exceed total seats");
+    }
+
+    const now = Date.now();
+    const payload = {
+      eventKey,
+      venueId,
+      venueName,
+      venueArea,
+      totalSeats,
+      confirmedBookedSeats,
+      priceLabel,
+      bookingRules,
+      bookingClosesAt,
+      updatedAt: now,
+    };
+
+    if (args.screeningId) {
+      await ctx.db.patch(args.screeningId, payload);
+      return args.screeningId;
+    }
+
+    const existing = await ctx.db
+      .query("screenings")
+      .withIndex("by_eventKey_and_venueId", (q) =>
+        q.eq("eventKey", eventKey).eq("venueId", venueId),
+      )
+      .first();
+
+    if (existing) {
+      await ctx.db.patch(existing._id, payload);
+      return existing._id;
+    }
+
+    return await ctx.db.insert("screenings", {
+      ...payload,
+      createdAt: now,
+    });
+  },
+});
+
 export const recordBookingInterest = mutation({
   args: {
     partyId: v.id("watchParties"),
