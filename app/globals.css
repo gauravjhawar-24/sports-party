@@ -4479,6 +4479,7 @@ h2 {
 }
 
 .screening-editor-form input,
+.screening-editor-form select,
 .screening-editor-form textarea {
   min-height: 44px;
   border: 1px solid var(--line);
@@ -4487,6 +4488,10 @@ h2 {
   color: var(--paper);
   padding: 0 12px;
   font: inherit;
+}
+
+.screening-editor-form select {
+  appearance: none;
 }
 
 .screening-editor-form textarea {

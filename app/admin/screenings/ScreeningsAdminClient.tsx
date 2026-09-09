@@ -11,8 +11,6 @@ type ScreeningForm = {
   screeningId?: Id<"screenings">;
   eventKey: string;
   venueId: string;
-  venueName: string;
-  venueArea: string;
   totalSeats: string;
   confirmedBookedSeats: string;
   priceLabel: string;
@@ -20,11 +18,16 @@ type ScreeningForm = {
   bookingClosesAt: string;
 };
 
+type VenueOption = {
+  venueId: string;
+  venueName: string;
+  venueArea: string;
+  source: string;
+};
+
 const emptyForm: ScreeningForm = {
   eventKey: nextRace.eventKey,
   venueId: "",
-  venueName: "",
-  venueArea: "",
   totalSeats: "30",
   confirmedBookedSeats: "0",
   priceLabel: "Rs 499 deposit",
@@ -34,11 +37,15 @@ const emptyForm: ScreeningForm = {
 
 export function ScreeningsAdminClient({
   initialScreenings,
+  initialVenueOptions,
 }: {
   initialScreenings: Doc<"screenings">[];
+  initialVenueOptions: VenueOption[];
 }) {
   const screenings =
     useQuery(api.actions.latestScreenings) ?? initialScreenings;
+  const venueOptions =
+    useQuery(api.actions.inventoryVenueOptions) ?? initialVenueOptions;
   const saveScreening = useMutation(api.actions.upsertScreeningInventory);
   const [form, setForm] = useState<ScreeningForm>(emptyForm);
   const [status, setStatus] = useState("");
@@ -65,8 +72,6 @@ export function ScreeningsAdminClient({
       screeningId: screening._id,
       eventKey: screening.eventKey,
       venueId: screening.venueId,
-      venueName: screening.venueName,
-      venueArea: screening.venueArea,
       totalSeats: String(screening.totalSeats),
       confirmedBookedSeats: String(screening.confirmedBookedSeats),
       priceLabel: screening.priceLabel,
@@ -86,8 +91,6 @@ export function ScreeningsAdminClient({
     const requiredFields = [
       form.eventKey,
       form.venueId,
-      form.venueName,
-      form.venueArea,
       form.priceLabel,
       form.bookingRules,
       form.bookingClosesAt,
@@ -115,17 +118,22 @@ export function ScreeningsAdminClient({
         screeningId: form.screeningId,
         eventKey: form.eventKey,
         venueId: form.venueId,
-        venueName: form.venueName,
-        venueArea: form.venueArea,
         totalSeats,
         confirmedBookedSeats,
         priceLabel: form.priceLabel,
         bookingRules: form.bookingRules,
         bookingClosesAt: form.bookingClosesAt,
       });
-      setStatus(`${form.venueName || "Screening"} inventory saved.`);
-    } catch {
-      setError("Could not save this inventory row. Check all fields.");
+      const venue = venueOptions.find(
+        (option) => option.venueId === form.venueId,
+      );
+      setStatus(`${venue?.venueName || "Screening"} inventory saved.`);
+    } catch (saveError) {
+      setError(
+        saveError instanceof Error
+          ? saveError.message
+          : "Could not save this inventory row. Check all fields.",
+      );
     } finally {
       setIsSaving(false);
     }
@@ -168,7 +176,7 @@ export function ScreeningsAdminClient({
           <span>{form.screeningId ? "Edit row" : "New row"}</span>
           <strong>
             {form.screeningId
-              ? `Update ${form.venueName}`
+              ? "Update venue inventory"
               : "Add venue inventory"}
           </strong>
         </div>
@@ -182,28 +190,18 @@ export function ScreeningsAdminClient({
             />
           </label>
           <label>
-            Venue ID
-            <input
+            Venue
+            <select
               value={form.venueId}
               onChange={(event) => updateField("venueId", event.target.value)}
-              placeholder="socials-indiranagar"
-            />
-          </label>
-          <label>
-            Venue name
-            <input
-              value={form.venueName}
-              onChange={(event) => updateField("venueName", event.target.value)}
-              placeholder="Socials"
-            />
-          </label>
-          <label>
-            Area
-            <input
-              value={form.venueArea}
-              onChange={(event) => updateField("venueArea", event.target.value)}
-              placeholder="Indiranagar"
-            />
+            >
+              <option value="">Choose an existing venue</option>
+              {venueOptions.map((venue) => (
+                <option key={venue.venueId} value={venue.venueId}>
+                  {venue.venueName} · {venue.venueArea} · {venue.source}
+                </option>
+              ))}
+            </select>
           </label>
           <label>
             Total seats

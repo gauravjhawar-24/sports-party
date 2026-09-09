@@ -12,10 +12,15 @@ export default async function ScreeningsAdminPage() {
   }
 
   const convex = new ConvexHttpClient(convexUrl);
-  const initialScreenings = await convex.query(
-    api.actions.latestScreenings,
-    {},
-  );
+  const [initialScreenings, initialVenueOptions] = await Promise.all([
+    convex.query(api.actions.latestScreenings, {}),
+    convex.query(api.actions.inventoryVenueOptions, {}),
+  ]);
 
-  return <ScreeningsAdminClient initialScreenings={initialScreenings} />;
+  return (
+    <ScreeningsAdminClient
+      initialScreenings={initialScreenings}
+      initialVenueOptions={initialVenueOptions}
+    />
+  );
 }

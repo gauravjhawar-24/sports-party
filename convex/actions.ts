@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
+import { venues } from "../lib/venues";
 
 const venueCandidateArgs = {
   sourceQuery: v.string(),
@@ -45,6 +46,78 @@ function normalizeInventoryKey(value: string) {
     .trim()
     .replace(/\s+/g, " ");
 }
+
+async function resolveInventoryVenue(
+  ctx: MutationCtx,
+  venueId: string,
+): Promise<{ venueId: string; venueName: string; venueArea: string }> {
+  const staticVenue = venues.find((venue) => venue.id === venueId);
+
+  if (staticVenue) {
+    return {
+      venueId: staticVenue.id,
+      venueName: staticVenue.name,
+      venueArea: staticVenue.area,
+    };
+  }
+
+  if (venueId.startsWith("approved-")) {
+    const approvedId = venueId.replace(/^approved-/, "");
+    const approvedVenues = await ctx.db
+      .query("venueCandidates")
+      .withIndex("by_status_and_created_at", (q) =>
+        q.eq("status", "approved"),
+      )
+      .collect();
+    const approvedVenue =
+      approvedVenues.find((venue) => String(venue._id) === approvedId) ?? null;
+
+    if (approvedVenue) {
+      return {
+        venueId: `approved-${approvedVenue._id}`,
+        venueName: approvedVenue.venueName,
+        venueArea:
+          approvedVenue.area === "Needs area check"
+            ? "Bangalore"
+            : approvedVenue.area,
+      };
+    }
+  }
+
+  throw new Error("Choose a venue from the approved venue list");
+}
+
+export const inventoryVenueOptions = query({
+  args: {},
+  handler: async (ctx) => {
+    const approvedVenues = await ctx.db
+      .query("venueCandidates")
+      .withIndex("by_status_and_created_at", (q) =>
+        q.eq("status", "approved"),
+      )
+      .collect();
+
+    return [
+      ...venues.map((venue) => ({
+        venueId: venue.id,
+        venueName: venue.name,
+        venueArea: venue.area,
+        source: "Fixed venue list",
+      })),
+      ...approvedVenues.map((venue) => ({
+        venueId: `approved-${venue._id}`,
+        venueName: venue.venueName,
+        venueArea:
+          venue.area === "Needs area check" ? "Bangalore" : venue.area,
+        source: "Approved venue database",
+      })),
+    ].sort((left, right) =>
+      `${left.venueArea} ${left.venueName}`.localeCompare(
+        `${right.venueArea} ${right.venueName}`,
+      ),
+    );
+  },
+});
 
 export const recordSearch = mutation({
   args: {
@@ -261,8 +334,6 @@ export const upsertScreeningInventory = mutation({
     screeningId: v.optional(v.id("screenings")),
     eventKey: v.string(),
     venueId: v.string(),
-    venueName: v.string(),
-    venueArea: v.string(),
     totalSeats: v.number(),
     confirmedBookedSeats: v.number(),
     priceLabel: v.string(),
@@ -272,8 +343,6 @@ export const upsertScreeningInventory = mutation({
   handler: async (ctx, args) => {
     const eventKey = args.eventKey.trim();
     const venueId = args.venueId.trim();
-    const venueName = args.venueName.trim();
-    const venueArea = args.venueArea.trim();
     const priceLabel = args.priceLabel.trim();
     const bookingRules = args.bookingRules.trim();
     const bookingClosesAt = args.bookingClosesAt.trim();
@@ -282,8 +351,6 @@ export const upsertScreeningInventory = mutation({
 
     if (!eventKey) throw new Error("Event key is required");
     if (!venueId) throw new Error("Venue ID is required");
-    if (!venueName) throw new Error("Venue name is required");
-    if (!venueArea) throw new Error("Venue area is required");
     if (!priceLabel) throw new Error("Price is required");
     if (!bookingRules) throw new Error("Booking rules are required");
     if (!bookingClosesAt) throw new Error("Booking close time is required");
@@ -295,12 +362,13 @@ export const upsertScreeningInventory = mutation({
       throw new Error("Already booked seats cannot exceed total seats");
     }
 
+    const resolvedVenue = await resolveInventoryVenue(ctx, venueId);
     const now = Date.now();
     const payload = {
       eventKey,
-      venueId,
-      venueName,
-      venueArea,
+      venueId: resolvedVenue.venueId,
+      venueName: resolvedVenue.venueName,
+      venueArea: resolvedVenue.venueArea,
       totalSeats,
       confirmedBookedSeats,
       priceLabel,
@@ -317,7 +385,7 @@ export const upsertScreeningInventory = mutation({
     const existing = await ctx.db
       .query("screenings")
       .withIndex("by_eventKey_and_venueId", (q) =>
-        q.eq("eventKey", eventKey).eq("venueId", venueId),
+        q.eq("eventKey", eventKey).eq("venueId", resolvedVenue.venueId),
       )
       .first();
 
