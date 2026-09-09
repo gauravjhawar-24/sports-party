@@ -388,11 +388,22 @@ export const screeningsForEvent = query({
 export const latestScreenings = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db
+    const rows = await ctx.db
       .query("screenings")
       .withIndex("by_eventKey")
       .order("desc")
       .take(50);
+    const seen = new Set<string>();
+    const deduped = [];
+
+    for (const row of rows) {
+      const key = `${row.eventKey}|${screeningKey(row.venueName, row.venueArea)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      deduped.push(row);
+    }
+
+    return deduped;
   },
 });
 
@@ -432,6 +443,10 @@ export const upsertScreeningInventory = mutation({
     const resolvedEventKey = resolveInventoryEvent(eventKey);
     const resolvedVenue = await resolveInventoryVenue(ctx, venueId);
     const now = Date.now();
+    const canonicalKey = screeningKey(
+      resolvedVenue.venueName,
+      resolvedVenue.venueArea,
+    );
     const payload = {
       eventKey: resolvedEventKey,
       venueId: resolvedVenue.venueId,
@@ -445,20 +460,37 @@ export const upsertScreeningInventory = mutation({
       updatedAt: now,
     };
 
-    if (args.screeningId) {
-      await ctx.db.patch(args.screeningId, payload);
-      return args.screeningId;
-    }
-
-    const existing = await ctx.db
+    const eventScreenings = await ctx.db
       .query("screenings")
-      .withIndex("by_eventKey_and_venueId", (q) =>
-        q.eq("eventKey", resolvedEventKey).eq("venueId", resolvedVenue.venueId),
+      .withIndex("by_eventKey", (q) => q.eq("eventKey", resolvedEventKey))
+      .collect();
+    const matchingScreenings = eventScreenings
+      .filter(
+        (screening) =>
+          screening.venueId === resolvedVenue.venueId ||
+          screeningKey(screening.venueName, screening.venueArea) ===
+            canonicalKey,
       )
-      .first();
+      .sort((left, right) => right.updatedAt - left.updatedAt);
+    const requestedScreening = args.screeningId
+      ? await ctx.db.get(args.screeningId)
+      : null;
+    const exactVenueScreening =
+      matchingScreenings.find(
+        (screening) => screening.venueId === resolvedVenue.venueId,
+      ) ?? null;
+    const existing =
+      requestedScreening ?? exactVenueScreening ?? matchingScreenings[0];
 
     if (existing) {
       await ctx.db.patch(existing._id, payload);
+
+      for (const duplicate of matchingScreenings) {
+        if (duplicate._id !== existing._id) {
+          await ctx.db.delete(duplicate._id);
+        }
+      }
+
       return existing._id;
     }
 
