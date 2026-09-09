@@ -1,7 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
-import { venues } from "../lib/venues";
+import { nextRace, venues } from "../lib/venues";
 
 const venueCandidateArgs = {
   sourceQuery: v.string(),
@@ -86,6 +86,31 @@ async function resolveInventoryVenue(
 
   throw new Error("Choose a venue from the approved venue list");
 }
+
+const inventoryEvents = [
+  {
+    eventKey: nextRace.eventKey,
+    sport: "Formula 1",
+    name: nextRace.name,
+    displayDate: nextRace.raceDate,
+    displayTime: nextRace.raceTime,
+  },
+];
+
+function resolveInventoryEvent(eventKey: string) {
+  const event = inventoryEvents.find((option) => option.eventKey === eventKey);
+
+  if (!event) {
+    throw new Error("Choose an event from the fixed event list");
+  }
+
+  return event.eventKey;
+}
+
+export const inventoryEventOptions = query({
+  args: {},
+  handler: async () => inventoryEvents,
+});
 
 export const inventoryVenueOptions = query({
   args: {},
@@ -362,10 +387,11 @@ export const upsertScreeningInventory = mutation({
       throw new Error("Already booked seats cannot exceed total seats");
     }
 
+    const resolvedEventKey = resolveInventoryEvent(eventKey);
     const resolvedVenue = await resolveInventoryVenue(ctx, venueId);
     const now = Date.now();
     const payload = {
-      eventKey,
+      eventKey: resolvedEventKey,
       venueId: resolvedVenue.venueId,
       venueName: resolvedVenue.venueName,
       venueArea: resolvedVenue.venueArea,
@@ -385,7 +411,7 @@ export const upsertScreeningInventory = mutation({
     const existing = await ctx.db
       .query("screenings")
       .withIndex("by_eventKey_and_venueId", (q) =>
-        q.eq("eventKey", eventKey).eq("venueId", resolvedVenue.venueId),
+        q.eq("eventKey", resolvedEventKey).eq("venueId", resolvedVenue.venueId),
       )
       .first();
 

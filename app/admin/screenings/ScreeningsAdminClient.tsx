@@ -25,6 +25,14 @@ type VenueOption = {
   source: string;
 };
 
+type EventOption = {
+  eventKey: string;
+  sport: string;
+  name: string;
+  displayDate: string;
+  displayTime: string;
+};
+
 const emptyForm: ScreeningForm = {
   eventKey: nextRace.eventKey,
   venueId: "",
@@ -38,14 +46,18 @@ const emptyForm: ScreeningForm = {
 export function ScreeningsAdminClient({
   initialScreenings,
   initialVenueOptions,
+  initialEventOptions,
 }: {
   initialScreenings: Doc<"screenings">[];
   initialVenueOptions: VenueOption[];
+  initialEventOptions: EventOption[];
 }) {
   const screenings =
     useQuery(api.actions.latestScreenings) ?? initialScreenings;
   const venueOptions =
     useQuery(api.actions.inventoryVenueOptions) ?? initialVenueOptions;
+  const eventOptions =
+    useQuery(api.actions.inventoryEventOptions) ?? initialEventOptions;
   const saveScreening = useMutation(api.actions.upsertScreeningInventory);
   const [form, setForm] = useState<ScreeningForm>(emptyForm);
   const [status, setStatus] = useState("");
@@ -183,11 +195,18 @@ export function ScreeningsAdminClient({
 
         <form className="screening-editor-form" onSubmit={submit}>
           <label>
-            Event key
-            <input
+            Event
+            <select
               value={form.eventKey}
               onChange={(event) => updateField("eventKey", event.target.value)}
-            />
+            >
+              {eventOptions.map((event) => (
+                <option key={event.eventKey} value={event.eventKey}>
+                  {event.name} · {event.sport} · {event.displayDate} ·{" "}
+                  {event.displayTime}
+                </option>
+              ))}
+            </select>
           </label>
           <label>
             Venue
