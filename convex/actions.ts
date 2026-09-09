@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 import { nextRace, venues } from "../lib/venues";
 
@@ -283,6 +284,42 @@ const v2SeedScreening = {
   bookingRules: "Entry is confirmed only after venue confirmation.",
   bookingClosesAt: "Sunday, 6 Sep 2026, 5:00 PM IST",
 };
+
+async function findScreeningForBooking(
+  ctx: MutationCtx,
+  booking: {
+    screeningId?: Id<"screenings">;
+    eventKey: string;
+    venueId: string;
+    venueName: string;
+    venueArea: string;
+  },
+) {
+  if (booking.screeningId) {
+    const screening = await ctx.db.get(booking.screeningId);
+    if (screening) return screening;
+  }
+
+  return (
+    (await ctx.db
+      .query("screenings")
+      .withIndex("by_eventKey_and_venueId", (q) =>
+        q.eq("eventKey", booking.eventKey).eq("venueId", booking.venueId),
+      )
+      .first()) ??
+    (
+      await ctx.db
+        .query("screenings")
+        .withIndex("by_eventKey", (q) => q.eq("eventKey", booking.eventKey))
+        .collect()
+    ).find(
+      (screening) =>
+        screeningKey(screening.venueName, screening.venueArea) ===
+        screeningKey(booking.venueName, booking.venueArea),
+    ) ??
+    null
+  );
+}
 
 export const seedV2ScreeningInventory = mutation({
   args: {},
@@ -695,38 +732,17 @@ export const requestSeatBooking = mutation({
     if (seats < 1 || seats > 10) {
       throw new Error("Choose between 1 and 10 seats");
     }
-    let screeningId = party.screeningId;
-    let totalSeats = party.screeningTotalSeats;
-    let confirmedBookedSeats = party.screeningConfirmedBookedSeats;
-
-    if (
-      typeof totalSeats !== "number" ||
-      typeof confirmedBookedSeats !== "number"
-    ) {
-      const fallbackScreening =
-        (await ctx.db
-          .query("screenings")
-          .withIndex("by_eventKey_and_venueId", (q) =>
-            q.eq("eventKey", v2SeedEvent.eventKey).eq("venueId", party.venueId),
-          )
-          .first()) ??
-        (
-          await ctx.db
-            .query("screenings")
-            .withIndex("by_eventKey", (q) =>
-              q.eq("eventKey", v2SeedEvent.eventKey),
-            )
-            .collect()
-        ).find(
-          (screening) =>
-            screeningKey(screening.venueName, screening.venueArea) ===
-            screeningKey(party.venueName, party.venueArea),
-        );
-
-      screeningId = fallbackScreening?._id;
-      totalSeats = fallbackScreening?.totalSeats;
-      confirmedBookedSeats = fallbackScreening?.confirmedBookedSeats;
-    }
+    const liveScreening = await findScreeningForBooking(ctx, {
+      screeningId: party.screeningId,
+      eventKey: v2SeedEvent.eventKey,
+      venueId: party.venueId,
+      venueName: party.venueName,
+      venueArea: party.venueArea,
+    });
+    const screeningId = liveScreening?._id ?? party.screeningId;
+    const totalSeats = liveScreening?.totalSeats ?? party.screeningTotalSeats;
+    const confirmedBookedSeats =
+      liveScreening?.confirmedBookedSeats ?? party.screeningConfirmedBookedSeats;
 
     if (
       typeof totalSeats !== "number" ||
@@ -817,71 +833,39 @@ export const reviewSeatBooking = mutation({
     const booking = await ctx.db.get(args.bookingId);
     if (!booking) throw new Error("Seat booking not found");
 
-    if (args.status === "confirmed") {
-      const party = await ctx.db.get(booking.partyId);
-      if (!party) throw new Error("Watch party not found");
+    const screening = await findScreeningForBooking(ctx, booking);
+    if (!screening) {
+      throw new Error("Seat inventory is not available for this screening");
+    }
 
-      let totalSeats = party.screeningTotalSeats;
-      let confirmedBookedSeats = party.screeningConfirmedBookedSeats;
+    const statusChanged = booking.status !== args.status;
+    let nextConfirmedBookedSeats = screening.confirmedBookedSeats;
 
-      if (
-        typeof totalSeats !== "number" ||
-        typeof confirmedBookedSeats !== "number"
-      ) {
-        const fallbackScreening =
-          (await ctx.db
-            .query("screenings")
-            .withIndex("by_eventKey_and_venueId", (q) =>
-              q.eq("eventKey", booking.eventKey).eq("venueId", booking.venueId),
-            )
-            .first()) ??
-          (
-            await ctx.db
-              .query("screenings")
-              .withIndex("by_eventKey", (q) =>
-                q.eq("eventKey", booking.eventKey),
-              )
-              .collect()
-          ).find(
-            (screening) =>
-              screeningKey(screening.venueName, screening.venueArea) ===
-              screeningKey(booking.venueName, booking.venueArea),
-          );
+    if (statusChanged && args.status === "confirmed") {
+      nextConfirmedBookedSeats += booking.seats;
+    }
 
-        totalSeats = fallbackScreening?.totalSeats;
-        confirmedBookedSeats = fallbackScreening?.confirmedBookedSeats;
-      }
+    if (statusChanged && booking.status === "confirmed") {
+      nextConfirmedBookedSeats -= booking.seats;
+    }
 
-      if (
-        typeof totalSeats !== "number" ||
-        typeof confirmedBookedSeats !== "number"
-      ) {
-        throw new Error("Seat inventory is not available for this screening");
-      }
+    if (nextConfirmedBookedSeats > screening.totalSeats) {
+      throw new Error("Not enough seats left");
+    }
 
-      const partyBookings = await ctx.db
-        .query("seatBookings")
-        .withIndex("by_party_and_created_at", (q) =>
-          q.eq("partyId", booking.partyId),
-        )
-        .collect();
-      const alreadyConfirmedSeats = partyBookings
-        .filter(
-          (row) => row.status === "confirmed" && row._id !== args.bookingId,
-        )
-        .reduce((sum, row) => sum + row.seats, 0);
+    const now = Date.now();
 
-      if (
-        confirmedBookedSeats + alreadyConfirmedSeats + booking.seats >
-        totalSeats
-      ) {
-        throw new Error("Not enough seats left");
-      }
+    if (statusChanged) {
+      await ctx.db.patch(screening._id, {
+        confirmedBookedSeats: Math.max(0, nextConfirmedBookedSeats),
+        updatedAt: now,
+      });
     }
 
     await ctx.db.patch(args.bookingId, {
       status: args.status,
-      updatedAt: Date.now(),
+      screeningId: screening._id,
+      updatedAt: now,
     });
 
     return args.bookingId;

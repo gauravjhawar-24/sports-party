@@ -759,13 +759,13 @@ function PartyScreeningInventory({
   party: Doc<"watchParties">;
   screening?: Doc<"screenings">;
 }) {
-  const totalSeats = party.screeningTotalSeats ?? screening?.totalSeats;
+  const totalSeats = screening?.totalSeats ?? party.screeningTotalSeats;
   const confirmedBookedSeats =
-    party.screeningConfirmedBookedSeats ?? screening?.confirmedBookedSeats;
-  const priceLabel = party.screeningPriceLabel ?? screening?.priceLabel;
-  const bookingRules = party.screeningBookingRules ?? screening?.bookingRules;
+    screening?.confirmedBookedSeats ?? party.screeningConfirmedBookedSeats;
+  const priceLabel = screening?.priceLabel ?? party.screeningPriceLabel;
+  const bookingRules = screening?.bookingRules ?? party.screeningBookingRules;
   const bookingClosesAt =
-    party.screeningBookingClosesAt ?? screening?.bookingClosesAt;
+    screening?.bookingClosesAt ?? party.screeningBookingClosesAt;
 
   const hasInventory =
     typeof totalSeats === "number" &&
@@ -868,9 +868,9 @@ function SeatBookingSection({
   seats: string;
   status: string;
 }) {
-  const totalSeats = party.screeningTotalSeats ?? screening?.totalSeats;
+  const totalSeats = screening?.totalSeats ?? party.screeningTotalSeats;
   const confirmedBookedSeats =
-    party.screeningConfirmedBookedSeats ?? screening?.confirmedBookedSeats;
+    screening?.confirmedBookedSeats ?? party.screeningConfirmedBookedSeats;
   const hasInventory =
     typeof totalSeats === "number" && typeof confirmedBookedSeats === "number";
   const pendingSeats = bookings
@@ -890,8 +890,8 @@ function SeatBookingSection({
         <span>Seat booking</span>
         <h2>Reserve your spot.</h2>
         <p>
-          Request seats inside FindMyScreen. Ops can confirm these requests in
-          the next milestone.
+          Request seats inside FindMyScreen. Your booking counts only after ops
+          confirms it.
         </p>
       </div>
 

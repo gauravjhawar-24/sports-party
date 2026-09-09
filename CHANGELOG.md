@@ -119,3 +119,4 @@
 - Mon 7 Sep 2026: V2A now has one bookable screening inventory record for Studz Sports Bar, with read-only seats, price, rules, and close time shown on discovery and copied into new watch parties.
 - Wed 9 Sep 2026: Screening inventory can now be saved only against an existing fixed or approved venue, so ops cannot create random venue rows while adding seats.
 - Wed 9 Sep 2026: Screening inventory now uses a fixed event dropdown and rejects custom event keys until new events are deliberately added.
+- Wed 9 Sep 2026: Approved seat requests now update the live screening inventory, so booked and seats-left counts move only after ops approval.
