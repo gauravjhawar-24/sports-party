@@ -295,29 +295,34 @@ async function findScreeningForBooking(
     venueArea: string;
   },
 ) {
+  const screenings = await ctx.db
+    .query("screenings")
+    .withIndex("by_eventKey", (q) => q.eq("eventKey", booking.eventKey))
+    .collect();
+  const matchingScreenings = screenings.filter(
+    (screening) =>
+      screening.venueId === booking.venueId ||
+      screeningKey(screening.venueName, screening.venueArea) ===
+        screeningKey(booking.venueName, booking.venueArea),
+  );
+
+  if (matchingScreenings.length) {
+    return matchingScreenings.sort(
+      (left, right) => right.updatedAt - left.updatedAt,
+    )[0];
+  }
+
   if (booking.screeningId) {
     const screening = await ctx.db.get(booking.screeningId);
     if (screening) return screening;
   }
 
   return (
-    (await ctx.db
-      .query("screenings")
-      .withIndex("by_eventKey_and_venueId", (q) =>
-        q.eq("eventKey", booking.eventKey).eq("venueId", booking.venueId),
-      )
-      .first()) ??
-    (
-      await ctx.db
-        .query("screenings")
-        .withIndex("by_eventKey", (q) => q.eq("eventKey", booking.eventKey))
-        .collect()
-    ).find(
+    screenings.find(
       (screening) =>
         screeningKey(screening.venueName, screening.venueArea) ===
         screeningKey(booking.venueName, booking.venueArea),
-    ) ??
-    null
+    ) ?? null
   );
 }
 

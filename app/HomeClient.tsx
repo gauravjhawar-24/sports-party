@@ -134,8 +134,9 @@ export function HomeClient({
   const screeningByVenueId = useMemo(() => {
     const rows = new Map<string, Doc<"screenings">>();
     for (const screening of screeningRows) {
-      rows.set(screening.venueId, screening);
-      rows.set(
+      setPreferredScreening(rows, screening.venueId, screening);
+      setPreferredScreening(
+        rows,
         screeningKey(screening.venueName, screening.venueArea),
         screening,
       );
@@ -233,9 +234,7 @@ export function HomeClient({
 
     try {
       const venue = pendingParty.venue;
-      const screening =
-        screeningByVenueId.get(venue.id) ??
-        screeningByVenueId.get(screeningKey(venue.name, venue.area));
+      const screening = screeningForVenue(venue, screeningByVenueId);
       const hostClientId = getOrCreateClientId();
       const party = await createWatchParty({
         hostName: trimmedName,
@@ -913,9 +912,20 @@ function screeningForVenue(
   screeningByVenueId: Map<string, Doc<"screenings">>,
 ) {
   return (
-    screeningByVenueId.get(venue.id) ??
-    screeningByVenueId.get(screeningKey(venue.name, venue.area))
+    screeningByVenueId.get(screeningKey(venue.name, venue.area)) ??
+    screeningByVenueId.get(venue.id)
   );
+}
+
+function setPreferredScreening(
+  rows: Map<string, Doc<"screenings">>,
+  key: string,
+  screening: Doc<"screenings">,
+) {
+  const current = rows.get(key);
+  if (!current || screening.updatedAt >= current.updatedAt) {
+    rows.set(key, screening);
+  }
 }
 
 function screeningKey(name: string, area: string) {

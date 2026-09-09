@@ -121,3 +121,4 @@
 - Wed 9 Sep 2026: Screening inventory now uses a fixed event dropdown and rejects custom event keys until new events are deliberately added.
 - Wed 9 Sep 2026: Approved seat requests now update the live screening inventory, so booked and seats-left counts move only after ops approval.
 - Wed 9 Sep 2026: The `/f1/admin` URL now opens the existing admin area instead of showing a missing page.
+- Wed 9 Sep 2026: Duplicate venue inventory now prefers the latest matching venue row, and the incorrect Studz 300-seat row has been corrected to 30 seats.

@@ -108,12 +108,14 @@ export function PartyPageClient({
     const party = partyData?.party;
     if (!party || !screeningRows) return undefined;
 
-    return screeningRows.find(
-      (screening) =>
-        screening.venueId === party.venueId ||
-        screeningKey(screening.venueName, screening.venueArea) ===
-          screeningKey(party.venueName, party.venueArea),
-    );
+    return screeningRows
+      .filter(
+        (screening) =>
+          screeningKey(screening.venueName, screening.venueArea) ===
+            screeningKey(party.venueName, party.venueArea) ||
+          screening.venueId === party.venueId,
+      )
+      .sort((left, right) => right.updatedAt - left.updatedAt)[0];
   }, [partyData?.party, screeningRows]);
 
   useEffect(() => {
